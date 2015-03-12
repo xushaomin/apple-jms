@@ -14,8 +14,7 @@ public class SimplePartitioner implements Partitioner {
 
 	@Override
 	public int partition(Object key, int numPartitions) {
-		long partitionKey = Long.parseLong(key.toString());
-		int partition = (int) (partitionKey % numPartitions);
+		int partition = Integer.parseInt(key.toString());
 		return partition;
 	}
 
