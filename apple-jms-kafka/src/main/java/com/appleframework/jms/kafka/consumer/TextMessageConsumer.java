@@ -43,8 +43,9 @@ public abstract class TextMessageConsumer extends MessageConusmer {
 
 	public abstract void processMessage();
 	
-		
 	protected void init() {
+		
+		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
 		
 		connector = Consumer.createJavaConsumerConnector(consumerConfig);
 		

@@ -35,9 +35,10 @@ public class ObjectMessageConsumer2 {
 	private Integer partitionsNum;
 	
 	private ConsumerConnector connector;
-	private Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
 			
-	protected void init() {
+	public void init() {
+		
+		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
 		
 		connector = Consumer.createJavaConsumerConnector(consumerConfig);
 		
@@ -74,6 +75,10 @@ public class ObjectMessageConsumer2 {
 	    	}
 	    }));
 	}
+	
+	public void setMessageConusmer2(MessageConusmer2<Object> messageConusmer2) {
+		this.messageConusmer2 = messageConusmer2;
+	}
 
 	public void setConsumerConfig(ConsumerConfig consumerConfig) {
 		this.consumerConfig = consumerConfig;
@@ -92,7 +97,4 @@ public class ObjectMessageConsumer2 {
 			connector.shutdown();
 	}
 	
-	public void setMessageConusmer2(MessageConusmer2<Object> messageConusmer2) {
-		this.messageConusmer2 = messageConusmer2;
-	}
 }

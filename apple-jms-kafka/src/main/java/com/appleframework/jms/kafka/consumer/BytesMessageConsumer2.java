@@ -41,10 +41,11 @@ public abstract class BytesMessageConsumer2 extends MessageConusmer {
 	protected Integer partitionsNum;
 	
 	private ConsumerConnector connector;
-	private Map<String, Integer> topicCountMap = new HashMap<String, Integer>();	
 		
 	protected void init() {
 		
+		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
+
 		connector = Consumer.createJavaConsumerConnector(consumerConfig);
 		
 		String[] topics = topic.split(",");

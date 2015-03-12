@@ -34,16 +34,17 @@ public class TextMessageConsumer2 {
 	private MessageConusmer2<String> messageConusmer2;
 	
 	@Resource
-	protected ConsumerConfig consumerConfig;
+	private ConsumerConfig consumerConfig;
 	
-	protected String topic;
+	private String topic;
     
-	protected Integer partitionsNum;
+	private Integer partitionsNum;
 	
-	protected ConsumerConnector connector;
-	protected Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
+	private ConsumerConnector connector;
+	
+	public void init() {
 		
-	protected void init() {
+		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
 		
 		connector = Consumer.createJavaConsumerConnector(consumerConfig);
 		
@@ -86,6 +87,10 @@ public class TextMessageConsumer2 {
 	    }));
 	}	
 
+	public void setMessageConusmer2(MessageConusmer2<String> messageConusmer2) {
+		this.messageConusmer2 = messageConusmer2;
+	}
+	
 	public void setConsumerConfig(ConsumerConfig consumerConfig) {
 		this.consumerConfig = consumerConfig;
 	}
@@ -103,7 +108,4 @@ public class TextMessageConsumer2 {
 			connector.shutdown();
 	}
 	
-	public void setMessageConusmer2(MessageConusmer2<String> messageConusmer2) {
-		this.messageConusmer2 = messageConusmer2;
-	}
 }

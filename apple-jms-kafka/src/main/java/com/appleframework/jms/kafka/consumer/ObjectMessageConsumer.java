@@ -33,12 +33,13 @@ public abstract class ObjectMessageConsumer extends MessageConusmer {
 	private Integer partitionsNum;
 	
 	private ConsumerConnector connector;
-	private Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
 	protected Object message;
 
 	public abstract void processMessage();
 			
 	protected void init() {
+		
+		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
 		
 		connector = Consumer.createJavaConsumerConnector(consumerConfig);
 		
