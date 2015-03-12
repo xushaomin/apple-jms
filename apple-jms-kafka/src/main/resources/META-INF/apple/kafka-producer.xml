@@ -12,6 +12,7 @@
         		<prop key="serializer.class">kafka.serializer.DefaultEncoder</prop>
         		<prop key="metadata.broker.list">${metadata.broker.list}</prop>
         		<prop key="producer.type">async</prop>
+        		<prop key="request.required.acks">1</prop>
             </props>
         </property>
     </bean>
