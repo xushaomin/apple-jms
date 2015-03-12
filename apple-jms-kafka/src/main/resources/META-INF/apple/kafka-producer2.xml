@@ -28,7 +28,7 @@
 		<constructor-arg index="0" ref="producerConfig" />
 	</bean>
 	
-	<bean id="messageProducer" class="com.appleframework.jms.kafka.producer.KafkaMessageProducer">
+	<bean id="messageProducer2" class="com.appleframework.jms.kafka.producer.KafkaMessageProducer2">
 		<property name="producer" ref="producer" />
 		<property name="topic" value="${producer.topic}" />
 		<property name="partitionsNum" value="${producer.partitionsNum}" />
