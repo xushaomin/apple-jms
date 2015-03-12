@@ -5,13 +5,17 @@
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
    	<context:property-placeholder location="classpath*:kafka.properties" ignore-unresolvable="true" />
-    
-	<bean id="producerProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+     
+  	<!-- modify by caicq -->
+    <bean id="producerProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="properties">
             <props>
         		<prop key="serializer.class">kafka.serializer.DefaultEncoder</prop>
         		<prop key="metadata.broker.list">${metadata.broker.list}</prop>
         		<prop key="producer.type">async</prop>
+    			<prop key="request.required.acks">1</prop>
+        		<prop key="partitioner.class">com.appleframework.jms.kafka.partitions.SimplePartitioner</prop>
+                <prop key="key.serializer.class">kafka.serializer.StringEncoder</prop>
             </props>
         </property>
     </bean>
@@ -27,6 +31,7 @@
 	<bean id="messageProducer" class="com.appleframework.jms.kafka.producer.KafkaMessageProducer">
 		<property name="producer" ref="producer" />
 		<property name="topic" value="${producer.topic}" />
+		<property name="partitionsNum" value="${producer.partitionsNum}" />
 	</bean>
 	
 </beans>
