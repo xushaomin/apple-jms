@@ -34,7 +34,7 @@ public class KafkaMessageProducer2 implements MessageProducer {
 	}
 	
 	private String getRandomNumValue() {
-		int randomNum = RandomUtility.main(0, partitionsNum);
+		int randomNum = RandomUtility.genRandom(0, partitionsNum);
 		return String.valueOf(randomNum);
 	}
 
