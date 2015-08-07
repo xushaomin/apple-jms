@@ -4,7 +4,7 @@
 
 	<groupId>com.appleframework.jms</groupId>
 	<artifactId>apple-jms</artifactId>
-	<version>0.0.5.RELEASE</version>
+	<version>0.0.6.RELEASE</version>
 	<packaging>pom</packaging>
 
 	<name>apple-jms</name>
@@ -12,7 +12,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.version>0.0.5.RELEASE</project.version>
+		<project.version>0.0.6.RELEASE</project.version>
 		<log4j.version>1.2.16</log4j.version>
 		<spring.version>4.0.5.RELEASE</spring.version>
 	</properties>
@@ -30,6 +30,13 @@
 				<artifactId>spring-jms</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-test</artifactId>
+				<version>${spring.version}</version>
+				<scope>test</scope>
+			</dependency>
 
 			<dependency>
 				<groupId>org.apache.geronimo.specs</groupId>
@@ -44,7 +51,9 @@
 		<module>apple-jms-activemq</module>
     	<module>apple-jms-kafka</module>
     	<module>apple-jms-rabbit</module>
-	</modules>
+    	<module>apple-jms-rocketmq</module>
+    	<module>apple-jms-ons</module>
+  </modules>
 	
 	<build>
 		<plugins>
@@ -68,8 +77,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.7</source>
+					<target>1.7</target>
 					<encoding>${file.encoding}</encoding>
 				</configuration>
 			</plugin>
