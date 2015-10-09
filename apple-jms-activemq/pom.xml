@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.appleframework.jms</groupId>
 		<artifactId>apple-jms</artifactId>
-		<version>0.0.6.RELEASE</version>
+		<version>0.0.8.RELEASE</version>
 	</parent>
 	<artifactId>apple-jms-activemq</artifactId>
 	<name>apple-jms-activemq</name>
@@ -14,7 +14,7 @@
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<activemq.version>5.10.0</activemq.version>
+		<activemq.version>5.12.0</activemq.version>
 	</properties>
 	
 	<dependencies>
