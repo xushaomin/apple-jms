@@ -18,6 +18,6 @@
 		</property>
 	</bean>
 
-	<import resource="classpath*:META-INF/apple/rocketmq-producer.xml" />
+	<import resource="classpath*:META-INF/apple/rocketmq-producer2.xml" />
 	 
 </beans>
