@@ -15,6 +15,7 @@
 		<project.version>0.0.8.RELEASE</project.version>
 		<log4j.version>1.2.16</log4j.version>
 		<spring.version>4.2.0.RELEASE</spring.version>
+		<junit.version>4.12</junit.version>
 	</properties>
 
 	<dependencyManagement>
@@ -51,6 +52,13 @@
 				<artifactId>geronimo-jms_1.1_spec</artifactId>
 				<version>1.1.1</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+			</dependency>
+			
 		</dependencies>
 	</dependencyManagement>
 
