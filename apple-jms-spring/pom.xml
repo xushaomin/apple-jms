@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+	    <groupId>com.appleframework.jms</groupId>
+		<artifactId>apple-jms</artifactId>
+		<version>0.1.0.RELEASE</version>
+	</parent>
+	<artifactId>apple-jms-spring</artifactId>
+	<name>apple-jms-spring</name>
+	<url>http://mvnrepo.appleframework.com</url>
+		
+	<dependencies>
+		
+		<dependency>
+			<groupId>com.appleframework.jms</groupId>
+			<artifactId>apple-jms-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jms</artifactId>
+		</dependency>
+		 
+	</dependencies>
+</project>
