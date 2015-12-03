@@ -6,16 +6,12 @@
 	<parent>
 	    <groupId>com.appleframework.jms</groupId>
 		<artifactId>apple-jms</artifactId>
-		<version>0.0.8.RELEASE</version>
+		<version>0.1.0.RELEASE</version>
 	</parent>
 	<artifactId>apple-jms-core</artifactId>
 	<name>apple-jms-core</name>
 	<url>http://mvnrepo.appleframework.com</url>
-	
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-	
+		
 	<dependencies>
 	
 		<dependency>

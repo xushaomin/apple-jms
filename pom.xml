@@ -4,7 +4,7 @@
 
 	<groupId>com.appleframework.jms</groupId>
 	<artifactId>apple-jms</artifactId>
-	<version>0.0.8.RELEASE</version>
+	<version>0.1.0.RELEASE</version>
 	<packaging>pom</packaging>
 
 	<name>apple-jms</name>
@@ -12,7 +12,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.version>0.0.8.RELEASE</project.version>
+		<project.version>0.1.0.RELEASE</project.version>
 		<log4j.version>1.2.16</log4j.version>
 		<spring.version>4.2.0.RELEASE</spring.version>
 		<junit.version>4.12</junit.version>
@@ -38,6 +38,7 @@
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-jms</artifactId>
 				<version>${spring.version}</version>
+				<scope>provided</scope>
 			</dependency>
 			
 			<dependency>
