@@ -24,7 +24,7 @@
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>4.12</version>
+				<version>${junit.version}</version>
 				<scope>test</scope>
 			</dependency>
 		
@@ -60,13 +60,7 @@
 				<artifactId>geronimo-jms_1.1_spec</artifactId>
 				<version>1.1.1</version>
 			</dependency>
-			
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>${junit.version}</version>
-			</dependency>
-			
+						
 		</dependencies>
 	</dependencyManagement>
 
@@ -74,10 +68,10 @@
 		<module>apple-jms-core</module>
 		<module>apple-jms-spring</module>
 		<module>apple-jms-activemq</module>
-    <module>apple-jms-rocketmq</module>
-    <module>apple-jms-kafka</module>
-    <module>apple-jms-ons</module>
-  </modules>
+    	<module>apple-jms-rocketmq</module>
+    	<module>apple-jms-kafka</module>
+    	<module>apple-jms-ons</module>
+  	</modules>
 	
 	<build>
 		<plugins>
