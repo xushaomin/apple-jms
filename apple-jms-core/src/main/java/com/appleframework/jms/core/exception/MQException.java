@@ -1,7 +1,5 @@
 package com.appleframework.jms.core.exception;
 
-import org.springframework.jms.JmsException;
-
 public class MQException extends JmsException {
 
 	private static final long serialVersionUID = 4333083322223588727L;
