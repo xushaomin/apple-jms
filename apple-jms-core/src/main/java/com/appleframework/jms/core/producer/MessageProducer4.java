@@ -9,24 +9,24 @@ import com.appleframework.jms.core.exception.JmsException;
  * @author cruise.xu
  *
  */
-public interface MessageProducer {
+public interface MessageProducer4 {
 	
 	/**
 	 * 发送对象信息
 	 * @param code
 	 */
-	public void sendObject(Serializable message) throws JmsException;
+	public void sendObject(String topic, String tags, String keys, Serializable message) throws JmsException;
 	
 	/**
 	 * 发送字符串
 	 * @param code
 	 */
-	public void sendText(String message) throws JmsException;
+	public void sendText(String topic, String tags, String keys, String message) throws JmsException;
 	
 	/**
 	 * 发送比特流
 	 * @param code
 	 */
-	public void sendByte(byte[] message) throws JmsException;
+	public void sendByte(String topic, String tags, String keys, byte[] message) throws JmsException;
 	
 }
