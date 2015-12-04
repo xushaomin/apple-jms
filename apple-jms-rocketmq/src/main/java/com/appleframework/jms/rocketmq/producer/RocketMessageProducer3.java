@@ -10,9 +10,8 @@ import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.common.message.Message;
 import com.alibaba.rocketmq.remoting.exception.RemotingException;
-import com.appleframework.jms.core.exception.JmsException;
 import com.appleframework.jms.core.exception.MQException;
-import com.appleframework.jms.core.producer.MessageProducer;
+import com.appleframework.jms.core.producer.MessageProducer3;
 import com.appleframework.jms.core.utils.ByteUtils;
 import com.appleframework.jms.rocketmq.RocketMQProducer;
 
@@ -20,58 +19,47 @@ import com.appleframework.jms.rocketmq.RocketMQProducer;
  * @author Cruise.Xu
  * 
  */
-public class RocketMessageProducer implements MessageProducer {
-
-	private final static Logger logger = LoggerFactory.getLogger(RocketMessageProducer.class);
-
-	private RocketMQProducer producer;
+public class RocketMessageProducer3 implements MessageProducer3 {
 	
-	private String topic;
-		
+	private final static Logger logger = LoggerFactory.getLogger(RocketMessageProducer3.class);
+
+	private RocketMQProducer producer;	
+
 	public void setProducer(RocketMQProducer producer) {
 		this.producer = producer;
 	}
 
-	public void setTopic(String topic) {
-		this.topic = topic;
-	}
-
-	public void sendByte(byte[] message) throws JmsException {
-        Message msg = new Message(topic, null, message);
+	public void sendByte(String topic, String keys, byte[] message) throws MQException {
+        Message msg = new Message(topic, null, keys, message);
         try {
-			SendResult result = producer.send(msg);
-			logger.info("msgId=" + result.getMsgId());
+        	SendResult result = producer.send(msg);
+        	logger.info("msgId=" + result.getMsgId());
 		} catch (MQClientException | RemotingException | MQBrokerException
 				| InterruptedException e) {
-			logger.error(e.getMessage());
-			throw new MQException(e);
-		}  
-	}
-
-	@Override
-	public void sendObject(Serializable message) throws JmsException {		
-		Message msg = new Message(topic, null, ByteUtils.toBytes(message));
-        try {
-			SendResult result = producer.send(msg);
-			logger.info("msgId=" + result.getMsgId());
-		} catch (MQClientException | RemotingException | MQBrokerException
-				| InterruptedException e) {
-			logger.error(e.getMessage());
-			throw new MQException(e);
-		}  
-	}
-
-	@Override
-	public void sendText(String message) throws JmsException {		
-		Message msg = new Message(topic, null, ByteUtils.toBytes(message));
-        try {
-			SendResult result = producer.send(msg);
-			logger.info("msgId=" + result.getMsgId());
-		} catch (MQClientException | RemotingException | MQBrokerException
-				| InterruptedException e) {
-			logger.error(e.getMessage());
 			throw new MQException(e);
 		}
 	}
+
+	public void sendObject(String topic, String keys, Serializable message) throws MQException {		
+		Message msg = new Message(topic, null, ByteUtils.toBytes(message));
+		try {
+			SendResult result = producer.send(msg);
+			logger.info("msgId=" + result.getMsgId());
+		} catch (MQClientException | RemotingException | MQBrokerException
+				| InterruptedException e) {
+			throw new MQException(e);
+		}
+	}
+
+	public void sendText(String topic, String keys, String message) throws MQException {		
+		Message msg = new Message(topic, null, ByteUtils.toBytes(message));
+		try {
+			SendResult result = producer.send(msg);
+			logger.info("msgId=" + result.getMsgId());
+		} catch (MQClientException | RemotingException | MQBrokerException
+				| InterruptedException e) {
+			throw new MQException(e);
+		}
+	}	
 
 }
