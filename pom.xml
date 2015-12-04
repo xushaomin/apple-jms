@@ -43,6 +43,13 @@
 			
 			<dependency>
 				<groupId>org.springframework</groupId>
+				<artifactId>spring-context</artifactId>
+				<version>${spring.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.springframework</groupId>
 				<artifactId>spring-test</artifactId>
 				<version>${spring.version}</version>
 				<scope>test</scope>
@@ -65,10 +72,11 @@
 
 	<modules>
 		<module>apple-jms-core</module>
+		<module>apple-jms-spring</module>
 		<module>apple-jms-activemq</module>
-    	<module>apple-jms-rocketmq</module>
-    	<module>apple-jms-kafka</module>
-    	<module>apple-jms-ons</module>
+    <module>apple-jms-rocketmq</module>
+    <module>apple-jms-kafka</module>
+    <module>apple-jms-ons</module>
   </modules>
 	
 	<build>
