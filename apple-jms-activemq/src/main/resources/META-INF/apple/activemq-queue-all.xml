@@ -29,7 +29,7 @@
          <property name="connectionFactory" ref="connectionFactory" />
     </bean>
     
-    <bean id="messageSender" class="com.appleframework.jms.core.producer.JmsMessageProducer">
+    <bean id="messageSender" class="com.appleframework.jms.spring.producer.JmsMessageProducer">
          <property name="jmsTemplate" ref="jmsTemplate" />
          <property name="destination" ref="destination" />
     </bean>
