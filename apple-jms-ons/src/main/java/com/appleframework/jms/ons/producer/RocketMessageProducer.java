@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jms.JmsException;
 
 import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.SendResult;
+import com.appleframework.jms.core.exception.JmsException;
 import com.appleframework.jms.core.exception.MQException;
 import com.appleframework.jms.core.producer.MessageProducer;
 import com.appleframework.jms.core.utils.ByteUtils;
