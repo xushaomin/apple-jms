@@ -5,8 +5,8 @@ import java.io.Serializable;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 
-import org.springframework.jms.JmsException;
-
+import com.appleframework.jms.core.exception.JmsException;
+import com.appleframework.jms.core.exception.MQException;
 import com.appleframework.jms.core.producer.MessageProducer;
 import com.appleframework.jms.core.utils.ByteUtils;
 
@@ -29,23 +29,36 @@ public class KafkaMessageProducer implements MessageProducer {
 	}
 	
 	public void sendByte(byte[] message) throws JmsException {
-		KeyedMessage<String, byte[]> producerData 
-			= new KeyedMessage<String, byte[]>(topic, message);
-		producer.send(producerData);
+		try {
+			KeyedMessage<String, byte[]> producerData 
+				= new KeyedMessage<String, byte[]>(topic, message);
+				producer.send(producerData);
+		} catch (Exception e) {
+			throw new MQException(e);
+		}
+		
 	}
 
 	@Override
 	public void sendObject(Serializable message) throws JmsException {
+		try {
 		KeyedMessage<String, byte[]> producerData 
 			= new KeyedMessage<String, byte[]>(topic, ByteUtils.toBytes(message));
 		producer.send(producerData);
+		} catch (Exception e) {
+			throw new MQException(e);
+		}
 	}
 
 	@Override
 	public void sendText(String message) throws JmsException {
-		KeyedMessage<String, byte[]> producerData 
-			= new KeyedMessage<String, byte[]>(topic, ByteUtils.toBytes(message));
-		producer.send(producerData);
+		try {
+			KeyedMessage<String, byte[]> producerData 
+				= new KeyedMessage<String, byte[]>(topic, ByteUtils.toBytes(message));
+			producer.send(producerData);
+		} catch (Exception e) {
+			throw new MQException(e);
+		}
 	}	
 
 }

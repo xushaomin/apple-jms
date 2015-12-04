@@ -7,28 +7,23 @@ import kafka.producer.KeyedMessage;
 
 import com.appleframework.jms.core.exception.JmsException;
 import com.appleframework.jms.core.exception.MQException;
-import com.appleframework.jms.core.producer.MessageProducer2;
+import com.appleframework.jms.core.producer.MessageProducer3;
 import com.appleframework.jms.core.utils.ByteUtils;
 
 /**
  * @author Cruise.Xu
  * 
  */
-public class KafkaMessageProducer2 implements MessageProducer2 {
+public class KafkaMessageProducer3 implements MessageProducer3 {
 
 	private Producer<String, byte[]> producer;
-	private String topic;
 
 	public void setProducer(Producer<String, byte[]> producer) {
 		this.producer = producer;
 	}
-
-	public void setTopic(String topic) {
-		this.topic = topic;
-	}
 	
 	@Override
-	public void sendByte(String key, byte[] message) throws JmsException {
+	public void sendByte(String topic, String key, byte[] message) throws JmsException {
 		try {
 			KeyedMessage<String, byte[]> producerData 
 				= new KeyedMessage<String, byte[]>(topic, key, message);
@@ -39,7 +34,7 @@ public class KafkaMessageProducer2 implements MessageProducer2 {
 	}
 
 	@Override
-	public void sendObject(String key, Serializable message) throws JmsException {
+	public void sendObject(String topic, String key, Serializable message) throws JmsException {
 		try {
 			KeyedMessage<String, byte[]> producerData 
 				= new KeyedMessage<String, byte[]>(topic, key, ByteUtils.toBytes(message));
@@ -50,7 +45,7 @@ public class KafkaMessageProducer2 implements MessageProducer2 {
 	}
 
 	@Override
-	public void sendText(String key, String message) throws JmsException {
+	public void sendText(String topic, String key, String message) throws JmsException {
 		try {
 			KeyedMessage<String, byte[]> producerData 
 				= new KeyedMessage<String, byte[]>(topic, key, ByteUtils.toBytes(message));
