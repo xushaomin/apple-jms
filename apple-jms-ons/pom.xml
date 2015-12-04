@@ -29,6 +29,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.appleframework.jms</groupId>
 			<artifactId>apple-jms-core</artifactId>
 			<version>${project.version}</version>
