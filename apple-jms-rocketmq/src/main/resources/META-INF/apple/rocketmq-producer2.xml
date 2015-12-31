@@ -9,7 +9,7 @@
       	<property name="producerGroup" value="${producer.producerGroup}" />
     </bean>
     
-    <bean id="messageProducer" class="com.appleframework.jms.rocketmq.producer.RocketMessageProducer2">
+    <bean id="messageProducer2" class="com.appleframework.jms.rocketmq.producer.RocketMessageProducer2">
 		<property name="producer" ref="producer" />
 		<property name="topic" value="${producer.topic}" />
 	</bean>
