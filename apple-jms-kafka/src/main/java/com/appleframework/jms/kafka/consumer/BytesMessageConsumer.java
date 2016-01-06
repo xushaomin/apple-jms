@@ -37,10 +37,10 @@ public abstract class BytesMessageConsumer extends MessageConusmer {
 	protected Integer partitionsNum;
 	
 	private ConsumerConnector connector;
+	
 	protected byte[] message;
 
 	public abstract void processMessage();
-	
 		
 	protected void init() {
 		

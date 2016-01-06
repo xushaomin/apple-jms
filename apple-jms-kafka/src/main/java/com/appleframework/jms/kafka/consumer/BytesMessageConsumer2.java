@@ -12,7 +12,6 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.appleframework.jms.core.consumer.MessageConusmer;
 import com.appleframework.jms.core.consumer.MessageConusmer2;
 
 import kafka.consumer.Consumer;
@@ -26,7 +25,7 @@ import kafka.javaapi.consumer.ConsumerConnector;
  * @author Cruise.Xu
  * 
  */
-public abstract class BytesMessageConsumer2 extends MessageConusmer {
+public abstract class BytesMessageConsumer2 {
 	
 	private final static Logger logger = LoggerFactory.getLogger(BytesMessageConsumer2.class);
 	
