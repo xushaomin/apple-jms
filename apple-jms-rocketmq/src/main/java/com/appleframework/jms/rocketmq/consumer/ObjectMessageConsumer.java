@@ -31,7 +31,6 @@ public abstract class ObjectMessageConsumer extends MessageConusmer {
 	private String tags;
 	
 	protected Object message;
-	
 
 	public abstract void processMessage();
 			
