@@ -53,6 +53,6 @@ public class KafkaMessageProducer3 implements MessageProducer3 {
 		} catch (Exception e) {
 			throw new MQException(e);
 		}
-	}	
-
+	}
+	
 }
