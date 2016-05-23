@@ -9,10 +9,10 @@ import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.appleframework.jms.core.consumer.MessageConusmer2;
-import com.appleframework.jms.core.utils.ByteUtils;
+import com.appleframework.jms.core.consumer.MessageConusmer;
 
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
@@ -21,30 +21,32 @@ import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.message.MessageAndMetadata;
 
+
 /**
  * @author Cruise.Xu
  * 
  */
-public class ObjectMessageConsumer2 {
+public abstract class MessageAndMetadataConsumer extends MessageConusmer {
 	
-	private static Logger logger = Logger.getLogger(ObjectMessageConsumer2.class.getName());
-
-	@Resource
-	private MessageConusmer2<Object> messageConusmer2;
+	private final static Logger logger = LoggerFactory.getLogger(MessageAndMetadataConsumer.class);
 	
 	@Resource
 	private ConsumerConfig consumerConfig;
 	
-	private String topic;
+	protected String topic;
     
-	private Integer partitionsNum;
+	protected Integer partitionsNum;
 	
 	private ConsumerConnector connector;
-			
-	public void init() {
+	
+	protected MessageAndMetadata<byte[], byte[]> message;
+
+	public abstract void processMessage();
+		
+	protected void init() {
 		
 		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
-		
+
 		connector = Consumer.createJavaConsumerConnector(consumerConfig);
 		
 		String[] topics = topic.split(",");
@@ -59,33 +61,31 @@ public class ObjectMessageConsumer2 {
 			streams.addAll(topicMessageStreams.get(topics[i]));
 		}
 		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage());
+		}
 	    //	    
 		final ExecutorService executor = Executors.newFixedThreadPool(partitionsNum * topics.length);
 	    for (final KafkaStream<byte[], byte[]> stream : streams) {
 	    	executor.submit(new Runnable() {
 				public void run() {
-					ConsumerIterator<byte[], byte[]> it = stream.iterator();
+                    ConsumerIterator<byte[], byte[]> it = stream.iterator();
 					while (it.hasNext()) {
-						MessageAndMetadata<byte[], byte[]> item = it.next();
-						String topic = item.topic();
-						logger.info("topic=" + topic);
-						Object object = ByteUtils.fromByte(item.message());
-						messageConusmer2.processMessage(object);
+						MessageAndMetadata<byte[], byte[]> message = it.next();
+						setMessage(message);
 					}
                 }
             });
 	    }
-	    
+	    	    
 	    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 	    	public void run() {
 	    		executor.shutdown();
 	    	}
 	    }));
-	}
-	
-	public void setMessageConusmer2(MessageConusmer2<Object> messageConusmer2) {
-		this.messageConusmer2 = messageConusmer2;
-	}
+	}	
 
 	public void setConsumerConfig(ConsumerConfig consumerConfig) {
 		this.consumerConfig = consumerConfig;
@@ -102,6 +102,14 @@ public class ObjectMessageConsumer2 {
 	public void destroy() {
 		if(null != connector)
 			connector.shutdown();
+	}
+
+	public MessageAndMetadata<byte[], byte[]> getMessage() {
+		return message;
+	}
+
+	public void setMessage(MessageAndMetadata<byte[], byte[]> message) {
+		this.message = message;
 	}
 	
 }
