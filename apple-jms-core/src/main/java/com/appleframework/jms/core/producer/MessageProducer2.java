@@ -15,18 +15,18 @@ public interface MessageProducer2 {
 	 * 发送对象信息
 	 * @param code
 	 */
-	public void sendObject(String key, Serializable message) throws JmsException;
+	public void sendObject(String topic, Serializable message) throws JmsException;
 	
 	/**
 	 * 发送字符串
 	 * @param code
 	 */
-	public void sendText(String key, String message) throws JmsException;
+	public void sendText(String topic, String message) throws JmsException;
 	
 	/**
 	 * 发送比特流
 	 * @param code
 	 */
-	public void sendByte(String key, byte[] message) throws JmsException;
+	public void sendByte(String topic, byte[] message) throws JmsException;
 	
 }
