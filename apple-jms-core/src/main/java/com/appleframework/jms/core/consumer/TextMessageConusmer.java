@@ -10,28 +10,15 @@ import javax.jms.TextMessage;
  * @author xusm
  * 
  */
-public abstract class TextMessageConusmer extends MessageConusmer implements MessageListener {
-	
-	protected String message;
-	
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
+public abstract class TextMessageConusmer extends MessageConusmer<String> implements MessageListener {
 
 	public void onMessage(Message message) {
 		try {
 			String object = ((TextMessage) message).getText();
-			this.message = object;
+			processMessage(object);
 		} catch (JMSException e) {
 			e.printStackTrace();
 		}
-		processMessage();
 	}
 	
-	public abstract void processMessage();
-
 }

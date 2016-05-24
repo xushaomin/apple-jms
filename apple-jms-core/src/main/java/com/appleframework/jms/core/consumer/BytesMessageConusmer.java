@@ -11,17 +11,7 @@ import com.appleframework.jms.core.utils.ByteUtils;
  * @author xusm
  * 
  */
-public abstract class BytesMessageConusmer extends MessageConusmer implements MessageListener {
-	
-	protected Object message;
-	
-	public Object getMessage() {
-		return message;
-	}
-
-	public void setMessage(Object message) {
-		this.message = message;
-	}
+public abstract class BytesMessageConusmer extends MessageConusmer<Object> implements MessageListener {
 
 	public void onMessage(Message message) {
 		try {
@@ -37,13 +27,10 @@ public abstract class BytesMessageConusmer extends MessageConusmer implements Me
 					e.printStackTrace();
 				}
 			}
-			setMessage(object);
+			processMessage(object);
 		} catch (JMSException e) {
 			e.printStackTrace();
 		}
-		processMessage();
 	}
 	
-	public abstract void processMessage();	
-
 }
