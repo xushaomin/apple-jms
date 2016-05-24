@@ -26,7 +26,7 @@ import kafka.message.MessageAndMetadata;
  * @author Cruise.Xu
  * 
  */
-public abstract class MessageAndMetadataConsumer extends MessageConusmer {
+public abstract class MessageAndMetadataConsumer extends MessageConusmer<MessageAndMetadata<byte[], byte[]>> {
 	
 	private final static Logger logger = LoggerFactory.getLogger(MessageAndMetadataConsumer.class);
 	
@@ -38,11 +38,7 @@ public abstract class MessageAndMetadataConsumer extends MessageConusmer {
 	protected Integer partitionsNum;
 	
 	private ConsumerConnector connector;
-	
-	protected MessageAndMetadata<byte[], byte[]> message;
-
-	public abstract void processMessage();
-		
+			
 	protected void init() {
 		
 		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
@@ -74,7 +70,7 @@ public abstract class MessageAndMetadataConsumer extends MessageConusmer {
                     ConsumerIterator<byte[], byte[]> it = stream.iterator();
 					while (it.hasNext()) {
 						MessageAndMetadata<byte[], byte[]> message = it.next();
-						setMessage(message);
+						processMessage(message);
 					}
                 }
             });
@@ -102,14 +98,6 @@ public abstract class MessageAndMetadataConsumer extends MessageConusmer {
 	public void destroy() {
 		if(null != connector)
 			connector.shutdown();
-	}
-
-	public MessageAndMetadata<byte[], byte[]> getMessage() {
-		return message;
-	}
-
-	public void setMessage(MessageAndMetadata<byte[], byte[]> message) {
-		this.message = message;
 	}
 	
 }

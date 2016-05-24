@@ -26,7 +26,7 @@ import kafka.message.MessageAndMetadata;
  * @author Cruise.Xu
  * 
  */
-public abstract class ObjectMessageConsumer extends MessageConusmer {
+public abstract class ObjectMessageConsumer extends MessageConusmer<Object> {
 	
 	private static Logger logger = Logger.getLogger(ObjectMessageConsumer.class.getName());
 	
@@ -38,9 +38,6 @@ public abstract class ObjectMessageConsumer extends MessageConusmer {
 	private Integer partitionsNum;
 	
 	private ConsumerConnector connector;
-	protected Object message;
-
-	public abstract void processMessage();
 			
 	protected void init() {
 		
@@ -71,8 +68,7 @@ public abstract class ObjectMessageConsumer extends MessageConusmer {
 						String topic = item.topic();
 						logger.info("topic=" + topic);
 						Object object = ByteUtils.fromByte(item.message());
-						setMessage(object);
-						processMessage();
+						processMessage(object);
 					}
                 }
             });
@@ -95,14 +91,6 @@ public abstract class ObjectMessageConsumer extends MessageConusmer {
 
 	public void setPartitionsNum(Integer partitionsNum) {
 		this.partitionsNum = partitionsNum;
-	}
-
-	public Object getMessage() {
-		return message;
-	}
-
-	public void setMessage(Object message) {
-		this.message = message;
 	}
 	
 	public void destroy() {

@@ -25,7 +25,7 @@ import kafka.javaapi.consumer.ConsumerConnector;
  * @author Cruise.Xu
  * 
  */
-public abstract class BytesMessageConsumer extends MessageConusmer {
+public abstract class BytesMessageConsumer extends MessageConusmer<byte[]> {
 	
 	private final static Logger logger = LoggerFactory.getLogger(BytesMessageConsumer.class);
 	
@@ -37,11 +37,7 @@ public abstract class BytesMessageConsumer extends MessageConusmer {
 	protected Integer partitionsNum;
 	
 	private ConsumerConnector connector;
-	
-	protected byte[] message;
-
-	public abstract void processMessage();
-		
+			
 	protected void init() {
 		
 		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
@@ -73,7 +69,7 @@ public abstract class BytesMessageConsumer extends MessageConusmer {
                     ConsumerIterator<byte[], byte[]> it = stream.iterator();
 					while (it.hasNext()) {
 						byte[] message = it.next().message();
-						setMessage(message);
+						processMessage(message);
 					}
                 }
             });
@@ -96,14 +92,6 @@ public abstract class BytesMessageConsumer extends MessageConusmer {
 
 	public void setPartitionsNum(Integer partitionsNum) {
 		this.partitionsNum = partitionsNum;
-	}
-
-	public byte[] getMessage() {
-		return message;
-	}
-
-	public void setMessage(byte[] message) {
-		this.message = message;
 	}
 	
 	public void destroy() {
