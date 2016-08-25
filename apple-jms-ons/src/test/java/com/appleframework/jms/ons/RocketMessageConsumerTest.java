@@ -8,9 +8,8 @@ import com.appleframework.jms.ons.consumer.ObjectMessageConsumer;
  */
 public class RocketMessageConsumerTest extends ObjectMessageConsumer {
 
-	@Override
-	public void processMessage() {
-		System.out.println(message);
+	
+	public void processMessage(Object message) {
 		
 	}
 	

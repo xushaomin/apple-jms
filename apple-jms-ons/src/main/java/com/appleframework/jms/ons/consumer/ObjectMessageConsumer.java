@@ -20,7 +20,7 @@ import com.appleframework.jms.ons.RocketMQPushConsumer;
  * @author Cruise.Xu
  * 
  */
-public abstract class ObjectMessageConsumer extends MessageConusmer {
+public abstract class ObjectMessageConsumer extends MessageConusmer<Object> {
 	
 	private final static Logger logger = LoggerFactory.getLogger(ObjectMessageConsumer.class);
 	
@@ -29,11 +29,6 @@ public abstract class ObjectMessageConsumer extends MessageConusmer {
 	private String topic;
 	
 	private String tags;
-	
-	protected Object message;
-	
-
-	public abstract void processMessage();
 			
 	protected void init() throws MQClientException {
         consumer.subscribe(topic, tags);
@@ -42,8 +37,8 @@ public abstract class ObjectMessageConsumer extends MessageConusmer {
                 public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext Context) {
                     Message msg = list.get(0);
                     logger.info(msg.toString());
-                    message = ByteUtils.fromByte(msg.getBody());
-                    processMessage();
+                    Object message = ByteUtils.fromByte(msg.getBody());
+                    processMessage(message);
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
             }
@@ -53,14 +48,6 @@ public abstract class ObjectMessageConsumer extends MessageConusmer {
 
 	public void setTopic(String topic) {
 		this.topic = topic.trim().replaceAll(" ", "");
-	}
-
-	public Object getMessage() {
-		return message;
-	}
-
-	public void setMessage(Object message) {
-		this.message = message;
 	}
 	
 	public void setConsumer(RocketMQPushConsumer consumer) {
