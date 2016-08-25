@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.appleframework.jms.rocketmq.producer.RocketMessageProducer4;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:config/spring-producer.xml" })
+@ContextConfiguration(locations = { "classpath:config/spring-producer2.xml" })
 public class RocketMessageProducerTest2 {
 
 	private static Logger logger = Logger.getLogger(RocketMessageProducerTest2.class.getName());
@@ -22,10 +22,10 @@ public class RocketMessageProducerTest2 {
 	@Test
 	public void testAddOpinion1() {
 		try {
-			for (int i = 0; i < 10; i++) {
-				messageProducer4.sendText("xu", "i", i + "", "xuxuxuxuxu" + i);
+			for (int i = 40000; i < 50000; i++) {
+				messageProducer4.sendText("mqtest99", "xu", i + "", "xuxu_test_" + i);
 			}
-			logger.error("------------------");
+			logger.error("------");
 			System.in.read();
 		} catch (Exception e) {
 			e.printStackTrace();
