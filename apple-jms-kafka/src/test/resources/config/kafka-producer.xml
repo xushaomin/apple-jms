@@ -11,8 +11,10 @@
             <props>
         		<prop key="serializer.class">kafka.serializer.DefaultEncoder</prop>
         		<prop key="metadata.broker.list">${metadata.broker.list}</prop>
-        		<prop key="producer.type">async</prop>
-        		<prop key="request.required.acks">1</prop>
+        		<prop key="producer.type">sync</prop>
+    			<prop key="request.required.acks">1</prop>
+        		<prop key="partitioner.class">com.appleframework.jms.kafka.partitions.RandomPartitioner</prop>
+                <prop key="key.serializer.class">kafka.serializer.StringEncoder</prop>
             </props>
         </property>
     </bean>
