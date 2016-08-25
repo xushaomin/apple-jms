@@ -20,7 +20,7 @@ import com.appleframework.jms.rocketmq.RocketMQPushConsumer;
  * @author Cruise.Xu
  * 
  */
-public abstract class BytesMessageConsumer extends MessageConusmer {
+public abstract class BytesMessageConsumer extends MessageConusmer<byte[]> {
 	
 	private final static Logger logger = LoggerFactory.getLogger(BytesMessageConsumer.class);
 	
@@ -29,11 +29,7 @@ public abstract class BytesMessageConsumer extends MessageConusmer {
 	private String topic;
 	
 	private String tags;
-	
-	protected byte[] message;
-
-	public abstract void processMessage();
-	
+		
 	public void setConsumer(RocketMQPushConsumer consumer) {
 		this.consumer = consumer;
 	}
@@ -53,20 +49,13 @@ public abstract class BytesMessageConsumer extends MessageConusmer {
                 public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext Context) {
                     Message msg = list.get(0);
                     logger.info(msg.toString());
-                    message = msg.getBody();
-                    processMessage();
+                    byte[] message = msg.getBody();
+                    processMessage(message);
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
             }
         );
         consumer.start();
 	}
-
-	public byte[] getMessage() {
-		return message;
-	}
-
-	public void setMessage(byte[] message) {
-		this.message = message;
-	}
+	
 }
