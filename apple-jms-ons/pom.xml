@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>apple-jms</artifactId>
 		<groupId>com.appleframework.jms</groupId>
-		<version>0.1.0.RELEASE</version>
+		<version>0.1.2.RELEASE</version>
 	</parent>
 	<artifactId>apple-jms-ons</artifactId>
 	<name>apple-jms-ons</name>
