@@ -1,6 +1,6 @@
 package com.appleframework.jms.ons;
 
-import com.alibaba.rocketmq.client.consumer.DefaultMQPullConsumer;
+import com.aliyun.openservices.shade.com.alibaba.rocketmq.client.consumer.DefaultMQPullConsumer;
 
 public class RocketMQPullConsumer extends DefaultMQPullConsumer {
 

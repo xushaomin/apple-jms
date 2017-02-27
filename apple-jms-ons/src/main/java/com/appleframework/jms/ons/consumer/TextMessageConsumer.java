@@ -2,16 +2,14 @@ package com.appleframework.jms.ons.consumer;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
-import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
-import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
-import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
-import com.alibaba.rocketmq.client.exception.MQClientException;
-import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
-import com.alibaba.rocketmq.common.message.Message;
-import com.alibaba.rocketmq.common.message.MessageExt;
+import com.aliyun.openservices.shade.com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
+import com.aliyun.openservices.shade.com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
+import com.aliyun.openservices.shade.com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
+import com.aliyun.openservices.shade.com.alibaba.rocketmq.client.exception.MQClientException;
+import com.aliyun.openservices.shade.com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
+import com.aliyun.openservices.shade.com.alibaba.rocketmq.common.message.MessageExt;
 import com.appleframework.jms.core.consumer.MessageConusmer;
 import com.appleframework.jms.core.utils.ByteUtils;
 import com.appleframework.jms.ons.RocketMQPushConsumer;
@@ -22,7 +20,7 @@ import com.appleframework.jms.ons.RocketMQPushConsumer;
  */
 public abstract class TextMessageConsumer extends MessageConusmer<String> {
 	
-	private final static Logger logger = LoggerFactory.getLogger(TextMessageConsumer.class);
+	private final static Logger logger = Logger.getLogger(TextMessageConsumer.class);
 	
 	private RocketMQPushConsumer consumer;
 	
@@ -35,7 +33,7 @@ public abstract class TextMessageConsumer extends MessageConusmer<String> {
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);  
         consumer.registerMessageListener(new MessageListenerConcurrently() {
                 public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext Context) {
-                    Message msg = list.get(0);
+                	MessageExt msg = list.get(0);
                     logger.info(msg.toString());
                     String message = (String)ByteUtils.fromByte(msg.getBody());
                     processMessage(message);

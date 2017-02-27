@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.appleframework.jms</groupId>
 		<artifactId>apple-jms</artifactId>
-		<version>0.1.3.RELEASE</version>
+		<version>0.1.4.RELEASE</version>
 	</parent>
 	<artifactId>apple-jms-kafka</artifactId>
 	<name>apple-jms-kafka</name>
@@ -23,7 +23,7 @@
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
 			<artifactId>kafka_2.11</artifactId>
-			<version>0.8.2.2</version>
+			<version>0.10.2.0</version>
 		</dependency>
 		
 		<dependency>

@@ -23,8 +23,8 @@ public class KafkaMessageProducerTest {
 	public void testAddOpinion1() {
 		try {
 			long t = System.currentTimeMillis();
-			for (int i = 1; i <= 10000; i++) {
-				messageProducer.sendText("xxxxxxxxxxxxxxxxxxxxx" + i);
+			for (int i = 1; i <= 100000; i++) {
+				messageProducer.sendText("xxxxxxxxxxxxxxxxxxxxx " + i);
 			}
 			System.out.println(System.currentTimeMillis() - t);
 			logger.error("------------------");

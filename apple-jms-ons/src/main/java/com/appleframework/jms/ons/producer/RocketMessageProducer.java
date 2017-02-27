@@ -2,8 +2,7 @@ package com.appleframework.jms.ons.producer;
 
 import java.io.Serializable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.SendResult;
@@ -19,7 +18,7 @@ import com.appleframework.jms.ons.RocketMQProducer;
  */
 public class RocketMessageProducer implements MessageProducer {
 	
-	private final static Logger logger = LoggerFactory.getLogger(RocketMessageProducer.class);
+	private final static Logger logger = Logger.getLogger(RocketMessageProducer.class);
 
 	private RocketMQProducer producer;
 	
