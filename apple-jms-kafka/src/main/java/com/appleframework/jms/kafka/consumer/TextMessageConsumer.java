@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.appleframework.jms.core.consumer.MessageConusmer;
-import com.appleframework.jms.core.utils.ByteUtils;
 
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
@@ -71,7 +70,7 @@ public abstract class TextMessageConsumer extends MessageConusmer<String> {
                     ConsumerIterator<byte[], byte[]> it = stream.iterator();
 					while (it.hasNext()) {
 						byte[] message = it.next().message();
-						String object = (String)ByteUtils.fromByte(message);
+						String object = new String(message);
 						processMessage(object);
 					}
                 }

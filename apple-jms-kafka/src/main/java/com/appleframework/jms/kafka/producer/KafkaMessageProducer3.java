@@ -48,7 +48,7 @@ public class KafkaMessageProducer3 implements MessageProducer3 {
 	public void sendText(String topic, String key, String message) throws JmsException {
 		try {
 			KeyedMessage<String, byte[]> producerData 
-				= new KeyedMessage<String, byte[]>(topic, key, ByteUtils.toBytes(message));
+				= new KeyedMessage<String, byte[]>(topic, key, message.getBytes());
 			producer.send(producerData);
 		} catch (Exception e) {
 			throw new MQException(e);
