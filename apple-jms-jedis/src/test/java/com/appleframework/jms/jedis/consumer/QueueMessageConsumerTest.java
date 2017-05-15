@@ -9,10 +9,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath*:config/apple-jms-jedis-consumer.xml" })
-public class JedisQueueMessageConsumerTest {
+public class QueueMessageConsumerTest {
 	
 	@Resource
-	private JedisQueueMessageConsumerImpl messageConsumer;
+	private QueueMessageConsumerImpl messageConsumer;
     
 	@Test
 	public void testAddOpinion1() {

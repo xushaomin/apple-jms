@@ -1,8 +1,8 @@
 package com.appleframework.jms.jedis.consumer;
 
-import com.appleframework.jms.jedis.consumer.BytesQueueMessageConsumer;
+import com.appleframework.jms.jedis.consumer.QueueBytesMessageConsumer;
 
-public class JedisQueueMessageConsumerImpl extends BytesQueueMessageConsumer {
+public class QueueMessageConsumerImpl extends QueueBytesMessageConsumer {
 
 	@Override
 	public void processMessage(byte[] message) {

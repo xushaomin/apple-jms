@@ -8,7 +8,7 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 
 import com.appleframework.cache.jedis.factory.PoolFactory;
-import com.appleframework.jms.core.consumer.MessageConusmer;
+import com.appleframework.jms.core.consumer.MessageConusmer2;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -18,24 +18,27 @@ import redis.clients.jedis.JedisPool;
  * 
  */
 @SuppressWarnings("deprecation")
-public abstract class BytesQueueMessageConsumer extends MessageConusmer<byte[]> {
-
-	private static Logger logger = Logger.getLogger(BytesQueueMessageConsumer.class);
-
+public class QueueBytesMessageConsumer2 {
+	
+	private static Logger logger = Logger.getLogger(QueueBytesMessageConsumer2.class);
+	
 	@Resource
-	protected PoolFactory poolFactory;
+	private MessageConusmer2<byte[]> messageConusmer2;
+	
+	@Resource
+	private PoolFactory poolFactory;
 
 	protected String topic;
 
 	private boolean poolRunning = true;
-	
+		
 	private void fetchMessage(String topic) {
 		JedisPool jedisPool = poolFactory.getReadPool();
 		Jedis jedis = jedisPool.getResource();
 		try {
 			byte[] value = jedis.rpop(topic.getBytes());
 			if (null != value) {
-				processMessage(value);
+				messageConusmer2.processMessage(value);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -45,6 +48,7 @@ public abstract class BytesQueueMessageConsumer extends MessageConusmer<byte[]> 
 	}
 
 	protected void init() {
+
 		String[] topics = topic.split(",");
 		final ExecutorService executor = Executors.newFixedThreadPool(topics.length);
 
@@ -53,9 +57,8 @@ public abstract class BytesQueueMessageConsumer extends MessageConusmer<byte[]> 
 			executor.submit(new Runnable() {
 				@Override
 				public void run() {
-					while(poolRunning) {
+					if(poolRunning)
 						fetchMessage(topicc);
-					}
 				}
 			});
 		}
@@ -71,12 +74,7 @@ public abstract class BytesQueueMessageConsumer extends MessageConusmer<byte[]> 
 		this.topic = topic.trim().replaceAll(" ", "");
 	}
 
-	public void setPoolFactory(PoolFactory poolFactory) {
-		this.poolFactory = poolFactory;
-	}
-
 	public void destroy() {
-		poolRunning = false;
-	}
 
+	}
 }

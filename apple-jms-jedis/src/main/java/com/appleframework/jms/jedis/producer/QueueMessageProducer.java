@@ -17,9 +17,9 @@ import redis.clients.jedis.JedisPool;
  * 
  */
 @SuppressWarnings("deprecation")
-public class JedisQueueMessageProducer implements MessageProducer {
+public class QueueMessageProducer implements MessageProducer {
 	
-	private static Logger logger = Logger.getLogger(JedisQueueMessageProducer.class);
+	private static Logger logger = Logger.getLogger(QueueMessageProducer.class);
 
 	private PoolFactory poolFactory;
 	

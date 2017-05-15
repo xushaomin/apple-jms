@@ -30,10 +30,9 @@
 		<property name="slavePoolConfig" ref="poolConfig" />
 	</bean>	
 	
-	<bean id="messageConsumer" class="com.appleframework.jms.jedis.consumer.JedisQueueMessageConsumerImpl"
-		init-method="init">
+	<bean id="messageProducer" class="com.appleframework.jms.jedis.producer.TopicMessageProducer">
 		<property name="poolFactory" ref="poolFactory" />
-		<property name="topic" value="test" />
+		<property name="topic" value="test2" />
 	</bean>	
 	
 </beans>

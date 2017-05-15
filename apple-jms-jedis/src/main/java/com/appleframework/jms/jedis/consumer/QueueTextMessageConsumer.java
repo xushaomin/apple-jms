@@ -8,7 +8,7 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 
 import com.appleframework.cache.jedis.factory.PoolFactory;
-import com.appleframework.jms.core.consumer.MessageConusmer2;
+import com.appleframework.jms.core.consumer.MessageConusmer;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -18,27 +18,24 @@ import redis.clients.jedis.JedisPool;
  * 
  */
 @SuppressWarnings("deprecation")
-public class BytesQueueMessageConsumer2 {
-	
-	private static Logger logger = Logger.getLogger(BytesQueueMessageConsumer2.class);
-	
+public abstract class QueueTextMessageConsumer extends MessageConusmer<String> {
+
+	private static Logger logger = Logger.getLogger(QueueTextMessageConsumer.class);
+
 	@Resource
-	private MessageConusmer2<byte[]> messageConusmer2;
-	
-	@Resource
-	private PoolFactory poolFactory;
+	protected PoolFactory poolFactory;
 
 	protected String topic;
 
 	private boolean poolRunning = true;
-		
+	
 	private void fetchMessage(String topic) {
 		JedisPool jedisPool = poolFactory.getReadPool();
 		Jedis jedis = jedisPool.getResource();
 		try {
 			byte[] value = jedis.rpop(topic.getBytes());
 			if (null != value) {
-				messageConusmer2.processMessage(value);
+				processMessage(new String(value));
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -48,7 +45,6 @@ public class BytesQueueMessageConsumer2 {
 	}
 
 	protected void init() {
-
 		String[] topics = topic.split(",");
 		final ExecutorService executor = Executors.newFixedThreadPool(topics.length);
 
@@ -57,8 +53,9 @@ public class BytesQueueMessageConsumer2 {
 			executor.submit(new Runnable() {
 				@Override
 				public void run() {
-					if(poolRunning)
+					while(poolRunning) {
 						fetchMessage(topicc);
+					}
 				}
 			});
 		}
@@ -74,7 +71,12 @@ public class BytesQueueMessageConsumer2 {
 		this.topic = topic.trim().replaceAll(" ", "");
 	}
 
-	public void destroy() {
-
+	public void setPoolFactory(PoolFactory poolFactory) {
+		this.poolFactory = poolFactory;
 	}
+
+	public void destroy() {
+		poolRunning = false;
+	}
+
 }

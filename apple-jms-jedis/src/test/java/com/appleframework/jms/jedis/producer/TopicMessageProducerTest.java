@@ -11,10 +11,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.appleframework.jms.core.producer.MessageProducer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath*:config/apple-jms-jedis-producer.xml" })
-public class JedisQueueMessageProducerTest {
+@ContextConfiguration(locations = { "classpath*:config/apple-jms-jedis-topic-producer.xml" })
+public class TopicMessageProducerTest {
 
-	private static Logger logger = Logger.getLogger(JedisQueueMessageProducerTest.class.getName());
+	private static Logger logger = Logger.getLogger(TopicMessageProducerTest.class.getName());
 
 	@Resource
 	private MessageProducer messageProducer;
