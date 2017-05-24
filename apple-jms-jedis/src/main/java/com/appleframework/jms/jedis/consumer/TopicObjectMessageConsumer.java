@@ -1,7 +1,5 @@
 package com.appleframework.jms.jedis.consumer;
 
-import javax.annotation.Resource;
-
 import org.apache.log4j.Logger;
 
 import com.appleframework.cache.jedis.factory.PoolFactory;
@@ -21,7 +19,6 @@ public abstract class TopicObjectMessageConsumer extends MessageConusmer<Object>
 
 	private static Logger logger = Logger.getLogger(TopicObjectMessageConsumer.class);
 
-	@Resource
 	protected PoolFactory poolFactory;
 
 	protected String topic;

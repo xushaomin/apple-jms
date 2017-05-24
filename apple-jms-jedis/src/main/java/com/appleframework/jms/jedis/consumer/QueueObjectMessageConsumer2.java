@@ -3,8 +3,6 @@ package com.appleframework.jms.jedis.consumer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.annotation.Resource;
-
 import org.apache.log4j.Logger;
 
 import com.appleframework.cache.jedis.factory.PoolFactory;
@@ -23,10 +21,8 @@ public class QueueObjectMessageConsumer2 {
 	
 	private static Logger logger = Logger.getLogger(QueueObjectMessageConsumer2.class);
 	
-	@Resource
 	private MessageConusmer2<Object> messageConusmer2;
 	
-	@Resource
 	private PoolFactory poolFactory;
 
 	protected String topic;

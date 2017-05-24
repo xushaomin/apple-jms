@@ -1,7 +1,5 @@
 package com.appleframework.jms.jedis.consumer;
 
-import javax.annotation.Resource;
-
 import org.apache.log4j.Logger;
 
 import com.appleframework.cache.jedis.factory.PoolFactory;
@@ -20,10 +18,8 @@ public class TopicBytesMessageConsumer2 {
 
 	private static Logger logger = Logger.getLogger(TopicBytesMessageConsumer2.class);
 
-	@Resource
 	private MessageConusmer2<byte[]> messageConusmer2;
 	
-	@Resource
 	protected PoolFactory poolFactory;
 
 	protected String topic;
