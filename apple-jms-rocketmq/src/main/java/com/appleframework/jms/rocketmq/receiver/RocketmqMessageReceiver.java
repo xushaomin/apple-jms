@@ -12,7 +12,7 @@ import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
 import com.alibaba.rocketmq.common.message.Message;
 import com.alibaba.rocketmq.common.message.MessageExt;
-import com.appleframework.jms.core.consumer.MessageConusmer;
+import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 import com.appleframework.jms.core.utils.ByteUtils;
 import com.appleframework.jms.rocketmq.RocketMQPushConsumer;
 
@@ -20,7 +20,7 @@ import com.appleframework.jms.rocketmq.RocketMQPushConsumer;
  * @author Cruise.Xu
  * 
  */
-public abstract class RocketmqMessageReceiver extends MessageConusmer<Object> {
+public abstract class RocketmqMessageReceiver extends AbstractMessageConusmer<Object> {
 	
 	private final static Logger logger = LoggerFactory.getLogger(RocketmqMessageReceiver.class);
 	

@@ -3,25 +3,20 @@ package com.appleframework.jms.rocketmq.consumer;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.Message;
 import com.alibaba.rocketmq.common.message.MessageExt;
-import com.appleframework.jms.core.consumer.BytesMessageConusmer;
+import com.appleframework.jms.core.consumer.IMessageConusmer;
 import com.appleframework.jms.rocketmq.RocketMQPushConsumer;
 
 /**
  * @author Cruise.Xu
  * 
  */
-public abstract class BaseMessageConsumer extends BytesMessageConusmer {
-
-	private final static Logger logger = LoggerFactory.getLogger(BaseMessageConsumer.class);
+public abstract class OriginalMessageConsumer implements IMessageConusmer<Message> {
 
 	private RocketMQPushConsumer consumer;
 
@@ -63,9 +58,7 @@ public abstract class BaseMessageConsumer extends BytesMessageConusmer {
 		consumer.registerMessageListener(new MessageListenerConcurrently() {
 			public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext Context) {
 				Message msg = list.get(0);
-				logger.info(msg.toString());
-				byte[] message = msg.getBody();
-				processByteMessage(message);
+				processMessage(msg);
 				return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 			}
 		});

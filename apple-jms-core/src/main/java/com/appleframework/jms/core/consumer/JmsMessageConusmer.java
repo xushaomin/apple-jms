@@ -7,7 +7,7 @@ import javax.jms.MessageListener;
  * @author xusm
  * 
  */
-public abstract class JmsMessageConusmer extends MessageConusmer<Message> implements MessageListener {
+public abstract class JmsMessageConusmer extends AbstractMessageConusmer<Message> implements MessageListener {
 	
 	public void onMessage(Message message) {
 		processMessage(message);

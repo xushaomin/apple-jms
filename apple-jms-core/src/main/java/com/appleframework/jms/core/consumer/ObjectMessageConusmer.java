@@ -10,7 +10,7 @@ import javax.jms.ObjectMessage;
  * @author xusm
  * 
  */
-public abstract class ObjectMessageConusmer extends MessageConusmer<Object> implements MessageListener {
+public abstract class ObjectMessageConusmer extends AbstractMessageConusmer<Object> implements MessageListener {
 	
 	public void onMessage(Message message) {
 		try {

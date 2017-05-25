@@ -9,21 +9,20 @@ import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 
-import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
+import com.appleframework.jms.core.consumer.BytesMessageConusmer;
 
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
-import kafka.message.MessageAndMetadata;
 
 
 /**
  * @author Cruise.Xu
  * 
  */
-public abstract class MessageAndMetadataConsumer extends AbstractMessageConusmer<MessageAndMetadata<byte[], byte[]>> {
+public abstract class BaseMessageConsumer extends BytesMessageConusmer {
 		
 	@Resource
 	private ConsumerConfig consumerConfig;
@@ -33,7 +32,7 @@ public abstract class MessageAndMetadataConsumer extends AbstractMessageConusmer
 	protected Integer partitionsNum;
 	
 	private ConsumerConnector connector;
-			
+				
 	protected void init() {
 		
 		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
@@ -51,15 +50,15 @@ public abstract class MessageAndMetadataConsumer extends AbstractMessageConusmer
 		for (int i = 0; i < topics.length; i++) {
 			streams.addAll(topicMessageStreams.get(topics[i]));
 		}
-
+		    
 		final ExecutorService executor = Executors.newFixedThreadPool(partitionsNum * topics.length);
 	    for (final KafkaStream<byte[], byte[]> stream : streams) {
 	    	executor.submit(new Runnable() {
 				public void run() {
                     ConsumerIterator<byte[], byte[]> it = stream.iterator();
 					while (it.hasNext()) {
-						MessageAndMetadata<byte[], byte[]> message = it.next();
-						processMessage(message);
+						byte[] message = it.next().message();
+						processByteMessage(message);
 					}
                 }
             });
@@ -88,5 +87,4 @@ public abstract class MessageAndMetadataConsumer extends AbstractMessageConusmer
 		if(null != connector)
 			connector.shutdown();
 	}
-	
 }

@@ -9,14 +9,14 @@ import javax.jms.MessageListener;
  */
 public abstract class JmsMessageConusmer2 implements MessageListener {
 	
-	private MessageConusmer2<Message> messageConusmer2;
+	private IMessageConusmer<Message> messageConusmer;
 	
-	public void setMessageConusmer2(MessageConusmer2<Message> messageConusmer2) {
-		this.messageConusmer2 = messageConusmer2;
+	public void setMessageConusmer(IMessageConusmer<Message> messageConusmer) {
+		this.messageConusmer = messageConusmer;
 	}
 
 	public void onMessage(Message message) {
-		messageConusmer2.processMessage(message);
+		messageConusmer.processMessage(message);
 	}
 	
 }

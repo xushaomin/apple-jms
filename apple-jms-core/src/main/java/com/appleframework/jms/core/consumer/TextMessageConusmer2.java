@@ -12,16 +12,16 @@ import javax.jms.TextMessage;
  */
 public class TextMessageConusmer2 implements MessageListener {
 	
-	private MessageConusmer2<String> messageConusmer2;
+	private IMessageConusmer<String> messageConusmer;
 	
-	public void setMessageConusmer2(MessageConusmer2<String> messageConusmer2) {
-		this.messageConusmer2 = messageConusmer2;
+	public void setMessageConusmer(IMessageConusmer<String> messageConusmer) {
+		this.messageConusmer = messageConusmer;
 	}
 
 	public void onMessage(Message message) {
 		try {
 			String object = ((TextMessage) message).getText();
-			messageConusmer2.processMessage(object);
+			messageConusmer.processMessage(object);
 		} catch (JMSException e) {
 			e.printStackTrace();
 		}

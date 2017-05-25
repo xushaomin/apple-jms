@@ -10,7 +10,7 @@ import com.aliyun.openservices.shade.com.alibaba.rocketmq.client.consumer.listen
 import com.aliyun.openservices.shade.com.alibaba.rocketmq.client.exception.MQClientException;
 import com.aliyun.openservices.shade.com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
 import com.aliyun.openservices.shade.com.alibaba.rocketmq.common.message.MessageExt;
-import com.appleframework.jms.core.consumer.MessageConusmer;
+import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 import com.appleframework.jms.core.utils.ByteUtils;
 import com.appleframework.jms.ons.RocketMQPushConsumer;
 
@@ -18,7 +18,7 @@ import com.appleframework.jms.ons.RocketMQPushConsumer;
  * @author Cruise.Xu
  * 
  */
-public abstract class TextMessageConsumer extends MessageConusmer<String> {
+public abstract class TextMessageConsumer extends AbstractMessageConusmer<String> {
 	
 	private final static Logger logger = Logger.getLogger(TextMessageConsumer.class);
 	

@@ -23,8 +23,9 @@ public class TopicMessageProducerTest {
 	public void testAddOpinion1() {
 		try {
 			long t = System.currentTimeMillis();
-			for (int i = 1; i <= 20; i++) {
+			for (int i = 1; i <= 2000000; i++) {
 				messageProducer.sendText("xxxxxxxxxxxxxxxxxxxxx " + i);
+				Thread.sleep(1000);
 			}
 			System.out.println(System.currentTimeMillis() - t);
 			logger.error("------------------");

@@ -1,76 +1,22 @@
 package com.appleframework.jms.jedis.consumer;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import org.apache.log4j.Logger;
-
-import com.appleframework.cache.jedis.factory.PoolFactory;
-import com.appleframework.jms.core.consumer.MessageConusmer2;
-
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
+import com.appleframework.jms.core.consumer.IMessageConusmer;
 
 /**
  * @author Cruise.Xu
  * 
  */
-@SuppressWarnings("deprecation")
-public class QueueBytesMessageConsumer2 {
-	
-	private static Logger logger = Logger.getLogger(QueueBytesMessageConsumer2.class);
-	
-	private MessageConusmer2<byte[]> messageConusmer2;
-	
-	private PoolFactory poolFactory;
+public class QueueBytesMessageConsumer2 extends QueueBaseMessageConsumer {
 
-	protected String topic;
+	private IMessageConusmer<byte[]> messageConusmer;
 
-	private boolean poolRunning = true;
-		
-	private void fetchMessage(String topic) {
-		JedisPool jedisPool = poolFactory.getReadPool();
-		Jedis jedis = jedisPool.getResource();
-		try {
-			byte[] value = jedis.rpop(topic.getBytes());
-			if (null != value) {
-				messageConusmer2.processMessage(value);
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		} finally {
-			jedisPool.returnResource(jedis);
-		}
+	public void setMessageConusmer2(IMessageConusmer<byte[]> messageConusmer2) {
+		this.messageConusmer = messageConusmer2;
 	}
 
-	protected void init() {
-
-		String[] topics = topic.split(",");
-		final ExecutorService executor = Executors.newFixedThreadPool(topics.length);
-
-		for (int i = 0; i < topics.length; i++) {
-			final String topicc = topics[i];
-			executor.submit(new Runnable() {
-				@Override
-				public void run() {
-					if(poolRunning)
-						fetchMessage(topicc);
-				}
-			});
-		}
-
-		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-			public void run() {
-				executor.shutdown();
-			}
-		}));
+	@Override
+	public void processByteMessage(byte[] message) {
+		messageConusmer.processMessage(message);
 	}
 
-	public void setTopic(String topic) {
-		this.topic = topic.trim().replaceAll(" ", "");
-	}
-
-	public void destroy() {
-
-	}
 }

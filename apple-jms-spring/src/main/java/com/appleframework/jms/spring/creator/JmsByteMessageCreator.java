@@ -18,7 +18,7 @@ public class JmsByteMessageCreator implements MessageCreator {
 	public Message createMessage(Session session) throws JMSException {
 		BytesMessage bytesMessage = session.createBytesMessage();
 		try {
-			bytesMessage.writeBytes(message);// 将字节数组填充到消息中作为消息主体
+			bytesMessage.writeBytes(message);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
