@@ -18,6 +18,14 @@
 		</property>
 	</bean>
 
-	<import resource="classpath*:META-INF/apple/rocketmq-producer.xml" />
+	<bean id="producer" class="com.appleframework.jms.rocketmq.RocketMQProducer" init-method="init" destroy-method="close">
+    	<property name="namesrvAddr" value="${producer.namesrvAddr}" />
+      	<property name="producerGroup" value="${producer.producerGroup}" />
+    </bean>
+    
+    <bean id="messageProducer" class="com.appleframework.jms.rocketmq.producer.RocketMessageProducer">
+		<property name="producer" ref="producer" />
+		<property name="topic" value="${producer.topic}" />
+	</bean>
 	 
 </beans>

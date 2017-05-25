@@ -5,22 +5,10 @@ import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
 
 public class RocketMQPushConsumer extends DefaultMQPushConsumer {
 
-	private String namesrvAddr;
+	private String consumeFrom;
 
-	private String consumerGroup;
-	
-	private String consumeFromWhere;
-
-	public void setNamesrvAddr(String namesrvAddr) {
-		this.namesrvAddr = namesrvAddr;
-	}
-
-	public void setConsumerGroup(String consumerGroup) {
-		this.consumerGroup = consumerGroup;
-	}
-	
-	public void setConsumeFromWhere(String consumeFromWhere) {
-		this.consumeFromWhere = consumeFromWhere;
+	public void setConsumeFrom(String consumeFrom) {
+		this.consumeFrom = consumeFrom;
 	}
 
 	public void close() {
@@ -28,13 +16,11 @@ public class RocketMQPushConsumer extends DefaultMQPushConsumer {
 	}
 
 	public void init() {
-		ConsumeFromWhere consumeFrom = ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET;
-		if("CONSUME_FROM_FIRST_OFFSET".equals(consumeFromWhere)) {
-			consumeFrom = ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET;
+		ConsumeFromWhere consumeFromWhere = ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET;
+		if("CONSUME_FROM_FIRST_OFFSET".equals(consumeFrom)) {
+			consumeFromWhere = ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET;
 		}
-		super.setNamesrvAddr(namesrvAddr);
-		super.setConsumerGroup(consumerGroup);
-		this.setConsumeFromWhere(consumeFrom);
+		super.setConsumeFromWhere(consumeFromWhere);
 	}
 
 }

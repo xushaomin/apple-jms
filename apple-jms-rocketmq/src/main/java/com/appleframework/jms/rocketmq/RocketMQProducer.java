@@ -1,34 +1,24 @@
 package com.appleframework.jms.rocketmq;
 
+import org.apache.log4j.Logger;
+
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 
 public class RocketMQProducer extends DefaultMQProducer {
 	
-	private String namesrvAddr;
-	
-	private String producerGroup;
-
-	public void setNamesrvAddr(String namesrvAddr) {
-		this.namesrvAddr = namesrvAddr;
-	}
-
-	public void setProducerGroup(String producerGroup) {
-		this.producerGroup = producerGroup;
-	}
+	private static Logger logger = Logger.getLogger(RocketMQProducer.class.getName());
 
 	public void init() {
 		try {
-			super.setProducerGroup(producerGroup);
-			super.setNamesrvAddr(namesrvAddr);
-			this.start();
+			start();
 		} catch (MQClientException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 	}
 
 	public void close() {
-		this.shutdown();
+		shutdown();
 	}
 
 }

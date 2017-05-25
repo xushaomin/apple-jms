@@ -23,9 +23,9 @@ public class RocketMessageProducerTest {
 	public void testAddOpinion1() {
 		try {
 			long t = System.currentTimeMillis();
-			for (int i = 1; i <= 10000; i++) {
-				//messageProducer.sendText("xu", "i", i + "", "xxxxxxxxxxxxxxxxxxxxx" + i);
-				messageProducer.sendText("xxxxxxxxxxxxxxxxxxxxx" + i);
+			for (int i = 2001; i <= 3000; i++) {
+				messageProducer.sendText("ddddddddd====" + i);
+				System.out.println(i);
 			}
 			System.out.println(System.currentTimeMillis() - t);
 			logger.error("------------------");

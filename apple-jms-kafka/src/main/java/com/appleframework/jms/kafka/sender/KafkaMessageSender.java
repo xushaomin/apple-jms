@@ -16,6 +16,7 @@ import com.appleframework.jms.core.utils.ByteUtils;
  * @author Cruise.Xu
  * 
  */
+@SuppressWarnings("deprecation")
 public class KafkaMessageSender implements MessageSender {
 
 	private Producer<String, byte[]> producer;

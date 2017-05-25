@@ -11,7 +11,6 @@ public class RocketMessageConsumerTest extends ObjectMessageConsumer {
 	@Override
 	public void processMessage(Object message) {
 		System.out.println(message);
-		
 	}
 	
 }

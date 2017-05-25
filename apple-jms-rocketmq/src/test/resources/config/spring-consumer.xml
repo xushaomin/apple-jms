@@ -9,17 +9,24 @@
            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">	
 
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath*:rocketmq.properties</value>
+			</list>
+		</property>
+	</bean>
+	
 	<bean id="consumer" class="com.appleframework.jms.rocketmq.RocketMQPushConsumer" init-method="init" destroy-method="close">
     	<property name="namesrvAddr" value="${consumer.namesrvAddr}" />
       	<property name="consumerGroup" value="${consumer.consumerGroup}" />
+      	<property name="consumeFrom" value="${consumer.consumeFrom}" />
     </bean>	
 	
 	<bean id="test" class="com.appleframework.jms.rocketmq.RocketMessageConsumerTest" init-method="init">
-    	<property name="consumer" ref="pushConsumer" />
+    	<property name="consumer" ref="consumer" />
    		<property name="topic" value="${consumer.topic}" />
 		<property name="tags" value="${consumer.tags}" /> 
     </bean>
-    
-    
-	 
+    	 
 </beans>

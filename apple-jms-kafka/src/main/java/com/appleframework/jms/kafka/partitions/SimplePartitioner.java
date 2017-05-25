@@ -7,6 +7,7 @@ import kafka.utils.VerifiableProperties;
  * @author caicq
  * 
  */
+@SuppressWarnings("deprecation")
 public class SimplePartitioner implements Partitioner {
 
 	public SimplePartitioner(VerifiableProperties props) {

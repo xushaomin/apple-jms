@@ -2,7 +2,6 @@ package com.appleframework.jms.kafka;
 
 import org.apache.log4j.Logger;
 
-import com.appleframework.jms.core.utils.ByteUtils;
 import com.appleframework.jms.kafka.consumer.BytesMessageConsumer;
 
 public class KafkaMessageConsumer extends BytesMessageConsumer {

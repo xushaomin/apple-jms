@@ -12,6 +12,7 @@ import kafka.utils.VerifiableProperties;
  * @author cruise.xu
  * 
  */
+@SuppressWarnings("deprecation")
 public class RandomPartitioner implements Partitioner {
 	
 	private final static Logger logger = LoggerFactory.getLogger(RandomPartitioner.class);
