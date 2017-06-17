@@ -1,10 +1,12 @@
 package com.appleframework.jms.kafka.partitions;
 
+import com.appleframework.jms.kafka.utils.RandomUtility;
+
 import kafka.producer.Partitioner;
 import kafka.utils.VerifiableProperties;
 
 /**
- * @author caicq
+ * @author cruise.xu
  * 
  */
 @SuppressWarnings("deprecation")
@@ -15,9 +17,13 @@ public class SimplePartitioner implements Partitioner {
 
 	@Override
 	public int partition(Object key, int numPartitions) {
-		long partitionKey = Long.parseLong(key.toString());
-		int partition = (int) (partitionKey % numPartitions);
-		return partition;
+		if (null == key) {
+			return RandomUtility.genRandom(numPartitions);
+		} else {
+			int partitionKey = key.hashCode();
+			int partition = partitionKey % numPartitions;
+			return Math.abs(partition);
+		}
 	}
 
 }

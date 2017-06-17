@@ -22,7 +22,7 @@ public class RandomPartitioner implements Partitioner {
 
 	@Override
 	public int partition(Object key, int numPartitions) {
-		int partition = RandomUtility.genRandom(0, numPartitions);
+		int partition = RandomUtility.genRandom(numPartitions);
 		if(logger.isDebugEnabled()) {
 			logger.debug("The numPartitions = " + numPartitions + " and Random partition = " + partition);
 		}
