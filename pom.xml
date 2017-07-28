@@ -70,8 +70,8 @@
     	<module>apple-jms-rocketmq</module>
     	<module>apple-jms-kafka</module>
     	<module>apple-jms-ons</module>
-    <module>apple-jms-jedis</module>
-  </modules>
+    	<module>apple-jms-jedis</module>
+  	</modules>
 	
 	<build>
 		<plugins>
