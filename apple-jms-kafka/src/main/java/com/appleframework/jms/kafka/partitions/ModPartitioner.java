@@ -19,11 +19,14 @@ public class ModPartitioner implements Partitioner {
 	public int partition(Object key, int numPartitions) {
 		if (null == key) {
 			return RandomUtility.genRandom(numPartitions);
-		} else if(key instanceof Integer) {
-			int partition = (Integer)key % numPartitions;
+		} else if (key instanceof String) {
+			int partition = Integer.parseInt(key.toString()) % numPartitions;
 			return Math.abs(partition);
-		} else if(key instanceof Long) {
-			Long partition = (Long)key % numPartitions;
+		} else if (key instanceof Integer) {
+			int partition = (Integer) key % numPartitions;
+			return Math.abs(partition);
+		} else if (key instanceof Long) {
+			Long partition = (Long) key % numPartitions;
 			return Math.abs(partition.intValue());
 		} else {
 			return RandomUtility.genRandom(numPartitions);
