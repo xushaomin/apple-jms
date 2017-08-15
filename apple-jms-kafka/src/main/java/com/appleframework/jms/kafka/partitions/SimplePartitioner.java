@@ -17,7 +17,7 @@ public class SimplePartitioner implements Partitioner {
 
 	@Override
 	public int partition(Object key, int numPartitions) {
-		if (null == key) {
+		if (null == key || key.equals("-1")) {
 			return RandomUtility.genRandom(numPartitions);
 		} else {
 			int partitionKey = key.hashCode();
