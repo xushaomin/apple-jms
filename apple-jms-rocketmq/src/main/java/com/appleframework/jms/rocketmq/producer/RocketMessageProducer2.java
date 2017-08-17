@@ -24,18 +24,10 @@ public class RocketMessageProducer2 implements MessageProducer2 {
 	private final static Logger logger = LoggerFactory.getLogger(RocketMessageProducer2.class);
 
 	private RocketMQProducer producer;
-	private String topic;
+	private String tag, key;	
 
-	public void setTopic(String topic) {
-		this.topic = topic;
-	}
-
-	public void setProducer(RocketMQProducer producer) {
-		this.producer = producer;
-	}
-
-	public void sendByte(String keys, byte[] message) throws MQException {
-        Message msg = new Message(topic, null, keys, message);
+	public void sendByte(String topic, byte[] message) throws MQException {
+        Message msg = new Message(topic, tag, key, message);
         try {
         	SendResult result = producer.send(msg);
         	logger.info("msgId=" + result.getMsgId());
@@ -45,8 +37,8 @@ public class RocketMessageProducer2 implements MessageProducer2 {
 		}
 	}
 
-	public void sendObject(String keys, Serializable message) throws MQException {		
-		Message msg = new Message(topic, null, ByteUtils.toBytes(message));
+	public void sendObject(String topic, Serializable message) throws MQException {		
+		Message msg = new Message(topic, tag, key, ByteUtils.toBytes(message));
 		try {
 			SendResult result = producer.send(msg);
 			logger.info("msgId=" + result.getMsgId());
@@ -56,8 +48,8 @@ public class RocketMessageProducer2 implements MessageProducer2 {
 		}
 	}
 
-	public void sendText(String keys, String message) throws MQException {		
-		Message msg = new Message(topic, null, ByteUtils.toBytes(message));
+	public void sendText(String topic, String message) throws MQException {		
+		Message msg = new Message(topic, tag, key, ByteUtils.toBytes(message));
 		try {
 			SendResult result = producer.send(msg);
 			logger.info("msgId=" + result.getMsgId());
@@ -65,6 +57,17 @@ public class RocketMessageProducer2 implements MessageProducer2 {
 				| InterruptedException e) {
 			throw new MQException(e);
 		}
-	}	
+	}
 
+	public void setProducer(RocketMQProducer producer) {
+		this.producer = producer;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
 }

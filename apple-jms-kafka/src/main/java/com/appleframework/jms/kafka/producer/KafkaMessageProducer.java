@@ -21,6 +21,8 @@ public class KafkaMessageProducer implements MessageProducer {
 	
 	private String topic;
 	
+	private String key;
+	
 	public void setProducer(Producer<String, byte[]> producer) {
 		this.producer = producer;
 	}
@@ -29,10 +31,14 @@ public class KafkaMessageProducer implements MessageProducer {
 		this.topic = topic;
 	}
 	
+	public void setKey(String key) {
+		this.key = key;
+	}
+
 	public void sendByte(byte[] message) throws JmsException {
 		try {
 			KeyedMessage<String, byte[]> producerData 
-				= new KeyedMessage<String, byte[]>(topic, String.valueOf(-1), message);
+				= new KeyedMessage<String, byte[]>(topic, key, message);
 				producer.send(producerData);
 		} catch (Exception e) {
 			throw new MQException(e);
@@ -44,7 +50,7 @@ public class KafkaMessageProducer implements MessageProducer {
 	public void sendObject(Serializable message) throws JmsException {
 		try {
 		KeyedMessage<String, byte[]> producerData 
-			= new KeyedMessage<String, byte[]>(topic, String.valueOf(-1), ByteUtils.toBytes(message));
+			= new KeyedMessage<String, byte[]>(topic, key, ByteUtils.toBytes(message));
 		producer.send(producerData);
 		} catch (Exception e) {
 			throw new MQException(e);
@@ -55,7 +61,7 @@ public class KafkaMessageProducer implements MessageProducer {
 	public void sendText(String message) throws JmsException {
 		try {
 			KeyedMessage<String, byte[]> producerData 
-				= new KeyedMessage<String, byte[]>(topic, String.valueOf(-1), message.getBytes());
+				= new KeyedMessage<String, byte[]>(topic, key, message.getBytes());
 			producer.send(producerData);
 		} catch (Exception e) {
 			throw new MQException(e);

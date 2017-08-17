@@ -23,7 +23,7 @@ public class RocketMessageProducer4 implements MessageProducer4 {
 	
 	private final static Logger logger = LoggerFactory.getLogger(RocketMessageProducer4.class);
 
-	private RocketMQProducer producer;	
+	private RocketMQProducer producer;
 
 	public void setProducer(RocketMQProducer producer) {
 		this.producer = producer;

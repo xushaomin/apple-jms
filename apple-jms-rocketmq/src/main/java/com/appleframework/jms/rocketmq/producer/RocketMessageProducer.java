@@ -26,18 +26,10 @@ public class RocketMessageProducer implements MessageProducer {
 
 	private RocketMQProducer producer;
 	
-	private String topic;
-		
-	public void setProducer(RocketMQProducer producer) {
-		this.producer = producer;
-	}
-
-	public void setTopic(String topic) {
-		this.topic = topic;
-	}
+	private String topic, tag, key;	
 
 	public void sendByte(byte[] message) throws JmsException {
-        Message msg = new Message(topic, null, message);
+        Message msg = new Message(topic, tag, key, message);
         try {
 			SendResult result = producer.send(msg);
 			logger.info("msgId=" + result.getMsgId());
@@ -50,7 +42,7 @@ public class RocketMessageProducer implements MessageProducer {
 
 	@Override
 	public void sendObject(Serializable message) throws JmsException {		
-		Message msg = new Message(topic, null, ByteUtils.toBytes(message));
+		Message msg = new Message(topic, tag, key, ByteUtils.toBytes(message));
         try {
 			SendResult result = producer.send(msg);
 			logger.info("msgId=" + result.getMsgId());
@@ -63,7 +55,7 @@ public class RocketMessageProducer implements MessageProducer {
 
 	@Override
 	public void sendText(String message) throws JmsException {		
-		Message msg = new Message(topic, null, ByteUtils.toBytes(message));
+		Message msg = new Message(topic, tag, key, ByteUtils.toBytes(message));
         try {
 			SendResult result = producer.send(msg);
 			logger.info("msgId=" + result.getMsgId());
@@ -72,6 +64,22 @@ public class RocketMessageProducer implements MessageProducer {
 			logger.error(e.getMessage());
 			throw new MQException(e);
 		}
+	}
+
+	public void setProducer(RocketMQProducer producer) {
+		this.producer = producer;
+	}
+
+	public void setTopic(String topic) {
+		this.topic = topic;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
 	}
 
 }

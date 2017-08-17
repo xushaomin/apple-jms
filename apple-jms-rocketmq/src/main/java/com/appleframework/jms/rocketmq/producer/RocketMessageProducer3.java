@@ -23,14 +23,11 @@ public class RocketMessageProducer3 implements MessageProducer3 {
 	
 	private final static Logger logger = LoggerFactory.getLogger(RocketMessageProducer3.class);
 
-	private RocketMQProducer producer;	
-
-	public void setProducer(RocketMQProducer producer) {
-		this.producer = producer;
-	}
-
+	private RocketMQProducer producer;
+	private String tag;
+	
 	public void sendByte(String topic, String keys, byte[] message) throws MQException {
-        Message msg = new Message(topic, null, keys, message);
+        Message msg = new Message(topic, tag, keys, message);
         try {
         	SendResult result = producer.send(msg);
         	logger.info("msgId=" + result.getMsgId());
@@ -41,7 +38,7 @@ public class RocketMessageProducer3 implements MessageProducer3 {
 	}
 
 	public void sendObject(String topic, String keys, Serializable message) throws MQException {		
-		Message msg = new Message(topic, null, ByteUtils.toBytes(message));
+		Message msg = new Message(topic, tag, ByteUtils.toBytes(message));
 		try {
 			SendResult result = producer.send(msg);
 			logger.info("msgId=" + result.getMsgId());
@@ -52,7 +49,7 @@ public class RocketMessageProducer3 implements MessageProducer3 {
 	}
 
 	public void sendText(String topic, String keys, String message) throws MQException {		
-		Message msg = new Message(topic, null, ByteUtils.toBytes(message));
+		Message msg = new Message(topic, tag, ByteUtils.toBytes(message));
 		try {
 			SendResult result = producer.send(msg);
 			logger.info("msgId=" + result.getMsgId());
@@ -60,6 +57,10 @@ public class RocketMessageProducer3 implements MessageProducer3 {
 				| InterruptedException e) {
 			throw new MQException(e);
 		}
-	}	
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
 
 }
