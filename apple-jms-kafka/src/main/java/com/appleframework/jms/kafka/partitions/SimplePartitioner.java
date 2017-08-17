@@ -1,6 +1,7 @@
 package com.appleframework.jms.kafka.partitions;
 
 import com.appleframework.jms.kafka.utils.RandomUtility;
+import com.appleframework.jms.kafka.utils.StringUtils;
 
 import kafka.producer.Partitioner;
 import kafka.utils.VerifiableProperties;
@@ -17,7 +18,7 @@ public class SimplePartitioner implements Partitioner {
 
 	@Override
 	public int partition(Object key, int numPartitions) {
-		if (key.equals("-1")) {
+		if (StringUtils.isEmpty(key) || key.equals("-1")) {
 			return RandomUtility.genRandom(numPartitions);
 		} else {
 			int partitionKey = key.hashCode();

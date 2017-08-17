@@ -9,6 +9,7 @@ import com.appleframework.jms.core.exception.JmsException;
 import com.appleframework.jms.core.exception.MQException;
 import com.appleframework.jms.core.producer.MessageProducer2;
 import com.appleframework.jms.core.utils.ByteUtils;
+import com.appleframework.jms.kafka.utils.StringUtils;
 
 /**
  * @author Cruise.Xu
@@ -19,14 +20,17 @@ public class KafkaMessageProducer2 implements MessageProducer2 {
 
 	private Producer<String, byte[]> producer;
 	
-	private String key;
+	private String key = "-1";
 
 	public void setProducer(Producer<String, byte[]> producer) {
 		this.producer = producer;
 	}
 	
 	public void setKey(String key) {
-		this.key = key;
+		if(StringUtils.isEmpty(key))
+			this.key = null;
+		else
+			this.key = key;
 	}
 	
 	@Override

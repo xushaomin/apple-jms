@@ -2,13 +2,14 @@ package com.appleframework.jms.kafka.producer;
 
 import java.io.Serializable;
 
-import kafka.javaapi.producer.Producer;
-import kafka.producer.KeyedMessage;
-
 import com.appleframework.jms.core.exception.JmsException;
 import com.appleframework.jms.core.exception.MQException;
 import com.appleframework.jms.core.producer.MessageProducer;
 import com.appleframework.jms.core.utils.ByteUtils;
+import com.appleframework.jms.kafka.utils.StringUtils;
+
+import kafka.javaapi.producer.Producer;
+import kafka.producer.KeyedMessage;
 
 /**
  * @author Cruise.Xu
@@ -21,7 +22,7 @@ public class KafkaMessageProducer implements MessageProducer {
 	
 	private String topic;
 	
-	private String key;
+	private String key = "-1";
 	
 	public void setProducer(Producer<String, byte[]> producer) {
 		this.producer = producer;
@@ -32,7 +33,10 @@ public class KafkaMessageProducer implements MessageProducer {
 	}
 	
 	public void setKey(String key) {
-		this.key = key;
+		if(StringUtils.isEmpty(key))
+			this.key = null;
+		else
+			this.key = key;
 	}
 
 	public void sendByte(byte[] message) throws JmsException {
