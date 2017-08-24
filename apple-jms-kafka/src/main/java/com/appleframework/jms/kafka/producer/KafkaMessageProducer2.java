@@ -64,6 +64,11 @@ public class KafkaMessageProducer2 implements MessageProducer2 {
 		} catch (Exception e) {
 			throw new MQException(e);
 		}
-	}	
+	}
+	
+	public void destory() {
+		if(null != producer)
+			producer.close();
+	}
 
 }

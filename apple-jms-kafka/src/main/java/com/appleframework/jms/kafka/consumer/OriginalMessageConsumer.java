@@ -33,6 +33,8 @@ public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<Me
 	protected Integer partitionsNum;
 	
 	private ConsumerConnector connector;
+	
+	private ExecutorService executor;
 			
 	protected void init() {
 		
@@ -52,7 +54,7 @@ public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<Me
 			streams.addAll(topicMessageStreams.get(topics[i]));
 		}
 
-		final ExecutorService executor = Executors.newFixedThreadPool(partitionsNum * topics.length);
+		executor = Executors.newFixedThreadPool(partitionsNum * topics.length);
 	    for (final KafkaStream<byte[], byte[]> stream : streams) {
 	    	executor.submit(new Runnable() {
 				public void run() {
@@ -87,6 +89,8 @@ public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<Me
 	public void destroy() {
 		if(null != connector)
 			connector.shutdown();
+		if (null != executor)
+			executor.shutdown();
 	}
 	
 }

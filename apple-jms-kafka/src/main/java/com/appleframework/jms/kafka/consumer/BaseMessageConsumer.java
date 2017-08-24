@@ -32,6 +32,8 @@ public abstract class BaseMessageConsumer extends BytesMessageConusmer {
 	protected Integer partitionsNum;
 	
 	private ConsumerConnector connector;
+	
+	private ExecutorService executor;
 				
 	protected void init() {
 		
@@ -41,6 +43,8 @@ public abstract class BaseMessageConsumer extends BytesMessageConusmer {
 		
 		String[] topics = topic.split(",");
 		for (int i = 0; i < topics.length; i++) {
+			// create 4 partitions of the stream for topic ¡°test-topic¡±, to allow 4 threads to consume
+			// example: map.put("test-topic", 4);
 			topicCountMap.put(topics[i], partitionsNum);
 		}
 
@@ -50,8 +54,10 @@ public abstract class BaseMessageConsumer extends BytesMessageConusmer {
 		for (int i = 0; i < topics.length; i++) {
 			streams.addAll(topicMessageStreams.get(topics[i]));
 		}
-		    
-		final ExecutorService executor = Executors.newFixedThreadPool(partitionsNum * topics.length);
+		
+		// create list of 4 threads to consume from each of the partitions
+		// ExecutorService executor = Executors.newFixedThreadPool(4);
+		executor = Executors.newFixedThreadPool(partitionsNum * topics.length);
 	    for (final KafkaStream<byte[], byte[]> stream : streams) {
 	    	executor.submit(new Runnable() {
 				public void run() {
@@ -84,7 +90,9 @@ public abstract class BaseMessageConsumer extends BytesMessageConusmer {
 	}
 	
 	public void destroy() {
-		if(null != connector)
+		if (null != connector)
 			connector.shutdown();
+		if (null != executor)
+			executor.shutdown();
 	}
 }
