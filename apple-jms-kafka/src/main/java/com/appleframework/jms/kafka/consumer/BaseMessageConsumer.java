@@ -56,7 +56,7 @@ public abstract class BaseMessageConsumer extends BytesMessageConusmer {
 		}
 		
 		// create list of 4 threads to consume from each of the partitions
-		// ExecutorService executor = Executors.newFixedThreadPool(4);
+		// example: ExecutorService executor = Executors.newFixedThreadPool(4);
 		executor = Executors.newFixedThreadPool(partitionsNum * topics.length);
 	    for (final KafkaStream<byte[], byte[]> stream : streams) {
 	    	executor.submit(new Runnable() {
