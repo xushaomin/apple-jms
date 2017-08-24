@@ -9,20 +9,21 @@ import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 
-import com.appleframework.jms.core.consumer.BytesMessageConusmer;
+import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
+import kafka.message.MessageAndMetadata;
 
 
 /**
  * @author Cruise.Xu
  * 
  */
-public abstract class BaseMessageConsumer extends BytesMessageConusmer {
+public abstract class MetadataMessageConsumer extends AbstractMessageConusmer<MessageAndMetadata<byte[], byte[]>> {
 		
 	@Resource
 	private ConsumerConfig consumerConfig;
@@ -37,8 +38,8 @@ public abstract class BaseMessageConsumer extends BytesMessageConusmer {
 	
 	private ExecutorService executor;
 	
-	private ErrorByteMessageProcessor errorProcessor;
-				
+	private ErrorMetadataMessageProcessor errorProcessor;
+			
 	protected void init() {
 		
 		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
@@ -47,8 +48,6 @@ public abstract class BaseMessageConsumer extends BytesMessageConusmer {
 		
 		String[] topics = topic.split(",");
 		for (int i = 0; i < topics.length; i++) {
-			// create 4 partitions of the stream for topic ¡°test-topic¡±, to allow 4 threads to consume
-			// example: map.put("test-topic", 4);
 			topicCountMap.put(topics[i], partitionsNum);
 		}
 
@@ -58,18 +57,16 @@ public abstract class BaseMessageConsumer extends BytesMessageConusmer {
 		for (int i = 0; i < topics.length; i++) {
 			streams.addAll(topicMessageStreams.get(topics[i]));
 		}
-		
-		// create list of 4 threads to consume from each of the partitions
-		// example: ExecutorService executor = Executors.newFixedThreadPool(4);
+
 		executor = Executors.newFixedThreadPool(partitionsNum * topics.length);
 	    for (final KafkaStream<byte[], byte[]> stream : streams) {
 	    	executor.submit(new Runnable() {
 				public void run() {
                     ConsumerIterator<byte[], byte[]> it = stream.iterator();
 					while (it.hasNext()) {
-						byte[] message = it.next().message();
+						MessageAndMetadata<byte[], byte[]> message = it.next();
 						try {
-							processByteMessage(message);
+							processMessage(message);
 						} catch (Exception e) {
 							processErrorMessage(message);
 						}
@@ -77,10 +74,10 @@ public abstract class BaseMessageConsumer extends BytesMessageConusmer {
                 }
             });
 	    }
-	    errorProcessor = new ErrorByteMessageProcessor(errorProcessorPoolSize);
+	    errorProcessor = new ErrorMetadataMessageProcessor(errorProcessorPoolSize);
 	}
 	
-	protected void processErrorMessage(byte[] message) {
+	private void processErrorMessage(MessageAndMetadata<byte[], byte[]> message) {
 		errorProcessor.submit(message, this);
 	}
 
@@ -99,13 +96,14 @@ public abstract class BaseMessageConsumer extends BytesMessageConusmer {
 	public void setErrorProcessorPoolSize(Integer errorProcessorPoolSize) {
 		this.errorProcessorPoolSize = errorProcessorPoolSize;
 	}
-
+	
 	public void destroy() {
-		if (null != connector)
+		if(null != connector)
 			connector.shutdown();
 		if (null != executor)
 			executor.shutdown();
 		if (null != errorProcessor)
 			errorProcessor.close();
 	}
+	
 }
