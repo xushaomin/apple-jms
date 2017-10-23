@@ -6,14 +6,14 @@
 	<parent>
 		<artifactId>apple-jms</artifactId>
 		<groupId>com.appleframework.jms</groupId>
-		<version>0.1.6.RELEASE</version>
+		<version>0.1.7.RELEASE</version>
 	</parent>
 	<artifactId>apple-jms-rocketmq</artifactId>
 	<name>apple-jms-rocketmq</name>
 	<url>http://mvnrepo.appleframework.org</url>
 	
 	<properties>
-		<rocketmq.version>3.6.2.Final</rocketmq.version>
+		<rocketmq.version>4.1.0-incubating</rocketmq.version>
 	</properties>
 	
 	<dependencies>
@@ -38,7 +38,7 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.alibaba.rocketmq</groupId>
+			<groupId>org.apache.rocketmq</groupId>
 			<artifactId>rocketmq-client</artifactId>
 			<version>${rocketmq.version}</version>
 		</dependency>

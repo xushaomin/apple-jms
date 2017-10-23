@@ -51,5 +51,12 @@ public class RocketMessageProducer3 implements MessageProducer3 {
 	public void setTag(String tag) {
 		this.tag = tag;
 	}
+	
+	public void destory() {
+		try {
+			producer.close();
+		} catch (Exception e) {
+		}
+	}
 
 }

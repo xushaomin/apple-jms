@@ -73,7 +73,9 @@ public class KafkaMessageProducer implements MessageProducer {
 	}
 
 	public void destory() {
-		if(null != producer)
+		try {
 			producer.close();
+		} catch (Exception e) {
+		}
 	}
 }

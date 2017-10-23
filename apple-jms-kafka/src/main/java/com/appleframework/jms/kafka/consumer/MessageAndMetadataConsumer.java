@@ -23,6 +23,7 @@ import kafka.message.MessageAndMetadata;
  * @author Cruise.Xu
  * 
  */
+@SuppressWarnings("deprecation")
 public abstract class MessageAndMetadataConsumer extends AbstractMessageConusmer<MessageAndMetadata<byte[], byte[]>> {
 		
 	@Resource

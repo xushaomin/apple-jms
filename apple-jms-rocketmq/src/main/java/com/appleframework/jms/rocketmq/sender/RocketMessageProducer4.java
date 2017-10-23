@@ -2,14 +2,14 @@ package com.appleframework.jms.rocketmq.sender;
 
 import java.io.Serializable;
 
+import org.apache.rocketmq.client.exception.MQBrokerException;
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alibaba.rocketmq.client.exception.MQBrokerException;
-import com.alibaba.rocketmq.client.exception.MQClientException;
-import com.alibaba.rocketmq.client.producer.SendResult;
-import com.alibaba.rocketmq.common.message.Message;
-import com.alibaba.rocketmq.remoting.exception.RemotingException;
 import com.appleframework.jms.core.exception.MQException;
 import com.appleframework.jms.core.producer.MessageProducer4;
 import com.appleframework.jms.core.utils.ByteUtils;

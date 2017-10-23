@@ -28,6 +28,7 @@ import kafka.message.MessageAndMetadata;
  * @author Cruise.Xu
  * 
  */
+@SuppressWarnings("deprecation")
 public abstract class KafkaMessageReceiver extends MessageReceiver<Serializable> {
 	
 	private static Logger logger = Logger.getLogger(KafkaMessageReceiver.class.getName());

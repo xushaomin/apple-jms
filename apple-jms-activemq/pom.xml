@@ -6,14 +6,14 @@
 	<parent>
 		<groupId>com.appleframework.jms</groupId>
 		<artifactId>apple-jms</artifactId>
-		<version>0.1.6.RELEASE</version>
+		<version>0.1.7.RELEASE</version>
 	</parent>
 	<artifactId>apple-jms-activemq</artifactId>
 	<name>apple-jms-activemq</name>
 	<url>http://mvnrepo.appleframework.com</url>
 	
 	<properties>
-		<activemq.version>5.14.3</activemq.version>
+		<activemq.version>5.15.2</activemq.version>
 	</properties>
 	
 	<dependencies>

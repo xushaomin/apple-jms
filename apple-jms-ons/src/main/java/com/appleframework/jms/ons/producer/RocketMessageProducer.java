@@ -74,5 +74,12 @@ public class RocketMessageProducer implements MessageProducer {
 	public void setKey(String key) {
 		this.key = key;
 	}
+	
+	public void destory() {
+		try {
+			producer.close();
+		} catch (Exception e) {
+		}
+	}
 
 }

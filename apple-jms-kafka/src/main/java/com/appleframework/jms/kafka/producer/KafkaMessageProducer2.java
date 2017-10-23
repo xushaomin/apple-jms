@@ -67,8 +67,10 @@ public class KafkaMessageProducer2 implements MessageProducer2 {
 	}
 	
 	public void destory() {
-		if(null != producer)
+		try {
 			producer.close();
+		} catch (Exception e) {
+		}
 	}
 
 }

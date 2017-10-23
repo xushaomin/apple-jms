@@ -42,4 +42,10 @@ public class RocketMQProducer {
 		producer.sendOneway(message);
 	}
 
+	public void destory() {
+		try {
+			producer.shutdown();
+		} catch (Exception e) {
+		}
+	}
 }

@@ -1,7 +1,7 @@
 package com.appleframework.jms.rocketmq;
 
-import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
-import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
+import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
+import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 
 public class RocketMQPushConsumer extends DefaultMQPushConsumer {
 

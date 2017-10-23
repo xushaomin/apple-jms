@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>apple-jms</artifactId>
 		<groupId>com.appleframework.jms</groupId>
-		<version>0.1.6.RELEASE</version>
+		<version>0.1.7.RELEASE</version>
 	</parent>
 	<artifactId>apple-jms-ons</artifactId>
 	<name>apple-jms-ons</name>
@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>com.aliyun.openservices</groupId>
 			<artifactId>ons-client</artifactId>
-			<version>1.2.7.Final</version>
+			<version>1.7.0.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>

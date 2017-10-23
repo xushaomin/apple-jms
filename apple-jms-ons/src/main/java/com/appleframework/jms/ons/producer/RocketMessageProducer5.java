@@ -45,6 +45,13 @@ public class RocketMessageProducer5 {
 		} catch (Exception e) {
 			throw new MQException(e);
 		}
-	}	
+	}
+	
+	public void destory() {
+		try {
+			producer.close();
+		} catch (Exception e) {
+		}
+	}
 
 }

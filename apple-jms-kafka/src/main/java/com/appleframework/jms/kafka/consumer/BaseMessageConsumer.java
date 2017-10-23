@@ -22,6 +22,7 @@ import kafka.javaapi.consumer.ConsumerConnector;
  * @author Cruise.Xu
  * 
  */
+@SuppressWarnings("deprecation")
 public abstract class BaseMessageConsumer extends BytesMessageConusmer {
 		
 	@Resource
