@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath*:rabbitmq.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+    <!--配置connection-factory，指定连接rabbit server参数 -->
+	<bean id="connectionFactoryBean" class="com.appleframework.jms.rabbitmq.factory.ConnectionFactoryBean">
+		<property name="virtualHost" value="${rabbit.virtual-host:/}" />
+		<property name="username" value="${rabbit.username:apple}" />
+		<property name="password" value="${rabbit.password:password}" />
+		<property name="host" value="${rabbit.host}" />
+		<property name="port" value="5672" />
+	</bean>
+	
+	<bean id="channelFactoryBean" class="com.appleframework.jms.rabbitmq.factory.ChannelFactoryBean">
+		<property name="connection" ref="connectionFactoryBean" />
+		<property name="queue" value="${rabbit.queue}" />
+	</bean>
+	
+	<bean id="test" class="com.appleframework.jms.rabbitmq.RabbitMessageConsumerTest" init-method="init">
+    	<property name="channel" ref="channelFactoryBean" />
+		<property name="topic" value="${rabbit.queue}" />
+    </bean>
+    
+	    
+</beans>

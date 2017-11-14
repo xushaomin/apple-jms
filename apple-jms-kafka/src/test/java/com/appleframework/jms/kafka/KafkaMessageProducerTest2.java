@@ -23,7 +23,8 @@ public class KafkaMessageProducerTest2 {
 	public void testAddOpinion1() {
 		try {
 			for (int i = 0; i < 10; i++) {
-				messageProducer2.sendText(null, "xuxuux" + i);
+				messageProducer2.sendText("xu01", "xuxuux" + i);
+				Thread.sleep(1000);
 			}
 			logger.error("------------------");
 			System.in.read();

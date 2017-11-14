@@ -1,4 +1,4 @@
-package com.appleframework.jms.kafka;
+package com.appleframework.jms.rabbitmq;
 
 import javax.annotation.Resource;
 
@@ -11,10 +11,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.appleframework.jms.core.producer.MessageProducer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:config/kafka-producer.xml" })
-public class KafkaMessageProducerTest {
+@ContextConfiguration(locations = { "classpath:META-INF/apple/rabbitmq-producer2.xml" })
+public class RabbitMessageProducerTest {
 
-	private static Logger logger = Logger.getLogger(KafkaMessageProducerTest.class.getName());
+	private static Logger logger = Logger.getLogger(RabbitMessageProducerTest.class.getName());
     
 	@Resource
 	private MessageProducer messageProducer;
@@ -23,9 +23,9 @@ public class KafkaMessageProducerTest {
 	public void testAddOpinion1() {
 		try {
 			long t = System.currentTimeMillis();
-			for (int i = 1; i <= 10000000; i++) {
-				messageProducer.sendText("xxxxxxxxxxxxxxxxxxxxx " + i);
-				Thread.sleep(1000);
+			for (int i = 1; i <= 30000; i++) {
+				messageProducer.sendText("ddddddddd====" + i);
+				System.out.println(i);
 			}
 			System.out.println(System.currentTimeMillis() - t);
 			logger.error("------------------");
