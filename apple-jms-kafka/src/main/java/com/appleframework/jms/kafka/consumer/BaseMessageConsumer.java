@@ -39,6 +39,8 @@ public abstract class BaseMessageConsumer extends BytesMessageConusmer {
 	private ExecutorService executor;
 	
 	private ErrorByteMessageProcessor errorProcessor;
+	
+	protected Boolean errorProcessorLock = true;
 				
 	protected void init() {
 		
@@ -69,20 +71,26 @@ public abstract class BaseMessageConsumer extends BytesMessageConusmer {
                     ConsumerIterator<byte[], byte[]> it = stream.iterator();
 					while (it.hasNext()) {
 						byte[] message = it.next().message();
-						try {
+						if(errorProcessorLock) {
 							processByteMessage(message);
-						} catch (Exception e) {
-							processErrorMessage(message);
+						}
+						else {
+							try {
+								processByteMessage(message);
+							} catch (Exception e) {
+								processErrorMessage(message);
+							}
 						}
 					}
                 }
             });
 	    }
-	    errorProcessor = new ErrorByteMessageProcessor(errorProcessorPoolSize);
+	    if(!errorProcessorLock)
+	    	errorProcessor = new ErrorByteMessageProcessor(errorProcessorPoolSize);
 	}
 	
 	protected void processErrorMessage(byte[] message) {
-		errorProcessor.submit(message, this);
+		errorProcessor.processErrorMessage(message, this);
 	}
 
 	public void setConsumerConfig(ConsumerConfig consumerConfig) {
@@ -99,6 +107,10 @@ public abstract class BaseMessageConsumer extends BytesMessageConusmer {
 	
 	public void setErrorProcessorPoolSize(Integer errorProcessorPoolSize) {
 		this.errorProcessorPoolSize = errorProcessorPoolSize;
+	}
+
+	public void setErrorProcessorLock(Boolean errorProcessorLock) {
+		this.errorProcessorLock = errorProcessorLock;
 	}
 
 	public void destroy() {

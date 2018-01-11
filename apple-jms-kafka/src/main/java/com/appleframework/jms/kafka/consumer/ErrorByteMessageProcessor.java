@@ -62,7 +62,7 @@ public class ErrorByteMessageProcessor implements Closeable {
 		});
 	}
 
-	public void submit(final byte[] message, final BytesMessageConusmer bytesMessageConusmer) {
+	public void processErrorMessage(final byte[] message, final BytesMessageConusmer bytesMessageConusmer) {
 		int taskCount;
 		if ((taskCount = taskQueue.size()) > 1000) {
 			logger.warn("ErrorByteMessageProcessor queue task count over:{}", taskCount);
