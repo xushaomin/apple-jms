@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 import javax.annotation.Resource;
 
 import com.appleframework.jms.core.consumer.BytesMessageConusmer;
+import com.appleframework.jms.core.consumer.ErrorByteMessageProcessor;
 
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;

@@ -1,4 +1,4 @@
-package com.appleframework.jms.kafka.consumer;
+package com.appleframework.jms.core.consumer;
 
 import java.io.Closeable;
 import java.util.concurrent.ExecutorService;
@@ -7,11 +7,9 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
-import com.appleframework.jms.core.consumer.BytesMessageConusmer;
-import com.appleframework.jms.kafka.thread.StandardThreadExecutor.StandardThreadFactory;
+import com.appleframework.jms.core.thread.StandardThreadExecutor.StandardThreadFactory;
 
 /**
  * 消费者端处理错误消息重试处理器
@@ -21,7 +19,7 @@ import com.appleframework.jms.kafka.thread.StandardThreadExecutor.StandardThread
  */
 public class ErrorByteMessageProcessor implements Closeable {
 
-	private static final Logger logger = LoggerFactory.getLogger(ErrorByteMessageProcessor.class);
+	private static final Logger logger = Logger.getLogger(ErrorByteMessageProcessor.class);
 
 	// 重试时间间隔单元（毫秒）
 	private static final long RETRY_PERIOD_UNIT = 15 * 1000;
@@ -65,7 +63,7 @@ public class ErrorByteMessageProcessor implements Closeable {
 	public void processErrorMessage(final byte[] message, final BytesMessageConusmer bytesMessageConusmer) {
 		int taskCount;
 		if ((taskCount = taskQueue.size()) > 1000) {
-			logger.warn("ErrorByteMessageProcessor queue task count over:{}", taskCount);
+			logger.warn("ErrorByteMessageProcessor queue task count over:" + taskCount);
 		}
 		taskQueue.add(new PriorityTask(message, bytesMessageConusmer));
 	}
