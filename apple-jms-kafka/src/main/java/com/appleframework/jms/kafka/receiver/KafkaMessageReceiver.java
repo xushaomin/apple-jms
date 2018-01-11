@@ -100,7 +100,8 @@ public abstract class KafkaMessageReceiver extends MessageReceiver<Serializable>
 	}
 	
 	public void destroy() {
-		if(null != connector)
+		if(null != connector) {
 			connector.shutdown();
+		}
 	}
 }

@@ -116,8 +116,9 @@ public class StandardThreadExecutor extends ThreadPoolExecutor {
 		if (t == null && r instanceof Future<?>) {
 			try {
 				Future<?> future = (Future<?>) r;
-				if (future.isDone())
+				if (future.isDone()) {
 					future.get();
+				}
 			} catch (CancellationException ce) {
 				t = ce;
 			} catch (ExecutionException ee) {
@@ -126,8 +127,9 @@ public class StandardThreadExecutor extends ThreadPoolExecutor {
 				Thread.currentThread().interrupt(); // ignore/reset
 			}
 		}
-		if (t != null)
+		if ( null != t) {
 			logger.error(t.getMessage(), t);
+		}
 	}
 	
 	public static class StandardThreadFactory implements ThreadFactory {
@@ -149,10 +151,12 @@ public class StandardThreadExecutor extends ThreadPoolExecutor {
 	        Thread t = new Thread(group, r,
 	                              namePrefix + threadNumber.getAndIncrement(),
 	                              0);
-	        if (t.isDaemon())
+	        if (t.isDaemon()) {
 	            t.setDaemon(false);
-	        if (t.getPriority() != Thread.NORM_PRIORITY)
+	        }
+	        if (t.getPriority() != Thread.NORM_PRIORITY) {
 	            t.setPriority(Thread.NORM_PRIORITY);
+	        }
 	        return t;
 	    }
 	}

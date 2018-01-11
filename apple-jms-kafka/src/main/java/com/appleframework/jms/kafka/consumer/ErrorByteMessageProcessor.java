@@ -45,8 +45,9 @@ public class ErrorByteMessageProcessor implements Closeable {
 					try {
 						PriorityTask task = taskQueue.take();
 						// 空任务跳出循环
-						if (task.getMessage() == null)
+						if (null == task.getMessage()) {
 							break;
+						}
 						if (task.nextFireTime - System.currentTimeMillis() > 0) {
 							TimeUnit.MILLISECONDS.sleep(1000);
 							taskQueue.put(task);

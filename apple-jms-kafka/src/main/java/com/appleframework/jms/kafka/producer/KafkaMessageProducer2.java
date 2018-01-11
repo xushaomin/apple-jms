@@ -27,10 +27,12 @@ public class KafkaMessageProducer2 implements MessageProducer2 {
 	}
 	
 	public void setKey(String key) {
-		if(StringUtils.isEmpty(key))
+		if(StringUtils.isEmpty(key)) {
 			this.key = null;
-		else
+		}
+		else {
 			this.key = key;
+		}
 	}
 	
 	@Override

@@ -88,10 +88,12 @@ public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<Me
 	}
 	
 	public void destroy() {
-		if(null != connector)
+		if(null != connector) {
 			connector.shutdown();
-		if (null != executor)
+		}
+		if (null != executor) {
 			executor.shutdown();
+		}
 	}
 	
 }

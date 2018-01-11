@@ -33,10 +33,12 @@ public class KafkaMessageProducer implements MessageProducer {
 	}
 	
 	public void setKey(String key) {
-		if(StringUtils.isEmpty(key))
+		if(StringUtils.isEmpty(key)) {
 			this.key = null;
-		else
+		}
+		else {
 			this.key = key;
+		}
 	}
 
 	public void sendByte(byte[] message) throws JmsException {

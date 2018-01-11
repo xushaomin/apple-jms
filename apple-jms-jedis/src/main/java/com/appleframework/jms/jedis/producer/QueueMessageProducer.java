@@ -33,6 +33,7 @@ public class QueueMessageProducer implements MessageProducer {
 		this.poolFactory = poolFactory;
 	}
 
+	@Override
 	public void sendByte(byte[] message) throws JmsException {
 		JedisPool jedisPool = poolFactory.getWritePool();
 		Jedis jedis = jedisPool.getResource();

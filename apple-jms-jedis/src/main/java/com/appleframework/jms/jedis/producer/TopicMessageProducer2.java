@@ -27,6 +27,7 @@ public class TopicMessageProducer2 implements MessageProducer2 {
 		this.poolFactory = poolFactory;
 	}
 
+	@Override
 	public void sendByte(String topic, byte[] message) throws JmsException {
 		JedisPool jedisPool = poolFactory.getWritePool();
 		Jedis jedis = jedisPool.getResource();

@@ -99,12 +99,15 @@ public abstract class MetadataMessageConsumer extends AbstractMessageConusmer<Me
 	}
 	
 	public void destroy() {
-		if(null != connector)
+		if(null != connector) {
 			connector.shutdown();
-		if (null != executor)
+		}
+		if (null != executor) {
 			executor.shutdown();
-		if (null != errorProcessor)
+		}
+		if (null != errorProcessor) {
 			errorProcessor.close();
+		}
 	}
 	
 }
