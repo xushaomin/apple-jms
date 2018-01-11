@@ -14,6 +14,7 @@ public class JmsTextMessageCreator implements MessageCreator {
 		this.string = string;
 	}
 	
+	@Override
 	public Message createMessage(Session session) throws JMSException {
 		Message message = session.createTextMessage(this.string);
 		return message;

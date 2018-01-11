@@ -22,6 +22,7 @@ public class JmsMessageProducer implements MessageProducer {
 	private JmsTemplate jmsTemplate;
 	private Destination destination;
 
+	@Override
 	public void sendObject(Serializable message) throws JmsException {
 		try {
 			this.jmsTemplate.send(destination, new JmsObjectMessageCreator(message));
@@ -30,6 +31,7 @@ public class JmsMessageProducer implements MessageProducer {
 		}
 	}
 	
+	@Override
 	public void sendByte(byte[] message) throws JmsException {
 		try {
 			this.jmsTemplate.send(destination, new JmsByteMessageCreator(message));
@@ -38,6 +40,7 @@ public class JmsMessageProducer implements MessageProducer {
 		}
 	}
 	
+	@Override
 	public void sendText(String message) throws JmsException {
 		try {
 			this.jmsTemplate.send(destination, new JmsTextMessageCreator(message));

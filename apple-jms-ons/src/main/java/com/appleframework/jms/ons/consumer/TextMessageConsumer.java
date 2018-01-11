@@ -32,7 +32,7 @@ public abstract class TextMessageConsumer extends AbstractMessageConusmer<String
         consumer.subscribe(topic, tags);
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);  
         consumer.registerMessageListener(new MessageListenerConcurrently() {
-                public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext Context) {
+                public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext context) {
                 	MessageExt msg = list.get(0);
                     logger.info(msg.toString());
                     String message = (String)ByteUtils.fromByte(msg.getBody());

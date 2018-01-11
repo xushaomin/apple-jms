@@ -15,6 +15,7 @@ public class JmsByteMessageCreator implements MessageCreator {
 		this.message = message;
 	}
 	
+	@Override
 	public Message createMessage(Session session) throws JMSException {
 		BytesMessage bytesMessage = session.createBytesMessage();
 		try {

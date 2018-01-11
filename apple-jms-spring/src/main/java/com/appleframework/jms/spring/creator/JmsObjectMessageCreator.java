@@ -16,6 +16,7 @@ public class JmsObjectMessageCreator implements MessageCreator {
 		this.serializable = serializable;
 	}
 	
+	@Override
 	public Message createMessage(Session session) throws JMSException {
 		Message message = session.createObjectMessage(this.serializable);
 		return message;

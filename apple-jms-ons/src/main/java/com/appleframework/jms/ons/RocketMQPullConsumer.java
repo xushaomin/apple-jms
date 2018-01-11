@@ -8,10 +8,12 @@ public class RocketMQPullConsumer extends DefaultMQPullConsumer {
 
 	private String consumerGroup;
 
+	@Override
 	public void setNamesrvAddr(String namesrvAddr) {
 		this.namesrvAddr = namesrvAddr;
 	}
 
+	@Override
 	public void setConsumerGroup(String consumerGroup) {
 		this.consumerGroup = consumerGroup;
 	}

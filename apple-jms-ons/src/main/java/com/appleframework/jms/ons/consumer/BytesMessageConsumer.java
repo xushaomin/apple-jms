@@ -44,7 +44,7 @@ public abstract class BytesMessageConsumer extends AbstractMessageConusmer<byte[
         consumer.subscribe(topic, tags);
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);  
         consumer.registerMessageListener(new MessageListenerConcurrently() {
-                public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext Context) {
+                public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext context) {
                 	MessageExt msg = list.get(0);
                     logger.info(msg.toString());
                     byte[] message = msg.getBody();
