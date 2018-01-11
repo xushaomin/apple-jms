@@ -40,6 +40,8 @@ public abstract class MetadataMessageConsumer extends AbstractMessageConusmer<Me
 	private ExecutorService executor;
 	
 	private ErrorMetadataMessageProcessor errorProcessor;
+	
+	protected Boolean errorProcessorLock = true;
 			
 	protected void init() {
 		
@@ -66,20 +68,29 @@ public abstract class MetadataMessageConsumer extends AbstractMessageConusmer<Me
                     ConsumerIterator<byte[], byte[]> it = stream.iterator();
 					while (it.hasNext()) {
 						MessageAndMetadata<byte[], byte[]> message = it.next();
-						try {
+						if(errorProcessorLock) {
 							processMessage(message);
-						} catch (Exception e) {
-							processErrorMessage(message);
+						}
+						else {
+							try {
+								processMessage(message);
+							} catch (Exception e) {
+								processErrorMessage(message);
+							}
 						}
 					}
                 }
             });
 	    }
-	    errorProcessor = new ErrorMetadataMessageProcessor(errorProcessorPoolSize);
+	    if(!errorProcessorLock) {
+		    errorProcessor = new ErrorMetadataMessageProcessor(errorProcessorPoolSize);
+	    }
 	}
 	
 	private void processErrorMessage(MessageAndMetadata<byte[], byte[]> message) {
-		errorProcessor.submit(message, this);
+		if(!errorProcessorLock) {
+			errorProcessor.submit(message, this);
+		}
 	}
 
 	public void setConsumerConfig(ConsumerConfig consumerConfig) {
@@ -98,6 +109,10 @@ public abstract class MetadataMessageConsumer extends AbstractMessageConusmer<Me
 		this.errorProcessorPoolSize = errorProcessorPoolSize;
 	}
 	
+	public void setErrorProcessorLock(Boolean errorProcessorLock) {
+		this.errorProcessorLock = errorProcessorLock;
+	}
+
 	public void destroy() {
 		if(null != connector) {
 			connector.shutdown();

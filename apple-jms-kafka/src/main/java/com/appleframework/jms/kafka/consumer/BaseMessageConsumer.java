@@ -91,7 +91,9 @@ public abstract class BaseMessageConsumer extends BytesMessageConusmer {
 	}
 	
 	protected void processErrorMessage(byte[] message) {
-		errorProcessor.processErrorMessage(message, this);
+		if(!errorProcessorLock) {
+			errorProcessor.processErrorMessage(message, this);
+		}
 	}
 
 	public void setConsumerConfig(ConsumerConfig consumerConfig) {
