@@ -24,7 +24,7 @@ public class ConnectionFactoryBean implements FactoryBean<Connection> {
 	public Connection getObject() throws Exception {
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(host);
-		factory.setPort(5672);
+		factory.setPort(port);
 		factory.setUsername(username);
 		factory.setPassword(password);
 		factory.setVirtualHost(virtualHost);
