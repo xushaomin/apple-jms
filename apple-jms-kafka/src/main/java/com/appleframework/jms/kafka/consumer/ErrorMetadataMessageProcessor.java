@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
-import com.appleframework.jms.kafka.thread.StandardThreadExecutor.StandardThreadFactory;
+import com.appleframework.jms.core.thread.StandardThreadExecutor.StandardThreadFactory;
 
 import kafka.message.MessageAndMetadata;
 
