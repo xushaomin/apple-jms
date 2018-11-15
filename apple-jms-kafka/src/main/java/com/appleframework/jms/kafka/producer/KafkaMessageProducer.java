@@ -27,7 +27,7 @@ public class KafkaMessageProducer implements MessageProducer {
 	public void setProducer(Producer<String, byte[]> producer) {
 		this.producer = producer;
 	}
-
+	 
 	public void setTopic(String topic) {
 		this.topic = topic;
 	}
