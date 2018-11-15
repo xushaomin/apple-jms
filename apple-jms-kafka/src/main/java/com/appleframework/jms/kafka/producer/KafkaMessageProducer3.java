@@ -2,8 +2,8 @@ package com.appleframework.jms.kafka.producer;
 
 import java.io.Serializable;
 
-import kafka.javaapi.producer.Producer;
-import kafka.producer.KeyedMessage;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 
 import com.appleframework.jms.core.exception.JmsException;
 import com.appleframework.jms.core.exception.MQException;
@@ -14,7 +14,6 @@ import com.appleframework.jms.core.utils.ByteUtils;
  * @author Cruise.Xu
  * 
  */
-@SuppressWarnings("deprecation")
 public class KafkaMessageProducer3 implements MessageProducer3 {
 
 	private Producer<String, byte[]> producer;
@@ -26,8 +25,8 @@ public class KafkaMessageProducer3 implements MessageProducer3 {
 	@Override
 	public void sendByte(String topic, String key, byte[] message) throws JmsException {
 		try {
-			KeyedMessage<String, byte[]> producerData 
-				= new KeyedMessage<String, byte[]>(topic, key, message);
+			ProducerRecord<String, byte[]> producerData 
+				= new ProducerRecord<String, byte[]>(topic, key, message);
 			producer.send(producerData);
 		} catch (Exception e) {
 			throw new MQException(e);
@@ -37,8 +36,8 @@ public class KafkaMessageProducer3 implements MessageProducer3 {
 	@Override
 	public void sendObject(String topic, String key, Serializable message) throws JmsException {
 		try {
-			KeyedMessage<String, byte[]> producerData 
-				= new KeyedMessage<String, byte[]>(topic, key, ByteUtils.toBytes(message));
+			ProducerRecord<String, byte[]> producerData 
+				= new ProducerRecord<String, byte[]>(topic, key, ByteUtils.toBytes(message));
 			producer.send(producerData);
 		} catch (Exception e) {
 			throw new MQException(e);
@@ -48,8 +47,8 @@ public class KafkaMessageProducer3 implements MessageProducer3 {
 	@Override
 	public void sendText(String topic, String key, String message) throws JmsException {
 		try {
-			KeyedMessage<String, byte[]> producerData 
-				= new KeyedMessage<String, byte[]>(topic, key, message.getBytes());
+			ProducerRecord<String, byte[]> producerData 
+				= new ProducerRecord<String, byte[]>(topic, key, message.getBytes());
 			producer.send(producerData);
 		} catch (Exception e) {
 			throw new MQException(e);

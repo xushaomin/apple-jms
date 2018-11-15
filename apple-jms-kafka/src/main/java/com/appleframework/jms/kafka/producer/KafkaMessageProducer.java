@@ -8,14 +8,14 @@ import com.appleframework.jms.core.producer.MessageProducer;
 import com.appleframework.jms.core.utils.ByteUtils;
 import com.appleframework.jms.kafka.utils.StringUtils;
 
-import kafka.javaapi.producer.Producer;
-import kafka.producer.KeyedMessage;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+
 
 /**
  * @author Cruise.Xu
  * 
  */
-@SuppressWarnings("deprecation")
 public class KafkaMessageProducer implements MessageProducer {
 
 	private Producer<String, byte[]> producer;
@@ -43,8 +43,8 @@ public class KafkaMessageProducer implements MessageProducer {
 
 	public void sendByte(byte[] message) throws JmsException {
 		try {
-			KeyedMessage<String, byte[]> producerData 
-				= new KeyedMessage<String, byte[]>(topic, key, message);
+			ProducerRecord<String, byte[]> producerData 
+				= new ProducerRecord<String, byte[]>(topic, key, message);
 				producer.send(producerData);
 		} catch (Exception e) {
 			throw new MQException(e);
@@ -55,8 +55,8 @@ public class KafkaMessageProducer implements MessageProducer {
 	@Override
 	public void sendObject(Serializable message) throws JmsException {
 		try {
-		KeyedMessage<String, byte[]> producerData 
-			= new KeyedMessage<String, byte[]>(topic, key, ByteUtils.toBytes(message));
+			ProducerRecord<String, byte[]> producerData 
+			= new ProducerRecord<String, byte[]>(topic, key, ByteUtils.toBytes(message));
 		producer.send(producerData);
 		} catch (Exception e) {
 			throw new MQException(e);
@@ -66,8 +66,8 @@ public class KafkaMessageProducer implements MessageProducer {
 	@Override
 	public void sendText(String message) throws JmsException {
 		try {
-			KeyedMessage<String, byte[]> producerData 
-				= new KeyedMessage<String, byte[]>(topic, key, message.getBytes());
+			ProducerRecord<String, byte[]> producerData 
+				= new ProducerRecord<String, byte[]>(topic, key, message.getBytes());
 			producer.send(producerData);
 		} catch (Exception e) {
 			throw new MQException(e);

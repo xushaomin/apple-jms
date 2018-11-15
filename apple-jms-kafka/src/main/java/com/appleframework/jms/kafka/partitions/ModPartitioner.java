@@ -1,22 +1,30 @@
 package com.appleframework.jms.kafka.partitions;
 
+import java.util.List;
+import java.util.Map;
+
+import org.apache.kafka.clients.producer.Partitioner;
+import org.apache.kafka.common.Cluster;
+import org.apache.kafka.common.PartitionInfo;
+
 import com.appleframework.jms.kafka.utils.RandomUtility;
 
-import kafka.producer.Partitioner;
 import kafka.utils.VerifiableProperties;
 
 /**
  * @author cruise.xu
  * 
  */
-@SuppressWarnings("deprecation")
 public class ModPartitioner implements Partitioner {
-
-	public ModPartitioner(VerifiableProperties props) {
+	
+	@Override
+	public void configure(Map<String, ?> configs) {
 	}
 
 	@Override
-	public int partition(Object key, int numPartitions) {
+	public int partition(String topic, Object key, byte[] keyBytes, Object value, byte[] valueBytes, Cluster cluster) {
+        List<PartitionInfo> partitions = cluster.partitionsForTopic(topic);
+        int numPartitions = partitions.size();
 		if (null == key) {
 			return RandomUtility.genRandom(numPartitions);
 		} else if (key instanceof String) {
@@ -31,6 +39,13 @@ public class ModPartitioner implements Partitioner {
 		} else {
 			return RandomUtility.genRandom(numPartitions);
 		}
+	}
+
+	@Override
+	public void close() {		
+	}
+
+	public ModPartitioner(VerifiableProperties props) {
 	}
 
 }

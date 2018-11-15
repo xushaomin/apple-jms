@@ -3,8 +3,8 @@ package com.appleframework.jms.kafka.sender;
 import java.io.Serializable;
 import java.util.UUID;
 
-import kafka.javaapi.producer.Producer;
-import kafka.producer.KeyedMessage;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 
 import com.appleframework.jms.core.exception.JmsException;
 import com.appleframework.jms.core.exception.MQException;
@@ -16,7 +16,6 @@ import com.appleframework.jms.core.utils.ByteUtils;
  * @author Cruise.Xu
  * 
  */
-@SuppressWarnings("deprecation")
 public class KafkaMessageSender implements MessageSender {
 
 	private Producer<String, byte[]> producer;
@@ -30,8 +29,8 @@ public class KafkaMessageSender implements MessageSender {
 		try {
 			String msgId = UUID.randomUUID().toString();
 			MessageObject<Serializable> sendObject = new MessageObject<Serializable>(message, trackId, msgId);
-			KeyedMessage<String, byte[]> producerData 
-				= new KeyedMessage<String, byte[]>(topic, ByteUtils.toBytes(sendObject));
+			ProducerRecord<String, byte[]> producerData 
+				= new ProducerRecord<String, byte[]>(topic, ByteUtils.toBytes(sendObject));
 			producer.send(producerData);
 			return msgId;
 		} catch (Exception e) {
