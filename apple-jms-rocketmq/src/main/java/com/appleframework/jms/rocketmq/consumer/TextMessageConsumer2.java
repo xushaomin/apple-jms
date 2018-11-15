@@ -15,8 +15,7 @@ public class TextMessageConsumer2 extends BaseMessageConsumer {
 	}
 
 	@Override
-	public void processByteMessage(byte[] message) {
-		messageConusmer.processMessage(new String(message));
-
+	public void processMessage(byte[] message) {
+		messageConusmer.onMessage(new String(message));
 	}
 }

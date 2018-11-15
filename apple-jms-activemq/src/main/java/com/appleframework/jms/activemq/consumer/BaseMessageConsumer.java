@@ -5,19 +5,19 @@ import javax.jms.MessageListener;
 
 import org.apache.activemq.command.ActiveMQBytesMessage;
 
-import com.appleframework.jms.core.consumer.BytesMessageConusmer;
+import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 
 /**
  * @author Cruise.Xu
  * 
  */
-public abstract class BaseMessageConsumer extends BytesMessageConusmer implements MessageListener {
+public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]> implements MessageListener {
 
 	@Override
 	public void onMessage(Message message) {
 		ActiveMQBytesMessage msg = (ActiveMQBytesMessage) message;
 		byte[] data = msg.getContent().getData();
-		processByteMessage(data);
+		processMessage(data);
 	}		
 	
 }

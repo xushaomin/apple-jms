@@ -8,16 +8,12 @@ public class KafkaMessageConsumer extends BytesMessageConsumer {
 
 	private static Logger logger = Logger.getLogger(KafkaMessageConsumer.class.getName());
 
+	
 	@Override
-	public void processMessage(byte[] message) {
-		
-		try {
-			String object = new String(message);
-			logger.error(object.toString());
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		
+	public void onMessage(byte[] message) {
+		String object = new String(message);
+		logger.error(object.toString());
+		commitSync();
 	}
 
 }

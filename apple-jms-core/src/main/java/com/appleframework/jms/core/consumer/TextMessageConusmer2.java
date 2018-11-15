@@ -21,7 +21,7 @@ public class TextMessageConusmer2 implements MessageListener {
 	public void onMessage(Message message) {
 		try {
 			String object = ((TextMessage) message).getText();
-			messageConusmer.processMessage(object);
+			messageConusmer.onMessage(object);
 		} catch (JMSException e) {
 			e.printStackTrace();
 		}

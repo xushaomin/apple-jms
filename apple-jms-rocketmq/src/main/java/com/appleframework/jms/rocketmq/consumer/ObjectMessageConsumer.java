@@ -10,8 +10,8 @@ import com.appleframework.jms.core.utils.ByteUtils;
 public abstract class ObjectMessageConsumer extends BaseMessageConsumer implements IMessageConusmer<Object> {
 
 	@Override
-	public void processByteMessage(byte[] message) {
-		processMessage(ByteUtils.fromByte(message));
+	public void processMessage(byte[] message) {
+		onMessage(ByteUtils.fromByte(message));
 	}
 	
 }

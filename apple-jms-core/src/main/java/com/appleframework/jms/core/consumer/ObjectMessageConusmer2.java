@@ -21,7 +21,7 @@ public class ObjectMessageConusmer2 implements MessageListener {
 	public void onMessage(Message message) {
 		try {
 			Object object = ((ObjectMessage) message).getObject();
-			messageConusmer.processMessage(object);
+			messageConusmer.onMessage(object);
 		} catch (JMSException e) {
 			e.printStackTrace();
 		}

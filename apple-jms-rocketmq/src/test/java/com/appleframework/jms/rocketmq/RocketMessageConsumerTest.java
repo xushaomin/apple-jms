@@ -9,7 +9,7 @@ import com.appleframework.jms.rocketmq.consumer.ObjectMessageConsumer;
 public class RocketMessageConsumerTest extends ObjectMessageConsumer {
 
 	@Override
-	public void processMessage(Object message) {
+	public void onMessage(Object message) {
 		System.out.println(message);
 	}
 	

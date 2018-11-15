@@ -9,7 +9,7 @@ import com.appleframework.jms.rabbitmq.consumer.TextMessageConsumer;
 public class RabbitMessageConsumerTest extends TextMessageConsumer {
 
 	@Override
-	public void processMessage(String message) {
+	public void onMessage(String message) {
 		System.out.println(message);
 	}
 	

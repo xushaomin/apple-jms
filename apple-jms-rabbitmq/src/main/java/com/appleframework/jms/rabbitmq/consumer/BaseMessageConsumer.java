@@ -2,7 +2,8 @@ package com.appleframework.jms.rabbitmq.consumer;
 
 import java.io.IOException;
 
-import com.appleframework.jms.core.consumer.BytesMessageConusmer;
+import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
+
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Consumer;
@@ -13,7 +14,7 @@ import com.rabbitmq.client.Envelope;
  * @author Cruise.Xu
  * 
  */
-public abstract class BaseMessageConsumer extends BytesMessageConusmer {
+public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]> {
 
 	private Channel channel;
 
@@ -32,7 +33,7 @@ public abstract class BaseMessageConsumer extends BytesMessageConusmer {
             @Override  
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)  
                     throws IOException {
-            	processByteMessage(body);
+            	processMessage(body);
             }  
         };  
         channel.basicConsume(topic, true, consumer);  

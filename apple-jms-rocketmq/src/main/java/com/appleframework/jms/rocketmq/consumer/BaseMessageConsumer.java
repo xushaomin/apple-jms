@@ -12,14 +12,14 @@ import org.apache.rocketmq.common.message.MessageExt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.appleframework.jms.core.consumer.BytesMessageConusmer;
+import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 import com.appleframework.jms.rocketmq.RocketMQPushConsumer;
 
 /**
  * @author Cruise.Xu
  * 
  */
-public abstract class BaseMessageConsumer extends BytesMessageConusmer {
+public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]> {
 
 	private final static Logger logger = LoggerFactory.getLogger(BaseMessageConsumer.class);
 
@@ -65,7 +65,7 @@ public abstract class BaseMessageConsumer extends BytesMessageConusmer {
 				Message msg = list.get(0);
 				logger.info(msg.toString());
 				byte[] message = msg.getBody();
-				processByteMessage(message);
+				processMessage(message);
 				return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 			}
 		});

@@ -15,8 +15,8 @@ public class TopicBytesMessageConsumer2 extends TopicBaseMessageConsumer {
 	}
 
 	@Override
-	public void processByteMessage(byte[] message) {
-		messageConusmer.processMessage(message);
+	public void processMessage(byte[] message) {
+		messageConusmer.onMessage(message);
 
 	}
 

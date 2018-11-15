@@ -1,99 +1,80 @@
 package com.appleframework.jms.kafka.consumer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import javax.annotation.Resource;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.errors.WakeupException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
-
-import kafka.consumer.Consumer;
-import kafka.consumer.ConsumerConfig;
-import kafka.consumer.ConsumerIterator;
-import kafka.consumer.KafkaStream;
-import kafka.javaapi.consumer.ConsumerConnector;
-import kafka.message.MessageAndMetadata;
-
 
 /**
  * @author Cruise.Xu
  * 
  */
-@SuppressWarnings("deprecation")
-public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<MessageAndMetadata<byte[], byte[]>> {
-		
-	@Resource
-	private ConsumerConfig consumerConfig;
-	
+public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<ConsumerRecord<String, byte[]>> implements Runnable {
+
+	private static Logger logger = LoggerFactory.getLogger(OriginalMessageConsumer.class);
+
 	protected String topic;
-    
-	protected Integer partitionsNum;
-	
-	private ConsumerConnector connector;
-	
-	private ExecutorService executor;
-			
+
+	protected KafkaConsumer<String, byte[]> consumer;
+
+	private AtomicBoolean closed = new AtomicBoolean(false);
+
+	private long timeout = 100;
+
 	protected void init() {
-		
-		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
-
-		connector = Consumer.createJavaConsumerConnector(consumerConfig);
-		
-		String[] topics = topic.split(",");
-		for (int i = 0; i < topics.length; i++) {
-			topicCountMap.put(topics[i], partitionsNum);
-		}
-
-		Map<String, List<KafkaStream<byte[], byte[]>>> topicMessageStreams 
-			= connector.createMessageStreams(topicCountMap);
-		List<KafkaStream<byte[], byte[]>> streams = new ArrayList<KafkaStream<byte[], byte[]>>();
-		for (int i = 0; i < topics.length; i++) {
-			streams.addAll(topicMessageStreams.get(topics[i]));
-		}
-
-		executor = Executors.newFixedThreadPool(partitionsNum * topics.length);
-	    for (final KafkaStream<byte[], byte[]> stream : streams) {
-	    	executor.submit(new Runnable() {
-				public void run() {
-                    ConsumerIterator<byte[], byte[]> it = stream.iterator();
-					while (it.hasNext()) {
-						MessageAndMetadata<byte[], byte[]> message = it.next();
-						processMessage(message);
-					}
-                }
-            });
-	    }
-	    	    
-	    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-	    	public void run() {
-	    		executor.shutdown();
-	    	}
-	    }));
-	}	
-
-	public void setConsumerConfig(ConsumerConfig consumerConfig) {
-		this.consumerConfig = consumerConfig;
+		new Thread(this).start();
 	}
+
+	@Override
+	public void run() {
+		try {
+			String[] topics = topic.split(",");
+			consumer.subscribe(Arrays.asList(topics));
+			while (!closed.get()) {
+				ConsumerRecords<String, byte[]> records = consumer.poll(timeout);
+				for (ConsumerRecord<String, byte[]> record : records) {
+					logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+					processMessage(record);
+				}
+			}
+		} catch (WakeupException e) {
+			if (!closed.get())
+				throw e;
+		} finally {
+			consumer.close();
+		}
+	}
+
 
 	public void setTopic(String topic) {
 		this.topic = topic.trim().replaceAll(" ", "");
 	}
 
-	public void setPartitionsNum(Integer partitionsNum) {
-		this.partitionsNum = partitionsNum;
+	public void setConsumer(KafkaConsumer<String, byte[]> consumer) {
+		this.consumer = consumer;
 	}
-	
+
+	public void setTimeout(long timeout) {
+		this.timeout = timeout;
+	}
+
 	public void destroy() {
-		if(null != connector) {
-			connector.shutdown();
-		}
-		if (null != executor) {
-			executor.shutdown();
-		}
+		closed.set(true);
+		consumer.wakeup();
+	}
+
+	public void commitSync() {
+		consumer.commitSync();
 	}
 	
+	public void commitAsync() {
+		consumer.commitAsync();
+	}
 }

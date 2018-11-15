@@ -59,7 +59,7 @@ public abstract class OriginalMessageConsumer implements IMessageConusmer<Messag
 		consumer.registerMessageListener(new MessageListenerConcurrently() {
 			public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext context) {
 				Message msg = list.get(0);
-				processMessage(msg);
+				onMessage(msg);
 				return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 			}
 		});

@@ -3,7 +3,7 @@ package com.appleframework.jms.jedis.consumer;
 import org.apache.log4j.Logger;
 
 import com.appleframework.cache.jedis.factory.PoolFactory;
-import com.appleframework.jms.core.consumer.BytesMessageConusmer;
+import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 
 import redis.clients.jedis.BinaryJedisPubSub;
 import redis.clients.jedis.Jedis;
@@ -14,7 +14,7 @@ import redis.clients.jedis.JedisPool;
  * 
  */
 @SuppressWarnings("deprecation")
-public abstract class TopicBaseMessageConsumer extends BytesMessageConusmer {
+public abstract class TopicBaseMessageConsumer extends AbstractMessageConusmer<byte[]> {
 
 	private static Logger logger = Logger.getLogger(TopicBaseMessageConsumer.class);
 
@@ -25,12 +25,12 @@ public abstract class TopicBaseMessageConsumer extends BytesMessageConusmer {
 	private BinaryJedisPubSub pubSub = new BinaryJedisPubSub() {
 		@Override
 		public void onMessage(byte[] channel, byte[] message) {
-			processByteMessage(message);
+			processMessage(message);
 		}
 
 		@Override
 		public void onPMessage(byte[] pattern, byte[] channel, byte[] message) {
-			processByteMessage(message);
+			processMessage(message);
 		}
 
 		@Override

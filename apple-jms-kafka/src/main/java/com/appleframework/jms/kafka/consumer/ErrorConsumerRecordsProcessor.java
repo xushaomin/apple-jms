@@ -7,13 +7,13 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
+import com.appleframework.jms.core.consumer.ErrorMessageProcessor;
 import com.appleframework.jms.core.thread.StandardThreadExecutor.StandardThreadFactory;
-
-import kafka.message.MessageAndMetadata;
 
 /**
  * 消费者端处理错误消息重试处理器
@@ -21,9 +21,9 @@ import kafka.message.MessageAndMetadata;
  * @description <br>
  * @date 2016年10月25日
  */
-public class ErrorMetadataMessageProcessor implements Closeable {
+public class ErrorConsumerRecordsProcessor implements Closeable,ErrorMessageProcessor<ConsumerRecord<String, byte[]>> {
 
-	private static final Logger logger = LoggerFactory.getLogger(ErrorMetadataMessageProcessor.class);
+	private static final Logger logger = LoggerFactory.getLogger(ErrorConsumerRecordsProcessor.class);
 
 	// 重试时间间隔单元（毫秒）
 	private static final long RETRY_PERIOD_UNIT = 15 * 1000;
@@ -34,12 +34,12 @@ public class ErrorMetadataMessageProcessor implements Closeable {
 
 	private AtomicBoolean closed = new AtomicBoolean(false);
 
-	public ErrorMetadataMessageProcessor() {
+	public ErrorConsumerRecordsProcessor() {
 		this(1);
 	}
 
-	public ErrorMetadataMessageProcessor(int poolSize) {
-		executor = Executors.newFixedThreadPool(poolSize, new StandardThreadFactory("ErrorByteMessageProcessor"));
+	public ErrorConsumerRecordsProcessor(int poolSize) {
+		executor = Executors.newFixedThreadPool(poolSize, new StandardThreadFactory("errorConsumerRecordsProcessor"));
 		executor.submit(new Runnable() {
 			@Override
 			public void run() {
@@ -64,8 +64,8 @@ public class ErrorMetadataMessageProcessor implements Closeable {
 		});
 	}
 
-	public void submit(final MessageAndMetadata<byte[], byte[]> message, 
-			final AbstractMessageConusmer<MessageAndMetadata<byte[], byte[]>> metadataMessageConusmer) {
+	public void submit(final ConsumerRecord<String, byte[]> message, 
+			final AbstractMessageConusmer<ConsumerRecord<String, byte[]>> metadataMessageConusmer) {
 		int taskCount;
 		if ((taskCount = taskQueue.size()) > 1000) {
 			logger.warn("ErrorByteMessageProcessor queue task count over:{}", taskCount);
@@ -87,26 +87,26 @@ public class ErrorMetadataMessageProcessor implements Closeable {
 
 	class PriorityTask implements Runnable, Comparable<PriorityTask> {
 
-		final MessageAndMetadata<byte[], byte[]> message;
-		final AbstractMessageConusmer<MessageAndMetadata<byte[], byte[]>> metadataMessageConusmer;
+		final ConsumerRecord<String, byte[]> message;
+		final AbstractMessageConusmer<ConsumerRecord<String, byte[]>> metadataMessageConusmer;
 
 		int retryCount = 0;
 		long nextFireTime;
 
-		public PriorityTask(MessageAndMetadata<byte[], byte[]> message, 
-				AbstractMessageConusmer<MessageAndMetadata<byte[], byte[]>> metadataMessageConusmer) {
+		public PriorityTask(ConsumerRecord<String, byte[]> message, 
+				AbstractMessageConusmer<ConsumerRecord<String, byte[]>> metadataMessageConusmer) {
 			this(message, metadataMessageConusmer, System.currentTimeMillis() + RETRY_PERIOD_UNIT);
 		}
 
-		public PriorityTask(MessageAndMetadata<byte[], byte[]> message, 
-				AbstractMessageConusmer<MessageAndMetadata<byte[], byte[]>> metadataMessageConusmer, long nextFireTime) {
+		public PriorityTask(ConsumerRecord<String, byte[]> message, 
+				AbstractMessageConusmer<ConsumerRecord<String, byte[]>> metadataMessageConusmer, long nextFireTime) {
 			super();
 			this.message = message;
 			this.metadataMessageConusmer = metadataMessageConusmer;
 			this.nextFireTime = nextFireTime;
 		}
 
-		public MessageAndMetadata<byte[], byte[]> getMessage() {
+		public ConsumerRecord<String, byte[]> getMessage() {
 			return message;
 		}
 
@@ -135,6 +135,13 @@ public class ErrorMetadataMessageProcessor implements Closeable {
 			return (int) (this.nextFireTime - o.nextFireTime);
 		}
 
+	}
+
+	@Override
+	public void processErrorMessage(ConsumerRecord<String, byte[]> message,
+			AbstractMessageConusmer<ConsumerRecord<String, byte[]>> messageConusmer) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

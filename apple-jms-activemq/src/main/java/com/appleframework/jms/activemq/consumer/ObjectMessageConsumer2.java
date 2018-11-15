@@ -16,9 +16,9 @@ public class ObjectMessageConsumer2 extends BaseMessageConsumer {
 	}
 
 	@Override
-	public void processByteMessage(byte[] message) {
+	public void processMessage(byte[] message) {
 		try {
-			messageConusmer.processMessage(ByteUtils.fromByte(message));
+			messageConusmer.onMessage(ByteUtils.fromByte(message));
 		} catch (Exception e) {
 		}
 	}

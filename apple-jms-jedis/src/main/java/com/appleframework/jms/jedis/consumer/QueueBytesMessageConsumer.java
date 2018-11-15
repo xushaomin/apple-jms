@@ -9,7 +9,7 @@ import com.appleframework.jms.core.consumer.IMessageConusmer;
 public abstract class QueueBytesMessageConsumer extends QueueBaseMessageConsumer implements IMessageConusmer<byte[]> {
 
 	@Override
-	public void processByteMessage(byte[] message) {
-		processMessage(message);
+	public void processMessage(byte[] message) {
+		onMessage(message);
 	}
 }

@@ -6,6 +6,6 @@ package com.appleframework.jms.core.consumer;
  */
 public interface IMessageConusmer<Message> {
 	
-	public void processMessage(Message message);
+	public void onMessage(Message message);
 
 }

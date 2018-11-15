@@ -16,7 +16,7 @@ public abstract class JmsMessageConusmer2 implements MessageListener {
 	}
 
 	public void onMessage(Message message) {
-		messageConusmer.processMessage(message);
+		messageConusmer.onMessage(message);
 	}
 	
 }

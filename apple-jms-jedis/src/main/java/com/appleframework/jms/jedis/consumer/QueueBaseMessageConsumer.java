@@ -6,7 +6,7 @@ import java.util.concurrent.Executors;
 import org.apache.log4j.Logger;
 
 import com.appleframework.cache.jedis.factory.PoolFactory;
-import com.appleframework.jms.core.consumer.BytesMessageConusmer;
+import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -16,7 +16,7 @@ import redis.clients.jedis.JedisPool;
  * 
  */
 @SuppressWarnings("deprecation")
-public abstract class QueueBaseMessageConsumer extends BytesMessageConusmer {
+public abstract class QueueBaseMessageConsumer extends AbstractMessageConusmer<byte[]> {
 
 	private static Logger logger = Logger.getLogger(QueueBaseMessageConsumer.class);
 
@@ -32,7 +32,7 @@ public abstract class QueueBaseMessageConsumer extends BytesMessageConusmer {
 		try {
 			byte[] value = jedis.rpop(topic.getBytes());
 			if (null != value) {
-				processByteMessage(value);
+				processMessage(value);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());

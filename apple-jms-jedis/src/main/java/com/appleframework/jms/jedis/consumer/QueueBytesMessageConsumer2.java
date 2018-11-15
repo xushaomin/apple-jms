@@ -15,8 +15,8 @@ public class QueueBytesMessageConsumer2 extends QueueBaseMessageConsumer {
 	}
 
 	@Override
-	public void processByteMessage(byte[] message) {
-		messageConusmer.processMessage(message);
+	public void processMessage(byte[] message) {
+		messageConusmer.onMessage(message);
 	}
 
 }
