@@ -6,21 +6,19 @@
 
    	<context:property-placeholder location="classpath*:kafka.properties" ignore-unresolvable="true" />
 
-	<bean id="consumerProperties"
-		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+	<bean id="consumerProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 		<property name="properties">
 			<props>
-				<prop key="zookeeper.connect">${zookeeper.connect}</prop>
-				<prop key="zookeeper.connection.timeout.ms">15000</prop>
-				<prop key="zookeeper.session.timeout.ms">15000</prop>
+				<prop key="bootstrap.servers">${bootstrap.servers}</prop>
 				<prop key="group.id">${group.id}</prop>
-				<prop key="auto.commit.interval.ms">${auto.commit.interval.ms:60000}</prop>
-				<prop key="auto.offset.reset">smallest</prop>
+				<prop key="enable.auto.commit">${enable.auto.commit:true}</prop>
+				<prop key="key.deserializer">org.apache.kafka.common.serialization.StringDeserializer</prop>
+            	<prop key="value.deserializer">org.apache.kafka.common.serialization.ByteArrayDeserializer</prop>
 			</props>
 		</property>
 	</bean>
-
-	<bean id="consumerConfig" class="kafka.consumer.ConsumerConfig">
+	
+	<bean id="consumer" class="org.apache.kafka.clients.consumer.KafkaConsumer">
 		<constructor-arg index="0" ref="consumerProperties" />
 	</bean>
 	

@@ -9,13 +9,12 @@
 	<bean id="producerProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="properties">
             <props>
-        		<prop key="bootstrap.servers">${metadata.broker.list}</prop>
+        		<prop key="bootstrap.servers">${bootstrap.servers}</prop>
         		<prop key="producer.type">sync</prop>
     			<prop key="request.required.acks">1</prop>
         		<prop key="partitioner.class">com.appleframework.jms.kafka.partitions.RandomPartitioner</prop>
                 <prop key="key.serializer">org.apache.kafka.common.serialization.StringSerializer</prop>
             	<prop key="value.serializer">org.apache.kafka.common.serialization.ByteArraySerializer</prop>
-                
             </props>
         </property>
     </bean>
