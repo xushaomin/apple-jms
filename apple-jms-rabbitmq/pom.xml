@@ -13,7 +13,7 @@
 	<url>http://maven.apache.org</url>
 	
 	<properties>
-		<amqp.version>5.0.0</amqp.version>
+		<amqp.version>5.5.0</amqp.version>
 	</properties>
 	
 	<dependencies>
@@ -26,6 +26,7 @@
 			<groupId>com.rabbitmq</groupId>
  			<artifactId>amqp-client</artifactId>
     		<version>${amqp.version}</version>
+    		<scope>provided</scope>
 		</dependency>
 		<dependency>
             <groupId>org.springframework</groupId>  

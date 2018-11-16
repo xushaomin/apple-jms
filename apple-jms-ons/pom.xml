@@ -21,7 +21,8 @@
 		<dependency>
 			<groupId>com.aliyun.openservices</groupId>
 			<artifactId>ons-client</artifactId>
-			<version>1.7.0.Final</version>
+			<version>1.7.8.Final</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
