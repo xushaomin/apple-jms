@@ -1,6 +1,6 @@
 package com.appleframework.jms.jedis.consumer;
 
-import com.appleframework.jms.jedis.consumer.QueueBytesMessageConsumer;
+import com.appleframework.jms.jedis.consumer.master.QueueBytesMessageConsumer;
 
 public class QueueMessageConsumerImpl extends QueueBytesMessageConsumer {
 

@@ -13,7 +13,7 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<cache.version>0.3.3.RELEASE</cache.version>
+		<cache.version>0.3.5.RELEASE</cache.version>
 	</properties>
 
 	<dependencies>
