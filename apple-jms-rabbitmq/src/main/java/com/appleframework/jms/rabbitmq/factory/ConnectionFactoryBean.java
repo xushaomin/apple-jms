@@ -19,6 +19,7 @@ public class ConnectionFactoryBean implements FactoryBean<Connection> {
 	private String username = "admin";
 	private String password = "admin";
 	private String virtualHost = "/";
+	private Boolean automaticRecovery = true;
 
 	@Override
 	public Connection getObject() throws Exception {
@@ -28,6 +29,7 @@ public class ConnectionFactoryBean implements FactoryBean<Connection> {
 		factory.setUsername(username);
 		factory.setPassword(password);
 		factory.setVirtualHost(virtualHost);
+		factory.setAutomaticRecoveryEnabled(automaticRecovery);
 		connection = factory.newConnection();
 		return connection;
 	}
@@ -82,6 +84,10 @@ public class ConnectionFactoryBean implements FactoryBean<Connection> {
 		this.virtualHost = virtualHost;
 	}
 	
+	public void setAutomaticRecovery(Boolean automaticRecovery) {
+		this.automaticRecovery = automaticRecovery;
+	}
+
 	public void destory() {
 		if (null != connection) {
 			try {
