@@ -2,9 +2,11 @@ package com.appleframework.jms.rabbitmq;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -14,7 +16,7 @@ import com.appleframework.jms.core.producer.MessageProducer;
 @ContextConfiguration(locations = { "classpath:META-INF/apple/rabbitmq-producer2.xml" })
 public class RabbitMessageProducerTest {
 
-	private static Logger logger = Logger.getLogger(RabbitMessageProducerTest.class.getName());
+	private static Logger logger = LoggerFactory.getLogger(RabbitMessageProducerTest.class.getName());
     
 	@Resource
 	private MessageProducer messageProducer;
