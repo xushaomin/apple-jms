@@ -2,7 +2,8 @@ package com.appleframework.jms.ons.consumer;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.aliyun.openservices.shade.com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import com.aliyun.openservices.shade.com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -20,7 +21,7 @@ import com.appleframework.jms.ons.RocketMQPushConsumer;
  */
 public abstract class ObjectMessageConsumer extends AbstractMessageConusmer<Object> {
 	
-	private final static Logger logger = Logger.getLogger(ObjectMessageConsumer.class);
+	private final static Logger logger = LoggerFactory.getLogger(ObjectMessageConsumer.class);
 	
 	private RocketMQPushConsumer consumer;
 	

@@ -12,7 +12,6 @@
 
 	<properties>
 		<project.version>0.1.9-SNAPSHOT</project.version>
-		<log4j.version>1.2.16</log4j.version>
 		<spring.version>4.2.0.RELEASE</spring.version>
 		<junit.version>4.12</junit.version>
 	</properties>
@@ -26,13 +25,7 @@
 				<version>${junit.version}</version>
 				<scope>test</scope>
 			</dependency>
-		
-			<dependency>
-				<groupId>log4j</groupId>
-				<artifactId>log4j</artifactId>
-				<version>${log4j.version}</version>
-			</dependency>
-			
+						
 			<dependency>
   				<groupId>org.slf4j</groupId>
   				<artifactId>slf4j-api</artifactId>

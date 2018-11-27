@@ -7,7 +7,8 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.appleframework.jms.core.thread.StandardThreadExecutor.StandardThreadFactory;
 
@@ -19,7 +20,7 @@ import com.appleframework.jms.core.thread.StandardThreadExecutor.StandardThreadF
  */
 public class ErrorByteMessageProcessor implements Closeable, ErrorMessageProcessor<byte[]> {
 
-	private static final Logger logger = Logger.getLogger(ErrorByteMessageProcessor.class);
+	private static final Logger logger = LoggerFactory.getLogger(ErrorByteMessageProcessor.class);
 
 	// 重试时间间隔单元（毫秒）
 	private static final long RETRY_PERIOD_UNIT = 15 * 1000;

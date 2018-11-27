@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 
@@ -13,7 +14,7 @@ import com.rabbitmq.client.Connection;
 
 public class ChannelFactoryBean implements FactoryBean<Channel>, DisposableBean {
 
-	private final static Logger logger = Logger.getLogger(ChannelFactoryBean.class);
+	private final static Logger logger = LoggerFactory.getLogger(ChannelFactoryBean.class);
 
 	private Connection connection;
 	private Channel channel;

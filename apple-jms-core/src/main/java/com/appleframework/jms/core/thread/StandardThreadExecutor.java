@@ -11,7 +11,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 该线程池可伸缩并有缓冲队列（先根据任务数调整到最大线程数，超出的放入缓冲队列）
@@ -20,7 +21,7 @@ import org.apache.log4j.Logger;
  */
 public class StandardThreadExecutor extends ThreadPoolExecutor {
 	
-	private final static Logger logger = Logger.getLogger(StandardThreadExecutor.class);
+	private final static Logger logger = LoggerFactory.getLogger(StandardThreadExecutor.class);
 
 	public static final int DEFAULT_MIN_THREADS = 1;
 	public static final int DEFAULT_MAX_THREADS = Runtime.getRuntime().availableProcessors() + 1;

@@ -2,7 +2,8 @@ package com.appleframework.jms.rabbitmq.producer;
 
 import java.io.Serializable;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.appleframework.jms.core.exception.JmsException;
 import com.appleframework.jms.core.exception.MQException;
@@ -17,7 +18,7 @@ import com.rabbitmq.client.Channel;
  */
 public class RabbitMessageProducer3 implements MessageProducer3 {
 
-	private final static Logger logger = Logger.getLogger(RabbitMessageProducer3.class);
+	private final static Logger logger = LoggerFactory.getLogger(RabbitMessageProducer3.class);
 
 	private Channel channel;
 

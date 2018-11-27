@@ -2,7 +2,8 @@ package com.appleframework.jms.rabbitmq.factory;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
 
 import com.rabbitmq.client.Connection;
@@ -10,7 +11,7 @@ import com.rabbitmq.client.ConnectionFactory;
 
 public class ConnectionFactoryBean implements FactoryBean<Connection> {
 
-	private final static Logger logger = Logger.getLogger(ConnectionFactoryBean.class);
+	private final static Logger logger = LoggerFactory.getLogger(ConnectionFactoryBean.class);
 	
 	private Connection connection;
 	

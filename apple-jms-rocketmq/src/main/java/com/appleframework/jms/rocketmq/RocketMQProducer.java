@@ -1,12 +1,13 @@
 package com.appleframework.jms.rocketmq;
 
-import org.apache.log4j.Logger;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RocketMQProducer extends DefaultMQProducer {
 	
-	private static Logger logger = Logger.getLogger(RocketMQProducer.class.getName());
+	private static Logger logger = LoggerFactory.getLogger(RocketMQProducer.class.getName());
 
 	public void init() {
 		try {
