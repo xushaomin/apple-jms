@@ -19,6 +19,8 @@ public abstract class TopicBaseMessageConsumer extends AbstractMessageConusmer<b
 	private JedisClusterFactory connectionFactory;
 
 	protected String topic;
+	
+	protected String prefix = "";
 		
 	private BinaryJedisPubSub pubSub = new BinaryJedisPubSub() {
 		@Override
@@ -51,7 +53,7 @@ public abstract class TopicBaseMessageConsumer extends AbstractMessageConusmer<b
 					JedisCluster jedis = connectionFactory.getClusterConnection();
 					try {
 						for (int i = 0; i < topics.length; i++) {
-							final String topicc = topics[i];
+							final String topicc = prefix + topics[i];
 							jedis.psubscribe(pubSub, topicc.getBytes());
 						}
 					} catch (Exception e) {
@@ -83,6 +85,10 @@ public abstract class TopicBaseMessageConsumer extends AbstractMessageConusmer<b
 
 	public void destroy() {
 		unsubscribe();
+	}
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
 	}
 
 }

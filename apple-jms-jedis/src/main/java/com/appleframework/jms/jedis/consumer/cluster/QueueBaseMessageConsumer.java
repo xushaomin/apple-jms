@@ -21,6 +21,8 @@ public abstract class QueueBaseMessageConsumer extends AbstractMessageConusmer<b
 	private JedisClusterFactory connectionFactory;
 
 	protected String topic;
+	
+	protected String prefix = "";
 
 	private boolean poolRunning = true;
 	
@@ -39,9 +41,8 @@ public abstract class QueueBaseMessageConsumer extends AbstractMessageConusmer<b
 	protected void init() {
 		String[] topics = topic.split(",");
 		final ExecutorService executor = Executors.newFixedThreadPool(topics.length);
-
 		for (int i = 0; i < topics.length; i++) {
-			final String topicc = topics[i];
+			final String topicc = prefix + topics[i];
 			executor.submit(new Runnable() {
 				@Override
 				public void run() {
@@ -69,6 +70,10 @@ public abstract class QueueBaseMessageConsumer extends AbstractMessageConusmer<b
 
 	public void destroy() {
 		poolRunning = false;
+	}
+	
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
 	}
 
 }
