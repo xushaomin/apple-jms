@@ -1,6 +1,7 @@
 package com.appleframework.jms.kafka.consumer;
 
-import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -22,6 +23,8 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 	private static Logger logger = LoggerFactory.getLogger(BaseMessageConsumer.class);
 	
 	protected String topic;
+	
+	protected String prefix = "";
     	
 	private ErrorMessageProcessor<byte[]> errorProcessor;
 	
@@ -41,7 +44,11 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 	 public void run() {
          try {
         	String[] topics = topic.split(",");
-     		consumer.subscribe(Arrays.asList(topics));
+        	Set<String> topicSet = new HashSet<String>();
+        	for (String tp : topics) {
+        		topicSet.add(prefix + tp);
+			}
+     		consumer.subscribe(topicSet);
         	while (!closed.get()) {
     			ConsumerRecords<String, byte[]> records = consumer.poll(timeout);
     			for (ConsumerRecord<String, byte[]> record : records) {
@@ -106,6 +113,10 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 
 	public void setErrorProcessor(ErrorMessageProcessor<byte[]> errorProcessor) {
 		this.errorProcessor = errorProcessor;
+	}
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
 	}
 	
 }

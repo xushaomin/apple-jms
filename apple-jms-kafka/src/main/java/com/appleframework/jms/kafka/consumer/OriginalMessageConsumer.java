@@ -1,6 +1,7 @@
 package com.appleframework.jms.kafka.consumer;
 
-import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -21,6 +22,8 @@ public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<Co
 	private static Logger logger = LoggerFactory.getLogger(OriginalMessageConsumer.class);
 
 	protected String topic;
+	
+	protected String prefix = "";
 
 	protected KafkaConsumer<String, byte[]> consumer;
 
@@ -36,7 +39,11 @@ public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<Co
 	public void run() {
 		try {
 			String[] topics = topic.split(",");
-			consumer.subscribe(Arrays.asList(topics));
+			Set<String> topicSet = new HashSet<String>();
+        	for (String tp : topics) {
+        		topicSet.add(prefix + tp);
+			}
+			consumer.subscribe(topicSet);
 			while (!closed.get()) {
 				ConsumerRecords<String, byte[]> records = consumer.poll(timeout);
 				for (ConsumerRecord<String, byte[]> record : records) {
@@ -76,5 +83,9 @@ public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<Co
 	
 	public void commitAsync() {
 		consumer.commitAsync();
+	}
+	
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
 	}
 }
