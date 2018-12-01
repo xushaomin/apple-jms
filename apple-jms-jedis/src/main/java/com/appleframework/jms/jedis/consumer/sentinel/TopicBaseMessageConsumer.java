@@ -1,5 +1,8 @@
 package com.appleframework.jms.jedis.consumer.sentinel;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.apache.log4j.Logger;
 
 import com.appleframework.cache.jedis.factory.JedisSentinelFactory;
@@ -45,31 +48,34 @@ public abstract class TopicBaseMessageConsumer extends AbstractMessageConusmer<b
 	};
 
 	protected void init() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					String[] topics = topic.split(",");
-					Jedis jedis = connectionFactory.getJedisConnection();
+		String[] topics = topic.split(",");
+		final ExecutorService executor = Executors.newFixedThreadPool(topics.length);
+		for (int i = 0; i < topics.length; i++) {
+			final String topicc = prefix + topics[i];
+			executor.submit(new Runnable() {
+				@Override
+				public void run() {
 					try {
-						for (int i = 0; i < topics.length; i++) {
-							final String topicc = topics[i];
+						Jedis jedis = connectionFactory.getJedisConnection();
+						try {
 							logger.warn("subscribe the topic ->" + topicc);
 							jedis.psubscribe(pubSub, topicc.getBytes());
+						} catch (Exception e) {
+							logger.error(e.getMessage());
 						}
 					} catch (Exception e) {
-						logger.error(e.getMessage());
+						logger.error("Subscribing failed.", e);
 					}
-				} catch (Exception e) {
-					logger.error("Subscribing failed.", e);
 				}
-			}
-		}).start();
+			});
+		}
+
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			public void run() {
 				unsubscribe();
 			}
 		}));
+	
 	}
 	
 	private void unsubscribe() {
