@@ -55,7 +55,7 @@ public abstract class TopicBaseMessageConsumer extends AbstractMessageConusmer<b
 					try {
 						for (int i = 0; i < topics.length; i++) {
 							final String topicc = prefix + topics[i];
-							logger.warn("subscribe the topic :" + topicc);
+							logger.warn("subscribe the topic ->" + topicc);
 							jedis.psubscribe(pubSub, topicc.getBytes());
 						}
 					} catch (Exception e) {
