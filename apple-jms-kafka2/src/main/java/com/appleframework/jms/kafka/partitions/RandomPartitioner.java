@@ -19,6 +19,10 @@ public class RandomPartitioner implements Partitioner {
 
 	private final static Logger logger = LoggerFactory.getLogger(RandomPartitioner.class);
 
+	public RandomPartitioner() {
+		super();
+	}
+	
 	@Override
 	public void configure(Map<String, ?> configs) {
 	}

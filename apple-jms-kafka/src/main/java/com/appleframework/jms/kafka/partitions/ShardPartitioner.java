@@ -28,6 +28,10 @@ public class ShardPartitioner implements Partitioner {
 	private volatile Object lock = new Object();
 	
 	private static String shardNodePrefix = "";
+	
+	public ShardPartitioner() {
+		super();
+	}
 
 	@Override
 	public void configure(Map<String, ?> configs) {

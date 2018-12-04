@@ -15,6 +15,10 @@ import com.appleframework.jms.kafka.utils.RandomUtility;
  */
 public class ModPartitioner implements Partitioner {
 	
+	public ModPartitioner() {
+		super();
+	}
+	
 	@Override
 	public void configure(Map<String, ?> configs) {
 	}

@@ -29,6 +29,10 @@ public class ShardPartitioner implements Partitioner {
 	
 	private static String shardNodePrefix = "";
 
+	public ShardPartitioner() {
+		super();
+	}
+	
 	@Override
 	public void configure(Map<String, ?> configs) {
 		Object shardNodePrefixO = configs.get("shard.node.prefix");

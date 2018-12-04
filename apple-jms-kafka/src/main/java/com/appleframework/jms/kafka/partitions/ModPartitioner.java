@@ -17,6 +17,10 @@ import kafka.utils.VerifiableProperties;
  */
 public class ModPartitioner implements Partitioner {
 	
+	public ModPartitioner() {
+		super();
+	}
+	
 	@Override
 	public void configure(Map<String, ?> configs) {
 	}
