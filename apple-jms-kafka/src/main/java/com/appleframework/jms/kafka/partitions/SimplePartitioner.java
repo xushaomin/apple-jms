@@ -40,7 +40,5 @@ public class SimplePartitioner implements Partitioner {
 	@Override
 	public void close() {		
 	}
-	
-	
 
 }

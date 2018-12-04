@@ -9,8 +9,6 @@ import org.apache.kafka.common.PartitionInfo;
 
 import com.appleframework.jms.kafka.utils.RandomUtility;
 
-import kafka.utils.VerifiableProperties;
-
 /**
  * @author cruise.xu
  * 
@@ -48,8 +46,5 @@ public class ModPartitioner implements Partitioner {
 	@Override
 	public void close() {		
 	}
-
-	public ModPartitioner(VerifiableProperties props) {
-	}
-
+	
 }
