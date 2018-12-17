@@ -33,6 +33,9 @@ public abstract class QueueBaseMessageConsumer extends AbstractMessageConusmer<b
 			if (null != value) {
 				processMessage(value);
 			}
+			else {
+				Thread.sleep(10L);
+			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
