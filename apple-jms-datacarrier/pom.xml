@@ -1,23 +1,24 @@
 <?xml version="1.0"?>
 <project
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.appleframework.jms</groupId>
 		<artifactId>apple-jms</artifactId>
 		<version>0.1.9.RELEASE</version>
 	</parent>
-	<artifactId>apple-jms-jedis</artifactId>
-	<name>apple-jms-jedis</name>
+	<artifactId>apple-jms-datacarrier</artifactId>
+	<name>apple-jms-datacarrier</name>
 	<url>http://maven.apache.org</url>
-
+	
 	<properties>
-		<cache.version>0.3.5.RELEASE</cache.version>
+		<data-carrier.version>1.2</data-carrier.version>
 	</properties>
 
 	<dependencies>
-		
+
 		<dependency>
 			<groupId>com.appleframework.jms</groupId>
 			<artifactId>apple-jms-core</artifactId>
@@ -25,10 +26,14 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.appleframework.cache</groupId>
-			<artifactId>apple-cache-jedis</artifactId>
-			<version>${cache.version}</version>
-			<scope>provided</scope>
+			<groupId>com.a.eye</groupId>
+			<artifactId>data-carrier</artifactId>
+			<version>${data-carrier.version}</version>
+		</dependency>
+
+		<dependency>
+  			<groupId>org.slf4j</groupId>
+  			<artifactId>slf4j-api</artifactId>
 		</dependency>
 		
 		<dependency>
@@ -41,12 +46,12 @@
 			<artifactId>spring-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
-	</dependencies>
 
+	</dependencies>
 </project>
