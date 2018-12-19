@@ -7,13 +7,13 @@ import com.a.eye.datacarrier.buffer.BufferStrategy;
 import com.a.eye.datacarrier.consumer.IConsumer;
 import com.a.eye.datacarrier.partition.IDataPartitioner;
 
-public class DataCarrierFactoryBean implements FactoryBean<DataCarrier<byte[]>> {
+public class ObjectDataCarrierFactoryBean implements FactoryBean<DataCarrier<Object>> {
 		
 	private int channelSize = 10;
 	private int bufferSize = 10000;
 	private BufferStrategy BUFFERSTRATEGY = BufferStrategy.IF_POSSIBLE;
-	private IDataPartitioner<byte[]> dataPartitioner;
-	private IConsumer<byte[]> consumer;
+	private IDataPartitioner<Object> dataPartitioner;
+	private IConsumer<Object> consumer;
 	private Integer num = 10;
 	
 	public void setChannelSize(int channelSize) {
@@ -25,8 +25,8 @@ public class DataCarrierFactoryBean implements FactoryBean<DataCarrier<byte[]>> 
 	}
 	
 	@Override
-	public DataCarrier<byte[]> getObject() throws Exception {
-		DataCarrier<byte[]> carrier = new DataCarrier<byte[]>(channelSize, bufferSize);
+	public DataCarrier<Object> getObject() throws Exception {
+		DataCarrier<Object> carrier = new DataCarrier<Object>(channelSize, bufferSize);
 		carrier.setBufferStrategy(BUFFERSTRATEGY);
 		if(null != dataPartitioner) {
 			carrier.setPartitioner(dataPartitioner);
@@ -64,13 +64,13 @@ public class DataCarrierFactoryBean implements FactoryBean<DataCarrier<byte[]>> 
 			 Class<?> clazz;
 			try {
 				clazz = Class.forName(dataPartitionerClass);
-				dataPartitioner = (IDataPartitioner<byte[]>)clazz.newInstance();
+				dataPartitioner = (IDataPartitioner<Object>)clazz.newInstance();
 			} catch (Exception e) {
 			}
 		}
 	}
 
-	public void setConsumer(IConsumer<byte[]> consumer) {
+	public void setConsumer(IConsumer<Object> consumer) {
 		this.consumer = consumer;
 	}
 
