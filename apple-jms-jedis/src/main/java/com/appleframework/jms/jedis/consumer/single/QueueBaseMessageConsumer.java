@@ -25,6 +25,8 @@ public abstract class QueueBaseMessageConsumer extends AbstractMessageConusmer<b
 
 	private boolean poolRunning = true;
 	
+	protected Long sleepMillis = 10L;
+	
 	private void fetchMessage(String topic) {
 		Jedis jedis = jedisPool.getResource();
 		try {
@@ -33,7 +35,7 @@ public abstract class QueueBaseMessageConsumer extends AbstractMessageConusmer<b
 				processMessage(value);
 			}
 			else {
-				Thread.sleep(10L);
+				Thread.sleep(sleepMillis);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -75,6 +77,10 @@ public abstract class QueueBaseMessageConsumer extends AbstractMessageConusmer<b
 
 	public void destroy() {
 		poolRunning = false;
+	}
+	
+	public void setSleepMillis(Long sleepMillis) {
+		this.sleepMillis = sleepMillis;
 	}
 
 }

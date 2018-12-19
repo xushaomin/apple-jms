@@ -23,6 +23,8 @@ public abstract class QueueBaseMessageConsumer extends AbstractMessageConusmer<b
 	protected String topic;
 	
 	protected String prefix = "";
+	
+	protected Long sleepMillis = 10L;
 
 	private boolean poolRunning = true;
 	
@@ -34,7 +36,7 @@ public abstract class QueueBaseMessageConsumer extends AbstractMessageConusmer<b
 				processMessage(value);
 			}
 			else {
-				Thread.sleep(10L);
+				Thread.sleep(sleepMillis);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -77,6 +79,10 @@ public abstract class QueueBaseMessageConsumer extends AbstractMessageConusmer<b
 	
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
+	}
+
+	public void setSleepMillis(Long sleepMillis) {
+		this.sleepMillis = sleepMillis;
 	}
 
 }

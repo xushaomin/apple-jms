@@ -21,6 +21,8 @@ public abstract class QueueBaseMessageConsumer extends AbstractMessageConusmer<b
 	protected JedisShardInfoFactory connectionFactory;
 
 	protected String topic;
+	
+	protected Long sleepMillis = 10L;
 
 	private boolean poolRunning = true;
 	
@@ -32,7 +34,7 @@ public abstract class QueueBaseMessageConsumer extends AbstractMessageConusmer<b
 				processMessage(value);
 			}
 			else {
-				Thread.sleep(10L);
+				Thread.sleep(sleepMillis);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -74,4 +76,7 @@ public abstract class QueueBaseMessageConsumer extends AbstractMessageConusmer<b
 		poolRunning = false;
 	}
 
+	public void setSleepMillis(Long sleepMillis) {
+		this.sleepMillis = sleepMillis;
+	}
 }
