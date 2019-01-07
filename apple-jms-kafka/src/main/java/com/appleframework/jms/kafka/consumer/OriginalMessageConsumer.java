@@ -41,7 +41,9 @@ public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<Co
 			String[] topics = topic.split(",");
 			Set<String> topicSet = new HashSet<String>();
         	for (String tp : topics) {
-        		topicSet.add(prefix + tp);
+        		String topicc = prefix + tp;
+        		topicSet.add(topicc);
+        		logger.warn("subscribe the topic -> " + topicc);
 			}
 			consumer.subscribe(topicSet);
 			while (!closed.get()) {

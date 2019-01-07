@@ -48,6 +48,7 @@ public abstract class QueueBaseMessageConsumer extends AbstractMessageConusmer<b
 		final ExecutorService executor = Executors.newFixedThreadPool(topics.length);
 		for (int i = 0; i < topics.length; i++) {
 			final String topicc = prefix + topics[i];
+			logger.warn("subscribe the topic -> " + topicc);
 			executor.submit(new Runnable() {
 				@Override
 				public void run() {
