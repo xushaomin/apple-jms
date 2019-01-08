@@ -81,6 +81,7 @@
     	<module>apple-jms-jedis</module>
 		<module>apple-jms-rabbitmq</module>
     	<module>apple-jms-datacarrier</module>
+    	<module>apple-jms-eventbus</module>
   	</modules>
 	
 	<build>
