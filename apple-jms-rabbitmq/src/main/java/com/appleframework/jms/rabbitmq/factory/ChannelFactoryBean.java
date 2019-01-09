@@ -24,11 +24,16 @@ public class ChannelFactoryBean implements FactoryBean<Channel>, DisposableBean 
 	private Boolean exclusive = false;
 	private Boolean autoDelete = false;
 	private Map<String, Object> arguments = null;
+	
+	private Integer prefetchCount;
 
 	@Override
 	public Channel getObject() throws Exception {
 		channel = connection.createChannel();
 		channel.queueDeclare(queue, durable, exclusive, autoDelete, arguments);
+		if(null != prefetchCount && prefetchCount > 0) {
+			channel.basicQos(prefetchCount);
+		}
 		return channel;
 	}
 
@@ -88,6 +93,10 @@ public class ChannelFactoryBean implements FactoryBean<Channel>, DisposableBean 
 
 	public Connection getConnection() {
 		return connection;
+	}
+	
+	public void setPrefetchCount(Integer prefetchCount) {
+		this.prefetchCount = prefetchCount;
 	}
 
 	public void destroy() {
