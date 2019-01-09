@@ -17,7 +17,6 @@ import com.rabbitmq.client.Envelope;
 public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]> {
 
 	private Channel channel;
-
 	private String topic;
 
 	public void setChannel(Channel channel) {
@@ -35,7 +34,7 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
                     throws IOException {
             	processMessage(body);
             }  
-        };  
+        };
         channel.basicConsume(topic, true, consumer);  
 	}
 
