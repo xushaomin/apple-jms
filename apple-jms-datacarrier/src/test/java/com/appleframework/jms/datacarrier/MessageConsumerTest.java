@@ -11,7 +11,7 @@ public class MessageConsumerTest extends ObjectMessageConsumer {
 	}
 
 	@Override
-	public void processMessage(Object message) {
+	public void onMessage(Object message) {
 		System.out.println("--->>>" + message);
 		
 	}
