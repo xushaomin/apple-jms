@@ -17,16 +17,13 @@ import com.appleframework.jms.core.consumer.IMessageConusmer;
 import com.appleframework.jms.core.thread.StandardThreadExecutor.StandardThreadFactory;
 
 /**
- * 消费者端处理错误消息重试处理器
+ * Error Consumer Records Processor
  * 
- * @description <br>
- * @date 2016年10月25日
  */
 public class ErrorConsumerRecordsProcessor implements Closeable,ErrorMessageProcessor<ConsumerRecord<String, byte[]>> {
 
 	private static final Logger logger = LoggerFactory.getLogger(ErrorConsumerRecordsProcessor.class);
 
-	// 重试时间间隔单元（毫秒）
 	private static final long RETRY_PERIOD_UNIT = 15 * 1000;
 
 	private final PriorityBlockingQueue<PriorityTask> taskQueue = new PriorityBlockingQueue<PriorityTask>(1000);
@@ -47,7 +44,6 @@ public class ErrorConsumerRecordsProcessor implements Closeable,ErrorMessageProc
 				while (!closed.get()) {
 					try {
 						PriorityTask task = taskQueue.take();
-						// 空任务跳出循环
 						if (null == task.getMessage()) {
 							break;
 						}
@@ -76,7 +72,6 @@ public class ErrorConsumerRecordsProcessor implements Closeable,ErrorMessageProc
 
 	public void close() {
 		closed.set(true);
-		// taskQueue里面没有任务会一直阻塞，所以先add一个新任务保证执行
 		taskQueue.add(new PriorityTask());
 		try {
 			Thread.sleep(1000);
@@ -151,7 +146,6 @@ public class ErrorConsumerRecordsProcessor implements Closeable,ErrorMessageProc
 				return;
 			}
 			nextFireTime = nextFireTime + retryCount * RETRY_PERIOD_UNIT;
-			// 重新放入任务队列
 			taskQueue.add(this);
 		}
 
