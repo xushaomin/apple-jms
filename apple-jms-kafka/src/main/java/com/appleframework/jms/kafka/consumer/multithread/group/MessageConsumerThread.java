@@ -1,6 +1,7 @@
-package com.appleframework.jms.kafka.consumer;
+package com.appleframework.jms.kafka.consumer.multithread.group;
 
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -18,27 +19,27 @@ import com.appleframework.jms.core.consumer.ErrorMessageProcessor;
  * @author Cruise.Xu
  * 
  */
-public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]> implements Runnable {
+public class MessageConsumerThread implements Runnable {
 		
-	private static Logger logger = LoggerFactory.getLogger(BaseMessageConsumer.class);
+	private static Logger logger = LoggerFactory.getLogger(MessageConsumerThread.class);
 	
-	protected String topic;
+	private String topic;
 	
-	protected String prefix = "";
+	private String prefix = "";
     	
 	private ErrorMessageProcessor<byte[]> errorProcessor;
 	
-	protected Boolean errorProcessorLock = true;
+	private AbstractMessageConusmer<byte[]> messageConusmer;
 	
-	protected KafkaConsumer<String, byte[]> consumer;
+	private Boolean errorProcessorLock = true;
 	
-    private AtomicBoolean closed = new AtomicBoolean(false);
+	private KafkaConsumer<String, byte[]> consumer;
+	
+	private AtomicBoolean closed = new AtomicBoolean(false);
     	
-	private long timeout = 100;
+	private long timeout = Long.MAX_VALUE;
 	
-	protected void init() {
-	    new Thread(this).start();
-	}
+	private Properties properties;
 	
 	@Override
 	 public void run() {
@@ -50,6 +51,7 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
         		topicSet.add(topicc);
         		logger.warn("subscribe the topic -> " + topicc);
 			}
+        	consumer = new KafkaConsumer<String, byte[]>(properties);
      		consumer.subscribe(topicSet);
         	while (!closed.get()) {
     			ConsumerRecords<String, byte[]> records = consumer.poll(timeout);
@@ -57,11 +59,11 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
     				logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
     				byte[] message = record.value();
     				if(errorProcessorLock) {
-    					processMessage(message);
+    					messageConusmer.processMessage(message);
     				}
     				else {
     					try {
-    						processMessage(message);
+    						messageConusmer.processMessage(message);
     					} catch (Exception e) {
     						processErrorMessage(message);
     					}
@@ -75,7 +77,7 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 	
 	protected void processErrorMessage(byte[] message) {
 		if(!errorProcessorLock && null != errorProcessor) {
-			errorProcessor.processErrorMessage(message, this);
+			errorProcessor.processErrorMessage(message, messageConusmer);
 		}
 	}
 
@@ -85,10 +87,6 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 
 	public void setErrorProcessorLock(Boolean errorProcessorLock) {
 		this.errorProcessorLock = errorProcessorLock;
-	}
-
-	public void setConsumer(KafkaConsumer<String, byte[]> consumer) {
-		this.consumer = consumer;
 	}
 
 	public void setTimeout(long timeout) {
@@ -117,6 +115,14 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
+	}
+
+	public void setMessageConusmer(AbstractMessageConusmer<byte[]> messageConusmer) {
+		this.messageConusmer = messageConusmer;
+	}
+
+	public void setProperties(Properties properties) {
+		this.properties = properties;
 	}
 	
 }

@@ -10,6 +10,8 @@ package com.appleframework.jms.core.consumer;
 public interface ErrorMessageProcessor<T>  {
 
 	public void processErrorMessage(T message,  AbstractMessageConusmer<T> messageConusmer);
+	
+	public void processErrorMessage(T message,  IMessageConusmer<T> messageConusmer);
 
 	public void close();
 }

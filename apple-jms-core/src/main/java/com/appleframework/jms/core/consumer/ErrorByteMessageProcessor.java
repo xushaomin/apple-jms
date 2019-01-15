@@ -69,11 +69,20 @@ public class ErrorByteMessageProcessor implements Closeable, ErrorMessageProcess
 		}
 		taskQueue.add(new PriorityTask(message, messageConusmer));
 	}
+	
+	@Override
+	public void processErrorMessage(byte[] message, IMessageConusmer<byte[]> messageConusmer) {
+		int taskCount;
+		if ((taskCount = taskQueue.size()) > 1000) {
+			logger.warn("ErrorByteMessageProcessor queue task count over:" + taskCount);
+		}
+		taskQueue.add(new PriorityTask(message, messageConusmer));
+	}
 
 	public void close() {
 		closed.set(true);
 		// taskQueue里面没有任务会一直阻塞，所以先add一个新任务保证执行
-		taskQueue.add(new PriorityTask(null, null));
+		taskQueue.add(new PriorityTask());
 		try {
 			Thread.sleep(1000);
 		} catch (Exception e) {
@@ -84,11 +93,16 @@ public class ErrorByteMessageProcessor implements Closeable, ErrorMessageProcess
 
 	class PriorityTask implements Runnable, Comparable<PriorityTask> {
 
-		final byte[] message;
-		final AbstractMessageConusmer<byte[]> messageConusmer;
+		byte[] message;
+		AbstractMessageConusmer<byte[]> messageConusmer1;
+		IMessageConusmer<byte[]> messageConusmer2 = null;
 
 		int retryCount = 0;
 		long nextFireTime;
+		
+		public PriorityTask() {
+			
+		}
 
 		public PriorityTask(byte[] message, AbstractMessageConusmer<byte[]> messageConusmer) {
 			this(message, messageConusmer, System.currentTimeMillis() + RETRY_PERIOD_UNIT);
@@ -97,7 +111,18 @@ public class ErrorByteMessageProcessor implements Closeable, ErrorMessageProcess
 		public PriorityTask(byte[] message, AbstractMessageConusmer<byte[]> messageConusmer, long nextFireTime) {
 			super();
 			this.message = message;
-			this.messageConusmer = messageConusmer;
+			this.messageConusmer1 = messageConusmer;
+			this.nextFireTime = nextFireTime;
+		}
+		
+		public PriorityTask(byte[] message, IMessageConusmer<byte[]> messageConusmer) {
+			this(message, messageConusmer, System.currentTimeMillis() + RETRY_PERIOD_UNIT);
+		}
+		
+		public PriorityTask(byte[] message, IMessageConusmer<byte[]> messageConusmer, long nextFireTime) {
+			super();
+			this.message = message;
+			this.messageConusmer2 = messageConusmer;
 			this.nextFireTime = nextFireTime;
 		}
 
@@ -108,7 +133,12 @@ public class ErrorByteMessageProcessor implements Closeable, ErrorMessageProcess
 		@Override
 		public void run() {
 			try {
-				messageConusmer.processMessage(message);
+				if(null != messageConusmer1) {
+					messageConusmer1.processMessage(message);
+				}
+				else if(null != messageConusmer2) {
+					messageConusmer2.onMessage(message);
+				}
 			} catch (Exception e) {
 				retryCount++;
 				retry();
@@ -130,6 +160,6 @@ public class ErrorByteMessageProcessor implements Closeable, ErrorMessageProcess
 			return (int) (this.nextFireTime - o.nextFireTime);
 		}
 
-	}
+	}	
 	
 }

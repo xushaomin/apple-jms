@@ -1,7 +1,10 @@
-package com.appleframework.jms.kafka.consumer;
+package com.appleframework.jms.kafka.consumer.multithread.thread;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -18,7 +21,7 @@ import com.appleframework.jms.core.consumer.ErrorMessageProcessor;
  * @author Cruise.Xu
  * 
  */
-public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]> implements Runnable {
+public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]> {
 		
 	private static Logger logger = LoggerFactory.getLogger(BaseMessageConsumer.class);
 	
@@ -34,14 +37,13 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 	
     private AtomicBoolean closed = new AtomicBoolean(false);
     	
-	private long timeout = 100;
+	private long timeout = Long.MAX_VALUE;
+	
+	private ExecutorService executor;
+	
+	protected Integer threadsNum;
 	
 	protected void init() {
-	    new Thread(this).start();
-	}
-	
-	@Override
-	 public void run() {
          try {
         	String[] topics = topic.split(",");
         	Set<String> topicSet = new HashSet<String>();
@@ -50,22 +52,30 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
         		topicSet.add(topicc);
         		logger.warn("subscribe the topic -> " + topicc);
 			}
+        	if(null == threadsNum) {
+        		threadsNum = topics.length;
+        	}
+        	executor = Executors.newFixedThreadPool(threadsNum);
      		consumer.subscribe(topicSet);
-        	while (!closed.get()) {
+     		while (!closed.get()) {
     			ConsumerRecords<String, byte[]> records = consumer.poll(timeout);
-    			for (ConsumerRecord<String, byte[]> record : records) {
-    				logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
-    				byte[] message = record.value();
-    				if(errorProcessorLock) {
-    					processMessage(message);
-    				}
-    				else {
-    					try {
-    						processMessage(message);
-    					} catch (Exception e) {
-    						processErrorMessage(message);
-    					}
-    				}
+    			for (final ConsumerRecord<String, byte[]> record : records) {
+    				executor.submit(new Runnable() {
+    					public void run() {
+    						logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+    						byte[] message = record.value();
+    	    				if(errorProcessorLock) {
+    	    					processMessage(message);
+    	    				}
+    	    				else {
+    	    					try {
+    	    						processMessage(message);
+    	    					} catch (Exception e) {
+    	    						processErrorMessage(message);
+    	    					}
+    	    				}
+    	                }
+    	            });
     			}
              }
          } catch (WakeupException e) {
@@ -101,6 +111,12 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 		if (null != errorProcessor) {
 			errorProcessor.close();
 		}
+		executor.shutdown();
+		try {
+			executor.awaitTermination(5000, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage());
+		}
 	}
 
 	public void commitSync() {
@@ -117,6 +133,10 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
+	}
+
+	public void setThreadsNum(Integer threadsNum) {
+		this.threadsNum = threadsNum;
 	}
 	
 }

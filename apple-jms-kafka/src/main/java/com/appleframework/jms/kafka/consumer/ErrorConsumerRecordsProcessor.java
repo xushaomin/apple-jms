@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 import com.appleframework.jms.core.consumer.ErrorMessageProcessor;
+import com.appleframework.jms.core.consumer.IMessageConusmer;
 import com.appleframework.jms.core.thread.StandardThreadExecutor.StandardThreadFactory;
 
 /**
@@ -143,5 +144,14 @@ public class ErrorConsumerRecordsProcessor implements Closeable,ErrorMessageProc
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void processErrorMessage(ConsumerRecord<String, byte[]> message,
+			IMessageConusmer<ConsumerRecord<String, byte[]>> messageConusmer) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 
 }
