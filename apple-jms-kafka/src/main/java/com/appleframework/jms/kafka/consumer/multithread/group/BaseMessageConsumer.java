@@ -1,6 +1,14 @@
 package com.appleframework.jms.kafka.consumer.multithread.group;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 import com.appleframework.jms.core.consumer.ErrorMessageProcessor;
@@ -10,6 +18,8 @@ import com.appleframework.jms.core.consumer.ErrorMessageProcessor;
  * 
  */
 public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]> {
+	
+	private static Logger logger = LoggerFactory.getLogger(BaseMessageConsumer.class);
 
 	protected String topic;
 
@@ -26,8 +36,13 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 	private Integer threadsNum = 1;
 	
 	private Boolean mixConsumer = true;
+	
+	private ExecutorService executor;
+	
+	private List<MessageConsumerThread> threadList = new ArrayList<>();
 
 	public void init() {
+		executor = Executors.newFixedThreadPool(threadsNum);
 		if (mixConsumer) {
 			for (int i = 0; i < threadsNum; i++) {
 				startThread(topic);
@@ -51,8 +66,8 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 		item.setPrefix(prefix);
 		item.setTimeout(timeout);
 		item.setTopic(topicc);
-		Thread thread = new Thread(item);
-		thread.start();
+		threadList.add(item);
+		executor.submit(item);
 	}
 
 	protected void processErrorMessage(byte[] message) {
@@ -76,6 +91,15 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 	public void destroy() {
 		if (null != errorProcessor) {
 			errorProcessor.close();
+		}
+		for (MessageConsumerThread thread : threadList) {
+			thread.destroy();
+		}
+		executor.shutdown();
+		try {
+			executor.awaitTermination(5000, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage());
 		}
 	}
 
