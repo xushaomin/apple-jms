@@ -20,7 +20,7 @@ import com.appleframework.jms.core.thread.StandardThreadExecutor.StandardThreadF
  * Error Consumer Records Processor
  * 
  */
-public class ErrorConsumerRecordsProcessor implements Closeable,ErrorMessageProcessor<ConsumerRecord<String, byte[]>> {
+public class ErrorConsumerRecordsProcessor implements Closeable, ErrorMessageProcessor<ConsumerRecord<String, byte[]>> {
 
 	private static final Logger logger = LoggerFactory.getLogger(ErrorConsumerRecordsProcessor.class);
 
