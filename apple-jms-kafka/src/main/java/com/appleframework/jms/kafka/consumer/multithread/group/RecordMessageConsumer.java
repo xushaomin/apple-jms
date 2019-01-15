@@ -1,18 +1,8 @@
 package com.appleframework.jms.kafka.consumer.multithread.group;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Properties;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.common.errors.WakeupException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 import com.appleframework.jms.core.consumer.ErrorMessageProcessor;
@@ -22,65 +12,49 @@ import com.appleframework.jms.core.consumer.ErrorMessageProcessor;
  * 
  */
 public abstract class RecordMessageConsumer extends AbstractMessageConusmer<ConsumerRecord<String, byte[]>> {
-
-	private static Logger logger = LoggerFactory.getLogger(BaseMessageConsumer.class);
-
+	
 	protected String topic;
 	
 	protected String prefix = "";
+	
+	private Properties properties;
 
 	private ErrorMessageProcessor<ConsumerRecord<String, byte[]>> errorProcessor;
 
 	protected Boolean errorProcessorLock = true;
-
-	protected KafkaConsumer<String, byte[]> consumer;
-
-	private AtomicBoolean closed = new AtomicBoolean(false);
-
+	
 	private long timeout = Long.MAX_VALUE;
-	
-	private ExecutorService executor;
-	
+		
 	protected Integer threadsNum;
+	
+	private Boolean mixConsumer = true;
 
-	protected void init() {
-		try {
+	public void init() {
+		if (mixConsumer) {
+			for (int i = 0; i < threadsNum; i++) {
+				startThread(topic);
+			}
+		} else {
 			String[] topics = topic.split(",");
-			Set<String> topicSet = new HashSet<String>();
 			for (String tp : topics) {
-				String topicc = prefix + tp;
-				topicSet.add(topicc);
-				logger.warn("subscribe the topic -> " + topicc);
-			}
-			if (null == threadsNum) {
-				threadsNum = topics.length;
-			}
-			executor = Executors.newFixedThreadPool(threadsNum);
-			consumer.subscribe(topicSet);
-
-			while (!closed.get()) {
-				ConsumerRecords<String, byte[]> records = consumer.poll(timeout);
-				for (final ConsumerRecord<String, byte[]> record : records) {
-					executor.submit(new Runnable() {
-						public void run() {
-							logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
-							if (errorProcessorLock) {
-								processMessage(record);
-							} else {
-								try {
-									processMessage(record);
-								} catch (Exception e) {
-									processErrorMessage(record);
-								}
-							}
-						}
-					});
+				for (int i = 0; i < threadsNum; i++) {
+					startThread(tp);
 				}
 			}
-		} catch (WakeupException e) {
-			if (!closed.get())
-				throw e;
 		}
+	}
+	
+	private void startThread(String topicc) {
+		OriginalMessageConsumerThread item = new OriginalMessageConsumerThread();
+		item.setProperties(properties);
+		item.setErrorProcessor(errorProcessor);
+		item.setErrorProcessorLock(errorProcessorLock);
+		item.setMessageConusmer(this);
+		item.setPrefix(prefix);
+		item.setTimeout(timeout);
+		item.setTopic(topicc);
+		Thread thread = new Thread(item);
+		thread.start();
 	}
 
 	protected void processErrorMessage(ConsumerRecord<String, byte[]> message) {
@@ -96,34 +70,23 @@ public abstract class RecordMessageConsumer extends AbstractMessageConusmer<Cons
 	public void setErrorProcessorLock(Boolean errorProcessorLock) {
 		this.errorProcessorLock = errorProcessorLock;
 	}
-
-	public void setConsumer(KafkaConsumer<String, byte[]> consumer) {
-		this.consumer = consumer;
-	}
-
+	
 	public void setTimeout(long timeout) {
 		this.timeout = timeout;
 	}
 
 	public void destroy() {
-		closed.set(true);
-		consumer.wakeup();
 		if (null != errorProcessor) {
 			errorProcessor.close();
 		}
-		executor.shutdown();
-		try {
-			executor.awaitTermination(5000, TimeUnit.MILLISECONDS);
-		} catch (InterruptedException e) {
-			logger.error(e.getMessage());
-		}
-	}
-
-	public void commit() {
-		consumer.commitSync();
 	}
 	
 	public void setThreadsNum(Integer threadsNum) {
 		this.threadsNum = threadsNum;
 	}
+
+	public void setProperties(Properties properties) {
+		this.properties = properties;
+	}
+	
 }

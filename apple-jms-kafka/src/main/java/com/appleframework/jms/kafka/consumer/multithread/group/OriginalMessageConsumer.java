@@ -1,18 +1,8 @@
 package com.appleframework.jms.kafka.consumer.multithread.group;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Properties;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.common.errors.WakeupException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 
@@ -20,93 +10,70 @@ import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
  * @author Cruise.Xu
  * 
  */
-public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<ConsumerRecord<String, byte[]>> implements Runnable {
-
-	private static Logger logger = LoggerFactory.getLogger(OriginalMessageConsumer.class);
+public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<ConsumerRecord<String, byte[]>> {
 
 	protected String topic;
-	
+
+	private Properties properties;
+
 	protected String prefix = "";
 
-	protected KafkaConsumer<String, byte[]> consumer;
-
-	private AtomicBoolean closed = new AtomicBoolean(false);
-
 	private long timeout = Long.MAX_VALUE;
-	
-	private ExecutorService executor;
-	
-	protected Integer threadsNum;
 
-	protected void init() {
-		try {
+	protected Integer threadsNum = 1;
+
+	private Boolean mixConsumer = true;
+
+	public void init() {
+		if (mixConsumer) {
+			for (int i = 0; i < threadsNum; i++) {
+				startThread(topic);
+			}
+		} else {
 			String[] topics = topic.split(",");
-			Set<String> topicSet = new HashSet<String>();
 			for (String tp : topics) {
-				String topicc = prefix + tp;
-				topicSet.add(topicc);
-				logger.warn("subscribe the topic -> " + topicc);
-			}
-			if (null == threadsNum) {
-				threadsNum = topics.length;
-			}
-			executor = Executors.newFixedThreadPool(threadsNum);
-			consumer.subscribe(topicSet);
-			while (!closed.get()) {
-				ConsumerRecords<String, byte[]> records = consumer.poll(timeout);
-				for (final ConsumerRecord<String, byte[]> record : records) {
-					executor.submit(new Runnable() {
-						public void run() {
-							logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
-							processMessage(record);
-						}
-					});
+				for (int i = 0; i < threadsNum; i++) {
+					startThread(tp);
 				}
 			}
-		} catch (WakeupException e) {
-			if (!closed.get())
-				throw e;
 		}
+	}
+
+	private void startThread(String topicc) {
+		OriginalMessageConsumerThread item = new OriginalMessageConsumerThread();
+		item.setProperties(properties);
+		item.setErrorProcessor(null);
+		item.setErrorProcessorLock(false);
+		item.setMessageConusmer(this);
+		item.setPrefix(prefix);
+		item.setTimeout(timeout);
+		item.setTopic(topicc);
+		Thread thread = new Thread(item);
+		thread.start();
 	}
 
 	public void setTopic(String topic) {
 		this.topic = topic.trim().replaceAll(" ", "");
 	}
 
-	public void setConsumer(KafkaConsumer<String, byte[]> consumer) {
-		this.consumer = consumer;
-	}
-
 	public void setTimeout(long timeout) {
 		this.timeout = timeout;
 	}
 
-	public void destroy() {
-		closed.set(true);
-		consumer.wakeup();
-		executor.shutdown();
-		try {
-			executor.awaitTermination(5000, TimeUnit.MILLISECONDS);
-		} catch (InterruptedException e) {
-			logger.error(e.getMessage());
-		}
-	}
-
-	public void commitSync() {
-		consumer.commitSync();
-	}
-	
-	public void commitAsync() {
-		consumer.commitAsync();
-	}
-	
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
 	}
-	
+
 	public void setThreadsNum(Integer threadsNum) {
 		this.threadsNum = threadsNum;
 	}
-	
-	
+
+	public void setProperties(Properties properties) {
+		this.properties = properties;
+	}
+
+	public void setMixConsumer(Boolean mixConsumer) {
+		this.mixConsumer = mixConsumer;
+	}
+
 }

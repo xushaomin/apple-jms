@@ -24,20 +24,35 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 	private long timeout = Long.MAX_VALUE;
 
 	private Integer threadsNum = 1;
+	
+	private Boolean mixConsumer = true;
 
 	public void init() {
-    	for (int i = 0; i < threadsNum; i++) {
-			MessageConsumerThread item = new MessageConsumerThread();
-			item.setProperties(properties);
-			item.setErrorProcessor(errorProcessor);
-			item.setErrorProcessorLock(errorProcessorLock);
-			item.setMessageConusmer(this);
-			item.setPrefix(prefix);
-			item.setTimeout(timeout);
-			item.setTopic(topic);
-			Thread thread = new Thread(item);
-			thread.start();
+		if (mixConsumer) {
+			for (int i = 0; i < threadsNum; i++) {
+				startThread(topic);
+			}
+		} else {
+			String[] topics = topic.split(",");
+			for (String tp : topics) {
+				for (int i = 0; i < threadsNum; i++) {
+					startThread(tp);
+				}
+			}
 		}
+	}
+	
+	private void startThread(String topicc) {
+		MessageConsumerThread item = new MessageConsumerThread();
+		item.setProperties(properties);
+		item.setErrorProcessor(errorProcessor);
+		item.setErrorProcessorLock(errorProcessorLock);
+		item.setMessageConusmer(this);
+		item.setPrefix(prefix);
+		item.setTimeout(timeout);
+		item.setTopic(topicc);
+		Thread thread = new Thread(item);
+		thread.start();
 	}
 
 	protected void processErrorMessage(byte[] message) {
@@ -78,6 +93,10 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 
 	public void setProperties(Properties properties) {
 		this.properties = properties;
+	}
+
+	public void setMixConsumer(Boolean mixConsumer) {
+		this.mixConsumer = mixConsumer;
 	}
 
 }
