@@ -139,6 +139,9 @@ public class ErrorByteMessageProcessor implements Closeable, ErrorMessageProcess
 				else if(null != messageConusmer2) {
 					messageConusmer2.onMessage(message);
 				}
+				else {
+					logger.error("MessageConusmer is not exist !!!!");
+				}
 			} catch (Exception e) {
 				retryCount++;
 				retry();

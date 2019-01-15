@@ -77,7 +77,7 @@ public class ErrorConsumerRecordsProcessor implements Closeable,ErrorMessageProc
 	public void close() {
 		closed.set(true);
 		// taskQueue里面没有任务会一直阻塞，所以先add一个新任务保证执行
-		taskQueue.add(new PriorityTask(null, null));
+		taskQueue.add(new PriorityTask());
 		try {
 			Thread.sleep(1000);
 		} catch (Exception e) {
@@ -88,11 +88,14 @@ public class ErrorConsumerRecordsProcessor implements Closeable,ErrorMessageProc
 
 	class PriorityTask implements Runnable, Comparable<PriorityTask> {
 
-		final ConsumerRecord<String, byte[]> message;
-		final AbstractMessageConusmer<ConsumerRecord<String, byte[]>> metadataMessageConusmer;
-
+		ConsumerRecord<String, byte[]> message;
+		AbstractMessageConusmer<ConsumerRecord<String, byte[]>> messageConusmer1;
+		IMessageConusmer<ConsumerRecord<String, byte[]>> messageConusmer2;
+		
 		int retryCount = 0;
 		long nextFireTime;
+		
+		public PriorityTask() {}
 
 		public PriorityTask(ConsumerRecord<String, byte[]> message, 
 				AbstractMessageConusmer<ConsumerRecord<String, byte[]>> metadataMessageConusmer) {
@@ -100,12 +103,26 @@ public class ErrorConsumerRecordsProcessor implements Closeable,ErrorMessageProc
 		}
 
 		public PriorityTask(ConsumerRecord<String, byte[]> message, 
-				AbstractMessageConusmer<ConsumerRecord<String, byte[]>> metadataMessageConusmer, long nextFireTime) {
+				AbstractMessageConusmer<ConsumerRecord<String, byte[]>> messageConusmer, long nextFireTime) {
 			super();
 			this.message = message;
-			this.metadataMessageConusmer = metadataMessageConusmer;
+			this.messageConusmer1 = messageConusmer;
 			this.nextFireTime = nextFireTime;
 		}
+		
+		public PriorityTask(ConsumerRecord<String, byte[]> message, 
+				IMessageConusmer<ConsumerRecord<String, byte[]>> messageConusmer) {
+			this(message, messageConusmer, System.currentTimeMillis() + RETRY_PERIOD_UNIT);
+		}
+
+		public PriorityTask(ConsumerRecord<String, byte[]> message, 
+				IMessageConusmer<ConsumerRecord<String, byte[]>> messageConusmer, long nextFireTime) {
+			super();
+			this.message = message;
+			this.messageConusmer2 = messageConusmer;
+			this.nextFireTime = nextFireTime;
+		}
+		
 
 		public ConsumerRecord<String, byte[]> getMessage() {
 			return message;
@@ -114,7 +131,14 @@ public class ErrorConsumerRecordsProcessor implements Closeable,ErrorMessageProc
 		@Override
 		public void run() {
 			try {
-				metadataMessageConusmer.processMessage(message);
+				if(null != messageConusmer1) {
+					messageConusmer1.processMessage(message);
+				}
+				else if(null != messageConusmer2) {
+					messageConusmer2.onMessage(message);
+				} else {
+					logger.error("MessageConusmer is not exist !!!!");
+				}
 			} catch (Exception e) {
 				retryCount++;
 				retry();
@@ -141,17 +165,20 @@ public class ErrorConsumerRecordsProcessor implements Closeable,ErrorMessageProc
 	@Override
 	public void processErrorMessage(ConsumerRecord<String, byte[]> message,
 			AbstractMessageConusmer<ConsumerRecord<String, byte[]>> messageConusmer) {
-		// TODO Auto-generated method stub
-		
+		int taskCount;
+		if ((taskCount = taskQueue.size()) > 1000) {
+			logger.warn("ErrorByteMessageProcessor queue task count over:" + taskCount);
+		}
+		taskQueue.add(new PriorityTask(message, messageConusmer));
 	}
 
 	@Override
 	public void processErrorMessage(ConsumerRecord<String, byte[]> message,
 			IMessageConusmer<ConsumerRecord<String, byte[]>> messageConusmer) {
-		// TODO Auto-generated method stub
-		
+		int taskCount;
+		if ((taskCount = taskQueue.size()) > 1000) {
+			logger.warn("ErrorByteMessageProcessor queue task count over:" + taskCount);
+		}
+		taskQueue.add(new PriorityTask(message, messageConusmer));
 	}
-	
-	
-
 }
