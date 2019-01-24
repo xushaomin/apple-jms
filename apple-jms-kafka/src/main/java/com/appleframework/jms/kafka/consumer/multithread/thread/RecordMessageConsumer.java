@@ -43,8 +43,6 @@ public abstract class RecordMessageConsumer extends AbstractMessageConusmer<Cons
 	
 	protected Integer threadsNum;
 	
-	protected Integer queueCapacity;
-
 	protected void init() {
 		try {
 			String[] topics = topic.split(",");
@@ -57,7 +55,7 @@ public abstract class RecordMessageConsumer extends AbstractMessageConusmer<Cons
 			if (null == threadsNum) {
 				threadsNum = topics.length;
 			}
-			executor = ExecutorUtils.newFixedThreadPool(threadsNum, queueCapacity);
+			executor = ExecutorUtils.newFixedThreadPool(threadsNum, null);
 			consumer.subscribe(topicSet);
 
 			while (!closed.get()) {
@@ -129,7 +127,4 @@ public abstract class RecordMessageConsumer extends AbstractMessageConusmer<Cons
 		this.threadsNum = threadsNum;
 	}
 	
-	public void setQueueCapacity(Integer queueCapacity) {
-		this.queueCapacity = queueCapacity;
-	}
 }

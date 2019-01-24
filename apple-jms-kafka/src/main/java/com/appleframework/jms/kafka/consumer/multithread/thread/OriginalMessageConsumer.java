@@ -38,8 +38,6 @@ public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<Co
 	
 	protected Integer threadsNum;
 	
-	protected Integer queueCapacity;
-
 	protected void init() {
 		try {
 			String[] topics = topic.split(",");
@@ -52,7 +50,7 @@ public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<Co
 			if (null == threadsNum) {
 				threadsNum = topics.length;
 			}
-			executor = ExecutorUtils.newFixedThreadPool(threadsNum, queueCapacity);
+			executor = ExecutorUtils.newFixedThreadPool(threadsNum, null);
 			consumer.subscribe(topicSet);
 			while (!closed.get()) {
 				ConsumerRecords<String, byte[]> records = consumer.poll(timeout);
@@ -110,7 +108,4 @@ public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<Co
 		this.threadsNum = threadsNum;
 	}
 	
-	public void setQueueCapacity(Integer queueCapacity) {
-		this.queueCapacity = queueCapacity;
-	}
 }

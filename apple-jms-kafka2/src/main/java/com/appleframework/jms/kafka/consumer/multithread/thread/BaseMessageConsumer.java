@@ -43,9 +43,7 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 	private ExecutorService executor;
 	
 	protected Integer threadsNum;
-	
-	protected Integer queueCapacity;
-	
+		
 	protected void init() {
          try {
         	String[] topics = topic.split(",");
@@ -58,7 +56,7 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
         	if(null == threadsNum) {
         		threadsNum = topics.length;
         	}
-        	executor = ExecutorUtils.newFixedThreadPool(threadsNum, queueCapacity);
+        	executor = ExecutorUtils.newFixedThreadPool(threadsNum, null);
      		consumer.subscribe(topicSet);
      		Duration duration = Duration.ofMillis(timeout);
      		while (!closed.get()) {
@@ -141,10 +139,6 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 
 	public void setThreadsNum(Integer threadsNum) {
 		this.threadsNum = threadsNum;
-	}
-	
-	public void setQueueCapacity(Integer queueCapacity) {
-		this.queueCapacity = queueCapacity;
 	}
 	
 }
