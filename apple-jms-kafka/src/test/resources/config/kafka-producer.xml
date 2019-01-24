@@ -28,4 +28,8 @@
 		<property name="topic" value="${producer.topic}" />
 	</bean>
 	
+	<bean id="messageProducer2" class="com.appleframework.jms.kafka.producer.KafkaMessageProducer2">
+		<property name="producer" ref="producer" />
+	</bean>
+	
 </beans>

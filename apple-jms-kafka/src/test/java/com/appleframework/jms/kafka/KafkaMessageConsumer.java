@@ -3,7 +3,8 @@ package com.appleframework.jms.kafka;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.appleframework.jms.kafka.consumer.BytesMessageConsumer;
+import com.appleframework.jms.kafka.consumer.multithread.thread.BytesMessageConsumer;
+
 
 public class KafkaMessageConsumer extends BytesMessageConsumer {
 

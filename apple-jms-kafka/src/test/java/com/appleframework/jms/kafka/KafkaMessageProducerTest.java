@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.appleframework.jms.core.producer.MessageProducer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:config/kafka-producer.xml" })
+@ContextConfiguration(locations = { "classpath*:config/kafka-producer.xml" })
 public class KafkaMessageProducerTest {
 
 	private static Logger logger = LoggerFactory.getLogger(KafkaMessageProducerTest.class.getName());

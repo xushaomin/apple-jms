@@ -3,7 +3,6 @@ package com.appleframework.jms.kafka.consumer.multithread.thread;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -16,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 import com.appleframework.jms.core.consumer.ErrorMessageProcessor;
+import com.appleframework.jms.kafka.utils.ExecutorUtils;
 
 /**
  * @author Cruise.Xu
@@ -43,6 +43,8 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 	
 	protected Integer threadsNum;
 	
+	protected Integer queueCapacity;
+	
 	protected void init() {
          try {
         	String[] topics = topic.split(",");
@@ -55,7 +57,7 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
         	if(null == threadsNum) {
         		threadsNum = topics.length;
         	}
-        	executor = Executors.newFixedThreadPool(threadsNum);
+        	executor = ExecutorUtils.newFixedThreadPool(threadsNum, queueCapacity);
      		consumer.subscribe(topicSet);
      		while (!closed.get()) {
     			ConsumerRecords<String, byte[]> records = consumer.poll(timeout);
@@ -137,6 +139,10 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 
 	public void setThreadsNum(Integer threadsNum) {
 		this.threadsNum = threadsNum;
+	}
+
+	public void setQueueCapacity(Integer queueCapacity) {
+		this.queueCapacity = queueCapacity;
 	}
 	
 }

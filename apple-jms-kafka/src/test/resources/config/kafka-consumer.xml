@@ -9,7 +9,7 @@
 	<bean id="consumerProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 		<property name="properties">
 			<props>
-				<prop key="bootstrap.servers">${metadata.broker.list}</prop>
+				<prop key="bootstrap.servers">${bootstrap.servers}</prop>
 				<prop key="group.id">${group.id}</prop>
 				<prop key="enable.auto.commit">false</prop>
 				<prop key="key.deserializer">org.apache.kafka.common.serialization.StringDeserializer</prop>
