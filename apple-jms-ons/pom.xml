@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>com.aliyun.openservices</groupId>
 			<artifactId>ons-client</artifactId>
-			<version>1.7.8.Final</version>
+			<version>1.7.9.Final</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
