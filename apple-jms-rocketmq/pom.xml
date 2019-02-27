@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>apple-jms</artifactId>
 		<groupId>com.appleframework.jms</groupId>
-		<version>0.1.9-SNAPSHOT</version>
+		<version>0.1.9.RELEASE</version>
 	</parent>
 	<artifactId>apple-jms-rocketmq</artifactId>
 	<name>apple-jms-rocketmq</name>
