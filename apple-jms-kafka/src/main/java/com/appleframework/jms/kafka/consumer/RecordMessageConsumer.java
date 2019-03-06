@@ -18,6 +18,7 @@ import com.appleframework.jms.core.consumer.ErrorMessageProcessor;
  * @author Cruise.Xu
  * 
  */
+@Deprecated
 public abstract class RecordMessageConsumer extends AbstractMessageConusmer<ConsumerRecord<String, byte[]>> implements Runnable {
 
 	private static Logger logger = LoggerFactory.getLogger(BaseMessageConsumer.class);

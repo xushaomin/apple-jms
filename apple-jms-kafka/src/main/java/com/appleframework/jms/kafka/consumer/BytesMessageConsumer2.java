@@ -8,6 +8,7 @@ import com.appleframework.jms.core.consumer.IMessageConusmer;
  * @author Cruise.Xu
  * 
  */
+@Deprecated
 public class BytesMessageConsumer2 extends BaseMessageConsumer {
 
 	@Resource
