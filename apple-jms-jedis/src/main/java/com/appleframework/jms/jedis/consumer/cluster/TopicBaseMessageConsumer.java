@@ -78,8 +78,10 @@ public abstract class TopicBaseMessageConsumer extends AbstractMessageConusmer<b
 						}
 						try {
 							Thread.sleep(sleepMillis);
+							connectionFactory.init();
 						} catch (Exception unused) {
 						}
+						
 					}
 				}
 			});

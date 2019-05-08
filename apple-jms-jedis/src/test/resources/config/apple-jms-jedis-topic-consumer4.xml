@@ -46,7 +46,8 @@
 	
 	<bean id="topicMessageConsumer" class="com.appleframework.jms.jedis.consumer.TopicMessageConsumerImpl" init-method="init">
 		<property name="connectionFactory" ref="connectionFactory" />
-		<property name="topic" value="test2" />
+		<property name="topic" value="test" />
+		<property name="sleepMillis" value="1000" />
 	</bean>
 	
 </beans>
