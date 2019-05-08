@@ -11,7 +11,7 @@
 			<props>
 				<prop key="bootstrap.servers">${bootstrap.servers}</prop>
 				<prop key="group.id">${group.id}</prop>
-				<prop key="enable.auto.commit">false</prop>
+				<prop key="enable.auto.commit">true</prop>
 				<prop key="key.deserializer">org.apache.kafka.common.serialization.StringDeserializer</prop>
             	<prop key="value.deserializer">org.apache.kafka.common.serialization.ByteArrayDeserializer</prop>
 			</props>

@@ -25,6 +25,8 @@ public abstract class TopicBaseMessageConsumer extends AbstractMessageConusmer<b
 	protected String topic;
 	
 	protected String prefix = "";
+	
+	protected Long sleepMillis = 10L;
 		
 	private BinaryJedisPubSub pubSub = new BinaryJedisPubSub() {
 		@Override
@@ -56,17 +58,24 @@ public abstract class TopicBaseMessageConsumer extends AbstractMessageConusmer<b
 			executor.submit(new Runnable() {
 				@Override
 				public void run() {
-					try {
+					while (true) {
 						JedisPool jedisPool = poolFactory.getWritePool();
-						Jedis jedis = jedisPool.getResource();
+						Jedis jedis = null;
 						try {
+							jedis = jedisPool.getResource();
 							logger.warn("subscribe the topic ->" + topicc);
 							jedis.psubscribe(pubSub, topicc.getBytes());
 						} catch (Exception e) {
 							logger.error(e.getMessage());
+						} finally {
+							if (jedis != null) {
+								jedis.close();
+							}
 						}
-					} catch (Exception e) {
-						logger.error("Subscribing failed.", e);
+						try {
+							Thread.sleep(sleepMillis);
+						} catch (Exception unused) {
+						}
 					}
 				}
 			});
@@ -98,6 +107,10 @@ public abstract class TopicBaseMessageConsumer extends AbstractMessageConusmer<b
 	
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
+	}
+	
+	public void setSleepMillis(Long sleepMillis) {
+		this.sleepMillis = sleepMillis;
 	}
 
 }

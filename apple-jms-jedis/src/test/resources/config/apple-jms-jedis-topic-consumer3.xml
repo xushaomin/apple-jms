@@ -12,8 +12,8 @@
      default-lazy-init="true">
      
      <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
-		<property name="maxTotal" value="24" />
-		<property name="maxIdle" value="24" />
+		<property name="maxTotal" value="1" />
+		<property name="maxIdle" value="1" />
 		<property name="minIdle" value="0" />
 	</bean>
 			
@@ -21,7 +21,7 @@
         <constructor-arg name="poolConfig" ref="poolConfig" />
         <constructor-arg name="host" value="192.168.1.236" />
         <constructor-arg name="port" value="6379" type="int" />
-        <constructor-arg name="timeout" value="10000" type="int" />
+        <constructor-arg name="timeout" value="100000" type="int" />
         <constructor-arg name="password" value="123456" />
         <constructor-arg name="database" value="0" type="int" />
     </bean>

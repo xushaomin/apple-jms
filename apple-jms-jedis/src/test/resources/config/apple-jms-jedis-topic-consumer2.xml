@@ -11,7 +11,7 @@
         http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd"
      default-lazy-init="true">
      
-     <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
 		<property name="maxTotal" value="50" />
 		<property name="maxIdle" value="50" />
 		<property name="minIdle" value="20" />

@@ -5,12 +5,11 @@ import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 
-import com.appleframework.cache.jedis.factory.PoolFactory;
+import com.appleframework.cache.jedis.factory.JedisShardInfoFactory;
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 
 import redis.clients.jedis.BinaryJedisPubSub;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 /**
  * @author Cruise.Xu
@@ -20,11 +19,13 @@ public abstract class TopicBaseMessageConsumer extends AbstractMessageConusmer<b
 
 	private static Logger logger = Logger.getLogger(TopicBaseMessageConsumer.class);
 
-	protected PoolFactory poolFactory;
+	protected JedisShardInfoFactory connectionFactory;
 
 	protected String topic;
 	
 	protected String prefix = "";
+	
+	protected Long sleepMillis = 10L;
 		
 	private BinaryJedisPubSub pubSub = new BinaryJedisPubSub() {
 		@Override
@@ -56,17 +57,23 @@ public abstract class TopicBaseMessageConsumer extends AbstractMessageConusmer<b
 			executor.submit(new Runnable() {
 				@Override
 				public void run() {
-					try {
-						JedisPool jedisPool = poolFactory.getWritePool();
-						Jedis jedis = jedisPool.getResource();
+					while (true) {
+						Jedis jedis = null;
 						try {
+							jedis = connectionFactory.getJedisConnection();
 							logger.warn("subscribe the topic ->" + topicc);
 							jedis.psubscribe(pubSub, topicc.getBytes());
 						} catch (Exception e) {
 							logger.error(e.getMessage());
+						} finally {
+							if (jedis != null) {
+								jedis.close();
+							}
 						}
-					} catch (Exception e) {
-						logger.error("Subscribing failed.", e);
+						try {
+							Thread.sleep(sleepMillis);
+						} catch (Exception unused) {
+						}
 					}
 				}
 			});
@@ -88,8 +95,8 @@ public abstract class TopicBaseMessageConsumer extends AbstractMessageConusmer<b
 		this.topic = topic.trim().replaceAll(" ", "");
 	}
 
-	public void setPoolFactory(PoolFactory poolFactory) {
-		this.poolFactory = poolFactory;
+	public void setConnectionFactory(JedisShardInfoFactory connectionFactory) {
+		this.connectionFactory = connectionFactory;
 	}
 
 	public void destroy() {
@@ -98,6 +105,10 @@ public abstract class TopicBaseMessageConsumer extends AbstractMessageConusmer<b
 	
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
+	}
+	
+	public void setSleepMillis(Long sleepMillis) {
+		this.sleepMillis = sleepMillis;
 	}
 
 }

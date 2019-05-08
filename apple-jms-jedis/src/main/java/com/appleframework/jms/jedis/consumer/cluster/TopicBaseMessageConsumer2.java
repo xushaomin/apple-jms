@@ -1,5 +1,6 @@
 package com.appleframework.jms.jedis.consumer.cluster;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -24,6 +25,8 @@ public abstract class TopicBaseMessageConsumer2 extends AbstractMessageConusmer<
 	protected String topic;
 	
 	protected String prefix = "";
+	
+	protected Long sleepMillis = 10L;
 		
 	private JedisPubSub pubSub = new JedisPubSub() {
 		@Override
@@ -56,16 +59,27 @@ public abstract class TopicBaseMessageConsumer2 extends AbstractMessageConusmer<
 			executor.submit(new Runnable() {
 				@Override
 				public void run() {
-					try {
-						JedisCluster jedis = connectionFactory.getClusterConnection();
+					while (true) {
+						JedisCluster jedis = null;
 						try {
+							jedis = connectionFactory.getClusterConnection();
 							logger.warn("subscribe the topic ->" + topicc);
 							jedis.subscribe(pubSub, topicc);
 						} catch (Exception e) {
 							logger.error(e.getMessage());
+						} finally {
+							if (jedis != null) {
+								try {
+									jedis.close();
+								} catch (IOException e) {
+									logger.error(e.getMessage());
+								}
+							}
 						}
-					} catch (Exception e) {
-						logger.error("Subscribing failed.", e);
+						try {
+							Thread.sleep(sleepMillis);
+						} catch (Exception unused) {
+						}
 					}
 				}
 			});
@@ -96,6 +110,10 @@ public abstract class TopicBaseMessageConsumer2 extends AbstractMessageConusmer<
 
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
+	}
+	
+	public void setSleepMillis(Long sleepMillis) {
+		this.sleepMillis = sleepMillis;
 	}
 
 }
