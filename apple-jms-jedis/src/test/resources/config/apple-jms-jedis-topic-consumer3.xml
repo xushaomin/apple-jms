@@ -9,9 +9,9 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd"
-	default-lazy-init="true">
-		
-	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+     default-lazy-init="true">
+     
+     <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
 		<property name="maxTotal" value="24" />
 		<property name="maxIdle" value="24" />
 		<property name="minIdle" value="0" />
@@ -26,9 +26,9 @@
         <constructor-arg name="database" value="0" type="int" />
     </bean>
 	
-	<bean id="messageProducer" class="com.appleframework.jms.jedis.producer.single.TopicMessageProducer">
+	<bean id="topicMessageConsumer" class="com.appleframework.jms.jedis.consumer.TopicMessageConsumerImpl" init-method="init">
 		<property name="jedisPool" ref="jedisPool" />
 		<property name="topic" value="test2" />
-	</bean>	
+	</bean>
 	
 </beans>

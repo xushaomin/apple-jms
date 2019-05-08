@@ -1,6 +1,6 @@
 package com.appleframework.jms.jedis.consumer;
 
-import com.appleframework.jms.jedis.consumer.master.TopicBytesMessageConsumer;
+import com.appleframework.jms.jedis.consumer.single.TopicBytesMessageConsumer;
 
 public class TopicMessageConsumerImpl extends TopicBytesMessageConsumer {
 
