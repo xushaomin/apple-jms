@@ -81,7 +81,6 @@ public abstract class TopicBaseMessageConsumer extends AbstractMessageConusmer<b
 							connectionFactory.init();
 						} catch (Exception unused) {
 						}
-						
 					}
 				}
 			});
