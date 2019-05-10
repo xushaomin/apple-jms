@@ -79,6 +79,7 @@
     	<module>apple-jms-kafka2</module>
     	<module>apple-jms-ons</module>
     	<module>apple-jms-jedis</module>
+    	<module>apple-jms-jedis3</module>
 		<module>apple-jms-rabbitmq</module>
     	<module>apple-jms-datacarrier</module>
     	<module>apple-jms-eventbus</module>

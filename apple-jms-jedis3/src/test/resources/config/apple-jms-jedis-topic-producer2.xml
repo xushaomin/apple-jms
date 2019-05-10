@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:c="http://www.springframework.org/schema/c" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd"
+     default-lazy-init="true">
+     
+     <!-- 连接池配置 -->
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<!-- 最大连接数 -->
+		<property name="maxTotal" value="500" />
+		<!-- 最大空闲连接数 -->
+		<property name="maxIdle" value="300" />
+		<!-- 最小空闲连接数 -->
+		<property name="minIdle" value="100" />
+		<!-- 获取连接时的最大等待毫秒数,小于零:阻塞不确定的时间,默认-1 -->
+		<property name="maxWaitMillis" value="3000" />
+		<!-- 每次释放连接的最大数目 -->
+		<property name="numTestsPerEvictionRun" value="100" />
+		<!-- 释放连接的扫描间隔（毫秒） -->
+		<property name="timeBetweenEvictionRunsMillis" value="3000" />
+		<!-- 连接最小空闲时间 -->
+		<property name="minEvictableIdleTimeMillis" value="1800000" />
+		<!-- 连接空闲多久后释放, 当空闲时间>该值 且 空闲连接>最大空闲连接数 时直接释放 -->
+		<property name="softMinEvictableIdleTimeMillis" value="10000" />
+		<!-- 在获取连接的时候检查有效性, 默认false -->
+		<property name="testOnBorrow" value="true" />
+		<!-- 在空闲时检查有效性, 默认false -->
+		<property name="testWhileIdle" value="true" />
+		<!-- 在归还给pool时，是否提前进行validate操作 -->
+		<property name="testOnReturn" value="true" />
+		<!-- 连接耗尽时是否阻塞, false报异常,ture阻塞直到超时, 默认true -->
+		<property name="blockWhenExhausted" value="false" />
+	</bean>
+		
+	<bean id="connectionFactory" class="com.appleframework.cache.jedis.factory.JedisClusterFactoryBean">
+		<property name="poolConfig" ref="jedisPoolConfig" />
+		<property name="serverNodes" value="192.168.1.217:7481,192.168.1.217:7482,192.168.1.218:7483,192.168.1.218:7484,192.168.1.219:7485,192.168.1.219:7486" />
+	</bean>
+	
+	<bean id="messageProducer" class="com.appleframework.jms.jedis.producer.cluster.TopicMessageProducer">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="topic" value="test" />
+	</bean>	
+	
+</beans>
