@@ -76,7 +76,7 @@
 		<module>apple-jms-activemq</module>
     	<module>apple-jms-rocketmq</module>
     	<module>apple-jms-kafka</module>
-    	<module>apple-jms-kafka2</module>
+    	<!-- <module>apple-jms-kafka2</module>-->
     	<module>apple-jms-ons</module>
     	<module>apple-jms-jedis</module>
     	<module>apple-jms-jedis3</module>
