@@ -13,7 +13,7 @@
 	<url>http://mvnrepo.appleframework.com</url>
 	
 	<properties>
-		<activemq.version>5.15.7</activemq.version>
+		<activemq.version>5.15.9</activemq.version>
 	</properties>
 	
 	<dependencies>
