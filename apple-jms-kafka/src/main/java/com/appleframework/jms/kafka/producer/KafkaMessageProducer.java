@@ -56,8 +56,8 @@ public class KafkaMessageProducer implements MessageProducer {
 	public void sendObject(Serializable message) throws JmsException {
 		try {
 			ProducerRecord<String, byte[]> producerData 
-			= new ProducerRecord<String, byte[]>(topic, key, ByteUtils.toBytes(message));
-		producer.send(producerData);
+				= new ProducerRecord<String, byte[]>(topic, key, ByteUtils.toBytes(message));
+			producer.send(producerData);
 		} catch (Exception e) {
 			throw new MQException(e);
 		}
