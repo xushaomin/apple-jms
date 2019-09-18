@@ -14,7 +14,7 @@
 
 	<properties>
 		<cache.version>0.3.6.RELEASE</cache.version>
-		<jedis.version>3.1.0-m1</jedis.version>
+		<jedis.version>3.1.0</jedis.version>
 	</properties>
 
 	<dependencies>

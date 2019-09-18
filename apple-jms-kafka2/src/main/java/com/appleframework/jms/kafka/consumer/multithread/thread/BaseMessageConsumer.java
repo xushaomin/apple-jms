@@ -128,13 +128,13 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 		try {
 			messageExecutor.awaitTermination(5000, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 		}
 		mainExecutor.shutdown();
 		try {
 			mainExecutor.awaitTermination(5000, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 		}
 	}
 

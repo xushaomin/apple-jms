@@ -31,7 +31,7 @@ public class RocketMessageProducer implements MessageProducer {
 			SendResult result = producer.send(msg);
 			logger.info("msgId=" + result.getMessageId());
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 			throw new MQException(e);
 		}  
 	}
@@ -43,7 +43,7 @@ public class RocketMessageProducer implements MessageProducer {
 			SendResult result = producer.send(msg);
 			logger.info("msgId=" + result.getMessageId());
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 			throw new MQException(e);
 		}  
 	}
@@ -55,7 +55,7 @@ public class RocketMessageProducer implements MessageProducer {
 			SendResult result = producer.send(msg);
 			logger.info("msgId=" + result.getMessageId());
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 			throw new MQException(e);
 		}
 	}

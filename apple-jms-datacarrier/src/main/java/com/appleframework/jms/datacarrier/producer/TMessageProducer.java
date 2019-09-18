@@ -31,7 +31,7 @@ public class TMessageProducer implements MessageProducer {
 		try {
 			carrier.produce(message);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 		}
 	}
 
@@ -40,7 +40,7 @@ public class TMessageProducer implements MessageProducer {
 		try {
 			carrier.produce(message);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 		}
 	}
 
@@ -49,7 +49,7 @@ public class TMessageProducer implements MessageProducer {
 		try {
 			carrier.produce(message);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 		}
 	}
 

@@ -2,7 +2,8 @@ package com.appleframework.jms.jedis.producer.single;
 
 import java.io.Serializable;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.appleframework.jms.core.exception.JmsException;
 import com.appleframework.jms.core.producer.MessageProducer2;
@@ -18,7 +19,7 @@ import redis.clients.jedis.JedisPool;
 @SuppressWarnings("deprecation")
 public class TopicMessageProducer2 implements MessageProducer2 {
 	
-	private static Logger logger = Logger.getLogger(TopicMessageProducer2.class);
+	private static Logger logger = LoggerFactory.getLogger(TopicMessageProducer2.class);
 
 	private JedisPool jedisPool;
 	
@@ -36,7 +37,7 @@ public class TopicMessageProducer2 implements MessageProducer2 {
 		try {
 			jedis.publish(topic.getBytes(), message);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 		} finally {
 			jedisPool.returnResource(jedis);
 		}
@@ -48,7 +49,7 @@ public class TopicMessageProducer2 implements MessageProducer2 {
 		try {
 			jedis.publish(topic.getBytes(), ByteUtils.toBytes(message));
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 		} finally {
 			jedisPool.returnResource(jedis);
 		}
@@ -60,7 +61,7 @@ public class TopicMessageProducer2 implements MessageProducer2 {
 		try {
 			jedis.publish(topic, message);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 		} finally {
 			jedisPool.returnResource(jedis);
 		}

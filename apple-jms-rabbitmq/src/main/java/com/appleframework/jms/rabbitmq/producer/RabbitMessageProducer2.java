@@ -30,7 +30,7 @@ public class RabbitMessageProducer2 implements MessageProducer2 {
 		try {
 			channel.basicPublish(exchange, topic, props, message);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 			throw new MQException(e);
 		}
 	}
@@ -40,7 +40,7 @@ public class RabbitMessageProducer2 implements MessageProducer2 {
 		try {
 			channel.basicPublish(exchange, topic, props, ByteUtils.toBytes(message));
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 			throw new MQException(e);
 		}
 	}
@@ -50,7 +50,7 @@ public class RabbitMessageProducer2 implements MessageProducer2 {
 		try {
 			channel.basicPublish(exchange, topic, props, message.getBytes());
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 			throw new MQException(e);
 		}
 	}

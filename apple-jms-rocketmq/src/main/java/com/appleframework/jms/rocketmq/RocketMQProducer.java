@@ -13,7 +13,7 @@ public class RocketMQProducer extends DefaultMQProducer {
 		try {
 			start();
 		} catch (MQClientException e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 		}
 	}
 

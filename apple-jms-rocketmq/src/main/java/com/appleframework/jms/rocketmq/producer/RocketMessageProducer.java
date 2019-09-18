@@ -35,7 +35,7 @@ public class RocketMessageProducer implements MessageProducer {
 			logger.info("msgId=" + result.getMsgId());
 		} catch (MQClientException | RemotingException | MQBrokerException
 				| InterruptedException e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 			throw new MQException(e);
 		}  
 	}
@@ -48,7 +48,7 @@ public class RocketMessageProducer implements MessageProducer {
 			logger.info("msgId=" + result.getMsgId());
 		} catch (MQClientException | RemotingException | MQBrokerException
 				| InterruptedException e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 			throw new MQException(e);
 		}  
 	}
@@ -61,7 +61,7 @@ public class RocketMessageProducer implements MessageProducer {
 			logger.info("msgId=" + result.getMsgId());
 		} catch (MQClientException | RemotingException | MQBrokerException
 				| InterruptedException e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 			throw new MQException(e);
 		}
 	}

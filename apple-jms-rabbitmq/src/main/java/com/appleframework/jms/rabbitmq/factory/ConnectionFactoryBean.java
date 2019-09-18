@@ -94,7 +94,7 @@ public class ConnectionFactoryBean implements FactoryBean<Connection> {
 			try {
 				connection.close();
 			} catch (IOException e) {
-				logger.error(e.getMessage());
+				logger.error("", e);
 			}
 		}
 	}

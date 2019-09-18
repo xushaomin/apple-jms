@@ -3,7 +3,8 @@ package com.appleframework.jms.jedis.consumer.sentinel;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.appleframework.cache.jedis.factory.JedisSentinelFactory;
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
@@ -17,7 +18,7 @@ import redis.clients.jedis.Jedis;
  */
 public abstract class TopicBaseMessageConsumer extends AbstractMessageConusmer<byte[]> {
 
-	private static Logger logger = Logger.getLogger(TopicBaseMessageConsumer.class);
+	private static Logger logger = LoggerFactory.getLogger(TopicBaseMessageConsumer.class);
 
 	private JedisSentinelFactory connectionFactory;
 
@@ -64,7 +65,7 @@ public abstract class TopicBaseMessageConsumer extends AbstractMessageConusmer<b
 							logger.warn("subscribe the topic ->" + topicc);
 							jedis.psubscribe(pubSub, topicc.getBytes());
 						} catch (Exception e) {
-							logger.error(e.getMessage());
+							logger.error("", e);
 						}  finally {
 							if (jedis != null) {
 								jedis.close();

@@ -28,7 +28,7 @@ public class ObjectMessageProducer implements MessageProducer {
 		try {
 			eventBus.post(message);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 		}
 	}
 
@@ -37,7 +37,7 @@ public class ObjectMessageProducer implements MessageProducer {
 		try {
 			eventBus.post(message);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 		}
 	}
 
@@ -46,7 +46,7 @@ public class ObjectMessageProducer implements MessageProducer {
 		try {
 			eventBus.post(message);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 		}
 	}
 

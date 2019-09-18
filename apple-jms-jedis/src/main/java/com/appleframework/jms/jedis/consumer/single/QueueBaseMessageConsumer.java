@@ -3,7 +3,8 @@ package com.appleframework.jms.jedis.consumer.single;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 
@@ -17,7 +18,7 @@ import redis.clients.jedis.JedisPool;
 @SuppressWarnings("deprecation")
 public abstract class QueueBaseMessageConsumer extends AbstractMessageConusmer<byte[]> {
 
-	private static Logger logger = Logger.getLogger(QueueBaseMessageConsumer.class);
+	private static Logger logger = LoggerFactory.getLogger(QueueBaseMessageConsumer.class);
 
 	protected JedisPool jedisPool;
 
@@ -38,7 +39,7 @@ public abstract class QueueBaseMessageConsumer extends AbstractMessageConusmer<b
 				Thread.sleep(sleepMillis);
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 		} finally {
 			jedisPool.returnResource(jedis);
 		}

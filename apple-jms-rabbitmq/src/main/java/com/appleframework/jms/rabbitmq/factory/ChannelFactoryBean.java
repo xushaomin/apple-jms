@@ -104,7 +104,7 @@ public class ChannelFactoryBean implements FactoryBean<Channel>, DisposableBean 
 			try {
 				channel.close();
 			} catch (IOException | TimeoutException e) {
-				logger.error(e.getMessage());
+				logger.error("", e);
 			}
 		}
 	}

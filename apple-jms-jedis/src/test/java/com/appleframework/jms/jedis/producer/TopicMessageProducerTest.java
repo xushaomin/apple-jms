@@ -2,7 +2,9 @@ package com.appleframework.jms.jedis.producer;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -14,7 +16,7 @@ import com.appleframework.jms.core.producer.MessageProducer;
 @ContextConfiguration(locations = { "classpath*:config/apple-jms-jedis-topic-producer2.xml" })
 public class TopicMessageProducerTest {
 
-	private static Logger logger = Logger.getLogger(TopicMessageProducerTest.class.getName());
+	private static Logger logger = LoggerFactory.getLogger(TopicMessageProducerTest.class.getName());
 
 	@Resource
 	private MessageProducer messageProducer;

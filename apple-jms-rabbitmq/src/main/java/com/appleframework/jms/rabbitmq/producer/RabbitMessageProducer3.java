@@ -28,7 +28,7 @@ public class RabbitMessageProducer3 implements MessageProducer3 {
 		try {
 			channel.basicPublish(exchange, topic, props, message);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 			throw new MQException(e);
 		}
 	}
@@ -38,7 +38,7 @@ public class RabbitMessageProducer3 implements MessageProducer3 {
 		try {
 			channel.basicPublish(exchange, topic, props, ByteUtils.toBytes(message));
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 			throw new MQException(e);
 		}
 	}
@@ -48,7 +48,7 @@ public class RabbitMessageProducer3 implements MessageProducer3 {
 		try {
 			channel.basicPublish(exchange, topic, props, message.getBytes());
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 			throw new MQException(e);
 		}
 	}

@@ -13,7 +13,7 @@
 	<url>http://maven.apache.org</url>
 	
 	<properties>
-		<amqp.version>5.7.0</amqp.version>
+		<amqp.version>5.7.3</amqp.version>
 	</properties>
 	
 	<dependencies>

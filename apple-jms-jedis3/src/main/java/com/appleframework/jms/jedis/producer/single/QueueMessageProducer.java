@@ -2,7 +2,8 @@ package com.appleframework.jms.jedis.producer.single;
 
 import java.io.Serializable;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.appleframework.jms.core.exception.JmsException;
 import com.appleframework.jms.core.producer.MessageProducer;
@@ -17,7 +18,7 @@ import redis.clients.jedis.JedisPool;
  */
 public class QueueMessageProducer implements MessageProducer {
 	
-	private static Logger logger = Logger.getLogger(QueueMessageProducer.class);
+	private static Logger logger = LoggerFactory.getLogger(QueueMessageProducer.class);
 
 	private JedisPool jedisPool;
 	
@@ -41,7 +42,7 @@ public class QueueMessageProducer implements MessageProducer {
 		try {
 			jedis.lpush(topic.getBytes(), message);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 		}
 	}
 
@@ -51,7 +52,7 @@ public class QueueMessageProducer implements MessageProducer {
 		try {
 			jedis.lpush(topic.getBytes(), ByteUtils.toBytes(message));
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 		}
 	}
 
@@ -61,7 +62,7 @@ public class QueueMessageProducer implements MessageProducer {
 		try {
 			jedis.lpush(topic, message);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 		}
 	}
 

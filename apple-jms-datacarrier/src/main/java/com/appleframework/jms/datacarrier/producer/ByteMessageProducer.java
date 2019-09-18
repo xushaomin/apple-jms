@@ -30,7 +30,7 @@ public class ByteMessageProducer implements MessageProducer {
 		try {
 			carrier.produce(message);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 		}
 	}
 
@@ -39,7 +39,7 @@ public class ByteMessageProducer implements MessageProducer {
 		try {
 			carrier.produce(ByteUtils.toBytes(message));
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 		}
 	}
 
@@ -48,7 +48,7 @@ public class ByteMessageProducer implements MessageProducer {
 		try {
 			carrier.produce(message.getBytes());
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 		}
 	}
 

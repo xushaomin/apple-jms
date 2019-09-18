@@ -99,7 +99,7 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 		try {
 			executor.awaitTermination(5000, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
-			logger.error(e.getMessage());
+			logger.error("", e);
 		}
 	}
 

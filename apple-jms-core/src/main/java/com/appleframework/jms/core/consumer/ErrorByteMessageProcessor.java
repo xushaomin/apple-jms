@@ -54,7 +54,7 @@ public class ErrorByteMessageProcessor implements Closeable, ErrorMessageProcess
 						}
 						task.run();
 					} catch (Exception e) {
-						logger.error(e.getMessage());
+						logger.error("", e);
 					}
 				}
 			}

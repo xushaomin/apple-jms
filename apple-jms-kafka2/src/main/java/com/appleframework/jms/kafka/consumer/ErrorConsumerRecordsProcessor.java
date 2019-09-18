@@ -54,7 +54,7 @@ public class ErrorConsumerRecordsProcessor implements Closeable, ErrorMessagePro
 						}
 						task.run();
 					} catch (Exception e) {
-						logger.error(e.getMessage());
+						logger.error("", e);
 					}
 				}
 			}
