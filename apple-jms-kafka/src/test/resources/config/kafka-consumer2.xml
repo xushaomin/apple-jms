@@ -6,7 +6,8 @@
 
    	<context:property-placeholder location="classpath*:kafka.properties" ignore-unresolvable="true" />
 
-	<bean id="consumerProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+	
+	<bean id="kafkaMessageConsumer" class="com.appleframework.jms.kafka.KafkaMessageConsumer2" init-method="init" destroy-method="destroy">
 		<property name="properties">
 			<props>
 				<prop key="bootstrap.servers">${bootstrap.servers}</prop>
@@ -16,15 +17,7 @@
             	<prop key="value.deserializer">org.apache.kafka.common.serialization.ByteArrayDeserializer</prop>
 			</props>
 		</property>
-	</bean>
-	
-	<bean id="consumer" class="org.apache.kafka.clients.consumer.KafkaConsumer">
-		<constructor-arg index="0" ref="consumerProperties" />
-	</bean>
-	
-	<bean id="kafkaMessageConsumer" class="com.appleframework.jms.kafka.KafkaMessageConsumer" init-method="init" destroy-method="destroy">
-		<property name="consumer" ref="consumer" />
 		<property name="topic" value="${consumer.topic}" />
-	</bean>	
+	</bean>
 
 </beans>

@@ -3,6 +3,9 @@ package com.appleframework.jms.kafka.consumer;
 import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -19,7 +22,7 @@ import com.appleframework.jms.core.consumer.ErrorMessageProcessor;
  * @author Cruise.Xu
  * 
  */
-public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]> implements Runnable {
+public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]> {
 		
 	private static Logger logger = LoggerFactory.getLogger(BaseMessageConsumer.class);
 	
@@ -37,12 +40,17 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
     	
 	private long timeout = 100;
 	
-	protected void init() {
-	    new Thread(this).start();
-	}
+	private ExecutorService executor = Executors.newSingleThreadExecutor();
 	
-	@Override
-	 public void run() {
+	protected void init() {
+		executor.execute(new Runnable() {
+			public void run() {
+				startup();
+			}
+		});
+	}
+
+	public void startup() {
          try {
         	String[] topics = topic.split(",");
         	Set<String> topicSet = new HashSet<String>();
@@ -102,6 +110,12 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 		consumer.wakeup();
 		if (null != errorProcessor) {
 			errorProcessor.close();
+		}
+		executor.shutdown();
+		try {
+			executor.awaitTermination(5000, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage());
 		}
 	}
 

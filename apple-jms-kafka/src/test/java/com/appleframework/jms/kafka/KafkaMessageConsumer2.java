@@ -3,11 +3,11 @@ package com.appleframework.jms.kafka;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.appleframework.jms.kafka.consumer.multithread.thread.BytesMessageConsumer;
+import com.appleframework.jms.kafka.consumer.multithread.group.BytesMessageConsumer;
 
-public class KafkaMessageConsumer extends BytesMessageConsumer {
+public class KafkaMessageConsumer2 extends BytesMessageConsumer {
 
-	private static Logger logger = LoggerFactory.getLogger(KafkaMessageConsumer.class.getName());
+	private static Logger logger = LoggerFactory.getLogger(KafkaMessageConsumer2.class.getName());
 	
 	@Override
 	public void onMessage(byte[] message) {

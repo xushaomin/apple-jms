@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -40,11 +41,21 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
     	
 	private long timeout = Long.MAX_VALUE;
 	
-	private ExecutorService executor;
+	private ExecutorService messageExecutor;
+	
+	private ExecutorService mainExecutor =Executors.newSingleThreadExecutor();
 	
 	protected Integer threadsNum;
 		
 	protected void init() {
+		mainExecutor.execute(new Runnable() {
+			public void run() {
+				startup();
+			}
+		});
+	}
+
+	public void startup() {
          try {
         	String[] topics = topic.split(",");
         	Set<String> topicSet = new HashSet<String>();
@@ -56,13 +67,13 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
         	if(null == threadsNum) {
         		threadsNum = topics.length;
         	}
-        	executor = ExecutorUtils.newFixedThreadPool(threadsNum, null);
+        	messageExecutor = ExecutorUtils.newFixedThreadPool(threadsNum, null);
      		consumer.subscribe(topicSet);
      		Duration duration = Duration.ofMillis(timeout);
      		while (!closed.get()) {
     			ConsumerRecords<String, byte[]> records = consumer.poll(duration);
     			for (final ConsumerRecord<String, byte[]> record : records) {
-    				executor.submit(new Runnable() {
+    				messageExecutor.submit(new Runnable() {
     					public void run() {
     						logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
     						byte[] message = record.value();
@@ -113,9 +124,15 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 		if (null != errorProcessor) {
 			errorProcessor.close();
 		}
-		executor.shutdown();
+		messageExecutor.shutdown();
 		try {
-			executor.awaitTermination(5000, TimeUnit.MILLISECONDS);
+			messageExecutor.awaitTermination(5000, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage());
+		}
+		mainExecutor.shutdown();
+		try {
+			mainExecutor.awaitTermination(5000, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage());
 		}
