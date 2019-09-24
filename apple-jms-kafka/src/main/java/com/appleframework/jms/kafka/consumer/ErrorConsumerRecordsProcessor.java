@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 import com.appleframework.jms.core.consumer.ErrorMessageProcessor;
 import com.appleframework.jms.core.consumer.IMessageConusmer;
-import com.appleframework.jms.core.thread.StandardThreadExecutor.StandardThreadFactory;
+import com.appleframework.jms.core.thread.NamedThreadFactory;
 
 /**
  * Error Consumer Records Processor
@@ -38,7 +38,7 @@ public class ErrorConsumerRecordsProcessor implements Closeable, ErrorMessagePro
 	}
 
 	public ErrorConsumerRecordsProcessor(int poolSize) {
-		executor = Executors.newFixedThreadPool(poolSize, new StandardThreadFactory("errorConsumerRecordsProcessor"));
+		executor = Executors.newFixedThreadPool(poolSize, new NamedThreadFactory("errorConsumerRecordsProcessor"));
 		executor.submit(new Runnable() {
 			@Override
 			public void run() {

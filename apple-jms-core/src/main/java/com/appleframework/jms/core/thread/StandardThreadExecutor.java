@@ -27,7 +27,7 @@ public class StandardThreadExecutor extends ThreadPoolExecutor {
 	public static final int DEFAULT_MAX_THREADS = Runtime.getRuntime().availableProcessors() + 1;
 	public static final int DEFAULT_MAX_IDLE_TIME = 60 * 1000; // 1 minutes
 	
-	private static final ThreadFactory defaultThreadFactory = new StandardThreadFactory("StandardThreadPool");
+	private static final ThreadFactory defaultThreadFactory = new NamedThreadFactory("StandardThreadPool");
 
 	protected AtomicInteger submittedTasksCount;	// 正在处理的任务数 
 	private int maxSubmittedTaskCount;				// 最大允许同时处理的任务数
@@ -132,34 +132,6 @@ public class StandardThreadExecutor extends ThreadPoolExecutor {
 		}
 	}
 	
-	public static class StandardThreadFactory implements ThreadFactory {
-	    private final AtomicInteger poolNumber = new AtomicInteger(1);
-	    private final ThreadGroup group;
-	    private final AtomicInteger threadNumber = new AtomicInteger(1);
-	    private final String namePrefix;
-
-	    public StandardThreadFactory(String namePrefix) {
-	        SecurityManager s = System.getSecurityManager();
-	        group = (s != null) ? s.getThreadGroup() :
-	                              Thread.currentThread().getThreadGroup();
-	        this.namePrefix = namePrefix + "-" +
-	                      poolNumber.getAndIncrement() +
-	                     "-thread-";
-	    }
-
-	    public Thread newThread(Runnable r) {
-	        Thread t = new Thread(group, r,
-	                              namePrefix + threadNumber.getAndIncrement(),
-	                              0);
-	        if (t.isDaemon()) {
-	            t.setDaemon(false);
-	        }
-	        if (t.getPriority() != Thread.NORM_PRIORITY) {
-	            t.setPriority(Thread.NORM_PRIORITY);
-	        }
-	        return t;
-	    }
-	}
 }
 
 class ExecutorQueue extends LinkedTransferQueue<Runnable> {

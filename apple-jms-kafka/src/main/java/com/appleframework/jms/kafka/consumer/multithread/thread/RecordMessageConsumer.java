@@ -3,6 +3,7 @@ package com.appleframework.jms.kafka.consumer.multithread.thread;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -15,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 import com.appleframework.jms.core.consumer.ErrorMessageProcessor;
-import com.appleframework.jms.kafka.utils.ExecutorUtils;
+import com.appleframework.jms.core.thread.NamedThreadFactory;
 
 /**
  * @author Cruise.Xu
@@ -55,7 +56,7 @@ public abstract class RecordMessageConsumer extends AbstractMessageConusmer<Cons
 			if (null == threadsNum) {
 				threadsNum = topics.length;
 			}
-			executor = ExecutorUtils.newFixedThreadPool(threadsNum, null);
+			executor = Executors.newFixedThreadPool(threadsNum, new NamedThreadFactory("apple-jms-kafka-comsumer-pool"));
 			consumer.subscribe(topicSet);
 
 			while (!closed.get()) {

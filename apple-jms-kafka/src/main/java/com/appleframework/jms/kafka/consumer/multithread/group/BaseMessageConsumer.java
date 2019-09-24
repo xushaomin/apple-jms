@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 import com.appleframework.jms.core.consumer.ErrorMessageProcessor;
+import com.appleframework.jms.core.thread.NamedThreadFactory;
 
 /**
  * @author Cruise.Xu
@@ -42,7 +43,7 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 	private List<MessageConsumerThread> threadList = new ArrayList<>();
 
 	public void init() {
-		executor = Executors.newFixedThreadPool(threadsNum);
+		executor = Executors.newFixedThreadPool(threadsNum, new NamedThreadFactory("apple-jms-kafka-comsumer-pool"));
 		if (mixConsumer) {
 			for (int i = 0; i < threadsNum; i++) {
 				startThread(topic);

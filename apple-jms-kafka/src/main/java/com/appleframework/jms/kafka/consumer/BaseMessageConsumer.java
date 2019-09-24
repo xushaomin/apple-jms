@@ -1,32 +1,22 @@
 package com.appleframework.jms.kafka.consumer;
 
 import java.util.HashSet;
-
 import java.util.Set;
-
 import java.util.concurrent.ExecutorService;
-
 import java.util.concurrent.Executors;
-
 import java.util.concurrent.TimeUnit;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-
 import org.apache.kafka.clients.consumer.ConsumerRecords;
-
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-
 import org.apache.kafka.common.errors.WakeupException;
-
 import org.slf4j.Logger;
-
 import org.slf4j.LoggerFactory;
 
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
-
 import com.appleframework.jms.core.consumer.ErrorMessageProcessor;
+import com.appleframework.jms.core.thread.NamedThreadFactory;
 
 /**
  * 
@@ -56,9 +46,10 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 
 	private long timeout = 100;
 
-	private ExecutorService executor = Executors.newSingleThreadExecutor();
+	private ExecutorService executor;
 
 	protected void init() {
+		executor = Executors.newSingleThreadExecutor(new NamedThreadFactory("apple-jms-kafka-comsumer-main"));
 		executor.execute(new Runnable() {
 			public void run() {
 				startup();

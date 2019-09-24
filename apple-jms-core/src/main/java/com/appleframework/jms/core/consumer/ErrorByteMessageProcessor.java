@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.appleframework.jms.core.thread.StandardThreadExecutor.StandardThreadFactory;
+import com.appleframework.jms.core.thread.NamedThreadFactory;
 
 /**
  * 消费者端处理错误消息重试处理器
@@ -36,7 +36,7 @@ public class ErrorByteMessageProcessor implements Closeable, ErrorMessageProcess
 	}
 
 	public ErrorByteMessageProcessor(int poolSize) {
-		executor = Executors.newFixedThreadPool(poolSize, new StandardThreadFactory("ErrorByteMessageProcessor"));
+		executor = Executors.newFixedThreadPool(poolSize, new NamedThreadFactory("ErrorByteMessageProcessor"));
 		executor.submit(new Runnable() {
 			@Override
 			public void run() {

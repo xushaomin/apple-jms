@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.appleframework.cache.jedis.factory.JedisClusterFactory;
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
+import com.appleframework.jms.core.thread.NamedThreadFactory;
 
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisPubSub;
@@ -53,7 +54,7 @@ public abstract class TopicBaseMessageConsumer2 extends AbstractMessageConusmer<
 
 	protected void init() {
 		String[] topics = topic.split(",");
-		final ExecutorService executor = Executors.newFixedThreadPool(topics.length);
+		final ExecutorService executor = Executors.newFixedThreadPool(topics.length, new NamedThreadFactory("apple-jms-redis-topic-cosnumer"));
 		for (int i = 0; i < topics.length; i++) {
 			final String topicc = prefix + topics[i];
 			logger.warn("subscribe the topic -> " + topicc);

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
+import com.appleframework.jms.core.thread.NamedThreadFactory;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -44,7 +45,7 @@ public abstract class QueueBaseMessageConsumer extends AbstractMessageConusmer<b
 
 	protected void init() {
 		String[] topics = topic.split(",");
-		final ExecutorService executor = Executors.newFixedThreadPool(topics.length);
+		final ExecutorService executor = Executors.newFixedThreadPool(topics.length, new NamedThreadFactory("apple-jms-redis-queue-cosnumer"));
 
 		for (int i = 0; i < topics.length; i++) {
 			final String topicc = topics[i];

@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 import com.appleframework.jms.core.consumer.ErrorMessageProcessor;
+import com.appleframework.jms.core.thread.NamedThreadFactory;
 
 /**
  * @author Cruise.Xu
@@ -40,9 +41,10 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
     	
 	private long timeout = 100;
 	
-	private ExecutorService executor = Executors.newSingleThreadExecutor();
+	private ExecutorService executor;
 	
 	protected void init() {
+		executor = Executors.newSingleThreadExecutor(new NamedThreadFactory("apple-jms-kafka-cosnumer"));
 		executor.execute(new Runnable() {
 			public void run() {
 				startup();
