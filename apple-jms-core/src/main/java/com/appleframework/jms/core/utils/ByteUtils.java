@@ -6,32 +6,71 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ByteUtils {
 
-	public static Object fromByte(byte[] obj) {
+	private final static Logger logger = LoggerFactory.getLogger(ByteUtils.class);
+
+	public static Object fromByte(byte[] bytes) {
 		Object object = null;
-		ByteArrayInputStream bis = new ByteArrayInputStream(obj);
+		ByteArrayInputStream bais = null;
+		ObjectInputStream ois = null;
 		try {
-			ObjectInputStream ois = new ObjectInputStream(bis);
+			bais = new ByteArrayInputStream(bytes);
+			ois = new ObjectInputStream(bais);
 			object = ois.readObject();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("ByteUtils.fromByte fail : ", e);
+		} finally {
+			if (null != ois) {
+				try {
+					ois.close();
+				} catch (IOException e) {
+					logger.error("ObjectInputStream close fail : ", e);
+				}
+			}
+			if (null != bais) {
+				try {
+					bais.close();
+				} catch (IOException e) {
+					logger.error("ByteArrayInputStream close fail : ", e);
+				}
+			}
 		}
 		return object;
 	}
 
 	public static byte[] toBytes(Object object) {
+		byte[] bytes = null;
+		ByteArrayOutputStream baos = null;
+		ObjectOutputStream oos = null;
 		try {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			ObjectOutputStream oos;
-			oos = new ObjectOutputStream(bos);
+			baos = new ByteArrayOutputStream();
+			oos = new ObjectOutputStream(baos);
 			oos.writeObject(object);
-			byte[] objMessage = bos.toByteArray();
-			return objMessage;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
+			oos.flush();
+			bytes = baos.toByteArray();
+		} catch (Exception e) {
+			logger.error("ByteUtils.toBytes fail : ", e);
+		} finally {
+			if (null != oos) {
+				try {
+					oos.close();
+				} catch (IOException e) {
+					logger.error("ObjectOutputStream close fail : ", e);
+				}
+			}
+			if (null != baos) {
+				try {
+					baos.close();
+				} catch (IOException e) {
+					logger.error("ByteArrayOutputStream close fail : ", e);
+				}
+			}
 		}
+		return bytes;
 	}
 
 }
