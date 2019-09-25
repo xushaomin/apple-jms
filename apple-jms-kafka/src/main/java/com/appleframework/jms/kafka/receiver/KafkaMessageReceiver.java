@@ -44,7 +44,9 @@ public abstract class KafkaMessageReceiver extends MessageReceiver<Serializable>
 			while (!closed.get()) {
 				ConsumerRecords<String, byte[]> records = consumer.poll(timeout);
 				for (ConsumerRecord<String, byte[]> record : records) {
-					logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+					if (logger.isDebugEnabled()) {
+    					logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+					}
 					String topic = record.topic();
 					logger.info("topic=" + topic);
 					MessageObject<Serializable> object = (MessageObject<Serializable>) ByteUtils.fromByte(record.value());

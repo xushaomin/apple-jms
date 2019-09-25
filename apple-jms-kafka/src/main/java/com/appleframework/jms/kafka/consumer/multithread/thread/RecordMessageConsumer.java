@@ -64,7 +64,9 @@ public abstract class RecordMessageConsumer extends AbstractMessageConusmer<Cons
 				for (final ConsumerRecord<String, byte[]> record : records) {
 					executor.submit(new Runnable() {
 						public void run() {
-							logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+							if (logger.isDebugEnabled()) {
+		    					logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+							}
 							if (errorProcessorLock) {
 								processMessage(record);
 							} else {

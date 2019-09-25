@@ -23,7 +23,7 @@ import com.appleframework.jms.core.thread.NamedThreadFactory;
  * @author Cruise.Xu
  * 
  */
-public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]> {
+public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]> implements Runnable {
 		
 	private static Logger logger = LoggerFactory.getLogger(BaseMessageConsumer.class);
 	
@@ -45,14 +45,11 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 	
 	protected void init() {
 		executor = Executors.newSingleThreadExecutor(new NamedThreadFactory("apple-jms-kafka-cosnumer"));
-		executor.execute(new Runnable() {
-			public void run() {
-				startup();
-			}
-		});
+		executor.execute(this);
 	}
 
-	public void startup() {
+	@Override
+	public void run() {
          try {
         	String[] topics = topic.split(",");
         	Set<String> topicSet = new HashSet<String>();
@@ -66,7 +63,9 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
         	while (!closed.get()) {
     			ConsumerRecords<String, byte[]> records = consumer.poll(duration);
     			for (ConsumerRecord<String, byte[]> record : records) {
-    				logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+    				if (logger.isDebugEnabled()) {
+    					logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+					}
     				byte[] message = record.value();
     				if(errorProcessorLock) {
     					processMessage(message);

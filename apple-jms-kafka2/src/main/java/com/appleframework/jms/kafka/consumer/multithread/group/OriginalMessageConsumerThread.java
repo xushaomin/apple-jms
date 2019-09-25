@@ -58,7 +58,9 @@ public class OriginalMessageConsumerThread implements Runnable {
         	while (!closed.get()) {
     			ConsumerRecords<String, byte[]> records = consumer.poll(duration);
     			for (ConsumerRecord<String, byte[]> record : records) {
-    				logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+    				if (logger.isDebugEnabled()) {
+    					logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+					}
     				if(errorProcessorLock) {
     					messageConusmer.processMessage(record);
     				}

@@ -58,7 +58,9 @@ public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<Co
 				for (final ConsumerRecord<String, byte[]> record : records) {
 					executor.submit(new Runnable() {
 						public void run() {
-							logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+							if (logger.isDebugEnabled()) {
+		    					logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+							}
 							processMessage(record);
 						}
 					});

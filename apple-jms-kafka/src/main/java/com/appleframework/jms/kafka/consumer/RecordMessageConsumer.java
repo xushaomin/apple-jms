@@ -55,7 +55,9 @@ public abstract class RecordMessageConsumer extends AbstractMessageConusmer<Cons
 			while (!closed.get()) {
 				ConsumerRecords<String, byte[]> records = consumer.poll(timeout);
 				for (ConsumerRecord<String, byte[]> record : records) {
-					logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+					if (logger.isDebugEnabled()) {
+    					logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+					}
 					if (errorProcessorLock) {
 						processMessage(record);
 					} else {
