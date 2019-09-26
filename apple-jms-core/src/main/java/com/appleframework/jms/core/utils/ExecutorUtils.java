@@ -21,6 +21,14 @@ public class ExecutorUtils {
 		else {
 			return new ThreadPoolExecutor(nThreads, nThreads, 0L, TimeUnit.MILLISECONDS, workQueue, threadFactory);
 		}
-		
+	}
+	
+	public static ThreadPoolExecutor newFixedThreadPool(int nThreads, BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory) {
+		if(null == threadFactory) {
+			return new ThreadPoolExecutor(nThreads, nThreads, 0L, TimeUnit.MILLISECONDS, workQueue);
+		}
+		else {
+			return new ThreadPoolExecutor(nThreads, nThreads, 0L, TimeUnit.MILLISECONDS, workQueue, threadFactory);
+		}
 	}
 }
