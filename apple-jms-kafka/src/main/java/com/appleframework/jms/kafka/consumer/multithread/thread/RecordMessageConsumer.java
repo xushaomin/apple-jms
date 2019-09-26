@@ -165,4 +165,12 @@ public abstract class RecordMessageConsumer extends AbstractMessageConusmer<Cons
 		this.threadsNum = threadsNum;
 	}
 	
+	public void setFlowControl(boolean flowControl) {
+		this.flowControl = flowControl;
+	}
+
+	public void setFlowCapacity(Integer flowCapacity) {
+		this.flowCapacity = flowCapacity;
+	}
+	
 }

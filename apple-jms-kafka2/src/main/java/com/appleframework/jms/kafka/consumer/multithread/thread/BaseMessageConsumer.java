@@ -179,4 +179,11 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 		this.threadsNum = threadsNum;
 	}
 	
+	public void setFlowControl(boolean flowControl) {
+		this.flowControl = flowControl;
+	}
+
+	public void setFlowCapacity(Integer flowCapacity) {
+		this.flowCapacity = flowCapacity;
+	}
 }
