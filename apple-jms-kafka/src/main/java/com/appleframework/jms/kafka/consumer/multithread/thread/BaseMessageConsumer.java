@@ -2,8 +2,10 @@ package com.appleframework.jms.kafka.consumer.multithread.thread;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -17,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 import com.appleframework.jms.core.consumer.ErrorMessageProcessor;
 import com.appleframework.jms.core.thread.NamedThreadFactory;
+import com.appleframework.jms.core.utils.ExecutorUtils;
 
 /**
  * @author Cruise.Xu
@@ -45,6 +48,10 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 	private ExecutorService mainExecutor;
 	
 	protected Integer threadsNum;
+	
+	protected boolean flowControl = false;
+	
+	protected Integer flowCapacity = Integer.MAX_VALUE;
 		
 	protected void init() {
 		mainExecutor = Executors.newSingleThreadExecutor(new NamedThreadFactory("apple-jms-kafka-comsumer-main"));
@@ -64,9 +71,23 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
         	if(null == threadsNum) {
         		threadsNum = topics.length;
         	}
-        	messageExecutor = Executors.newFixedThreadPool(threadsNum, new NamedThreadFactory("apple-jms-kafka-comsumer-pool"));
-     		consumer.subscribe(topicSet);
+        	BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<Runnable>();
+        	messageExecutor = ExecutorUtils.newFixedThreadPool(threadsNum, workQueue, new NamedThreadFactory("apple-jms-kafka-comsumer-pool"));
+        	consumer.subscribe(topicSet);
      		while (!closed.get()) {
+				if (flowControl) {
+					while (true) {
+						if (workQueue.size() >= flowCapacity) {
+							try {
+								Thread.sleep(10);
+							} catch (InterruptedException e) {
+								logger.error("", e);
+							}
+						} else {
+							break;
+						}
+					}
+				}
     			ConsumerRecords<String, byte[]> records = consumer.poll(timeout);
     			for (final ConsumerRecord<String, byte[]> record : records) {
     				messageExecutor.submit(new Runnable() {
@@ -154,6 +175,14 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 
 	public void setThreadsNum(Integer threadsNum) {
 		this.threadsNum = threadsNum;
+	}
+
+	public void setFlowControl(boolean flowControl) {
+		this.flowControl = flowControl;
+	}
+
+	public void setFlowCapacity(Integer flowCapacity) {
+		this.flowCapacity = flowCapacity;
 	}
 	
 }

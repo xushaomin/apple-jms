@@ -3,8 +3,10 @@ package com.appleframework.jms.kafka.consumer.multithread.thread;
 import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -18,12 +20,13 @@ import org.slf4j.LoggerFactory;
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 import com.appleframework.jms.core.consumer.ErrorMessageProcessor;
 import com.appleframework.jms.core.thread.NamedThreadFactory;
+import com.appleframework.jms.core.utils.ExecutorUtils;
 
 /**
  * @author Cruise.Xu
  * 
  */
-public abstract class RecordMessageConsumer extends AbstractMessageConusmer<ConsumerRecord<String, byte[]>> {
+public abstract class RecordMessageConsumer extends AbstractMessageConusmer<ConsumerRecord<String, byte[]>> implements Runnable {
 
 	private static Logger logger = LoggerFactory.getLogger(BaseMessageConsumer.class);
 
@@ -41,11 +44,23 @@ public abstract class RecordMessageConsumer extends AbstractMessageConusmer<Cons
 
 	private long timeout = Long.MAX_VALUE;
 	
-	private ExecutorService executor;
+	private ExecutorService messageExecutor;
+	
+	private ExecutorService mainExecutor;
 	
 	protected Integer threadsNum;
 	
+	protected boolean flowControl = false;
+	
+	protected Integer flowCapacity = Integer.MAX_VALUE;
+		
 	protected void init() {
+		mainExecutor = Executors.newSingleThreadExecutor(new NamedThreadFactory("apple-jms-kafka-comsumer-main"));
+		mainExecutor.execute(this);
+	}
+
+	@Override
+	public void run() {
 		try {
 			String[] topics = topic.split(",");
 			Set<String> topicSet = new HashSet<String>();
@@ -57,13 +72,27 @@ public abstract class RecordMessageConsumer extends AbstractMessageConusmer<Cons
 			if (null == threadsNum) {
 				threadsNum = topics.length;
 			}
-			executor = Executors.newFixedThreadPool(threadsNum, new NamedThreadFactory("apple-jms-kafka-comsumer-pool"));
+			BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<Runnable>();
+        	messageExecutor = ExecutorUtils.newFixedThreadPool(threadsNum, workQueue, new NamedThreadFactory("apple-jms-kafka-comsumer-pool"));
 			consumer.subscribe(topicSet);
 			Duration duration = Duration.ofMillis(timeout);
 			while (!closed.get()) {
+				if (flowControl) {
+					while (true) {
+						if (workQueue.size() >= flowCapacity) {
+							try {
+								Thread.sleep(10);
+							} catch (InterruptedException e) {
+								logger.error("", e);
+							}
+						} else {
+							break;
+						}
+					}
+				}
 				ConsumerRecords<String, byte[]> records = consumer.poll(duration);
 				for (final ConsumerRecord<String, byte[]> record : records) {
-					executor.submit(new Runnable() {
+					messageExecutor.submit(new Runnable() {
 						public void run() {
 							if (logger.isDebugEnabled()) {
 		    					logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
@@ -115,9 +144,15 @@ public abstract class RecordMessageConsumer extends AbstractMessageConusmer<Cons
 		if (null != errorProcessor) {
 			errorProcessor.close();
 		}
-		executor.shutdown();
+		messageExecutor.shutdown();
 		try {
-			executor.awaitTermination(5000, TimeUnit.MILLISECONDS);
+			messageExecutor.awaitTermination(5000, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			logger.error("", e);
+		}
+		mainExecutor.shutdown();
+		try {
+			mainExecutor.awaitTermination(5000, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
 			logger.error("", e);
 		}
