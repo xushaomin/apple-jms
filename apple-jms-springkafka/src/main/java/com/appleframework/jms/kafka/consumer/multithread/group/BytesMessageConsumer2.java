@@ -1,4 +1,4 @@
-package com.appleframework.jms.kafka.consumer;
+package com.appleframework.jms.kafka.consumer.multithread.group;
 
 import javax.annotation.Resource;
 

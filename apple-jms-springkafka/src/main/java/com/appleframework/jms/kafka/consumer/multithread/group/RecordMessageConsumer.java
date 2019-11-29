@@ -1,4 +1,4 @@
-package com.appleframework.jms.kafka.consumer;
+package com.appleframework.jms.kafka.consumer.multithread.group;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
@@ -20,7 +20,8 @@ public abstract class RecordMessageConsumer extends AbstractMessageConusmer<Cons
 
 	protected Boolean errorProcessorLock = true;
 
-	@KafkaListener(topics = "#{'${spring.kafka.consumer.topics}'.split(',')}")
+	@KafkaListener(topics = "#{'${spring.kafka.consumer.topics}'.split(',')}", 
+			concurrency = "${spring.kafka.consumer.concurrency:1}")
 	public void run(ConsumerRecord<String, byte[]> record) {
 		try {
 			if (logger.isDebugEnabled()) {

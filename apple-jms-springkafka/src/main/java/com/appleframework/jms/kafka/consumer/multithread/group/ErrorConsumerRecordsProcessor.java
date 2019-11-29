@@ -1,4 +1,4 @@
-package com.appleframework.jms.kafka.consumer;
+package com.appleframework.jms.kafka.consumer.multithread.group;
 
 import java.io.Closeable;
 import java.util.concurrent.ExecutorService;

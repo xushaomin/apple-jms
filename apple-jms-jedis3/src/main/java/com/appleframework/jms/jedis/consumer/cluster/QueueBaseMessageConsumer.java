@@ -47,7 +47,8 @@ public abstract class QueueBaseMessageConsumer extends AbstractMessageConusmer<b
 
 	protected void init() {
 		String[] topics = topic.split(",");
-		final ExecutorService executor = Executors.newFixedThreadPool(topics.length, new NamedThreadFactory("apple-jms-redis-queue-cosnumer"));
+		final ExecutorService executor = Executors.newFixedThreadPool(topics.length, 
+				new NamedThreadFactory("apple-jms-redis-queue-cosnumer"));
 		for (int i = 0; i < topics.length; i++) {
 			final String topicc = prefix + topics[i];
 			logger.warn("subscribe the topic -> " + topicc);

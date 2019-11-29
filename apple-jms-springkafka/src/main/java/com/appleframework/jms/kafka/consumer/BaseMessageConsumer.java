@@ -23,7 +23,7 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 
 	protected Boolean errorProcessorLock = true;
 	
-	@KafkaListener(topics = "#{'${spring.kafka.consumer.topics}'.split(',')}")
+	@KafkaListener(topics = "#{'${spring.kafka.consumer.topics}'.split(',')}", concurrency = "${spring.kafka.consumer.concurrency:1}")
 	public void run(ConsumerRecord<String, byte[]> record) {
 		try {
 			if (logger.isDebugEnabled()) {

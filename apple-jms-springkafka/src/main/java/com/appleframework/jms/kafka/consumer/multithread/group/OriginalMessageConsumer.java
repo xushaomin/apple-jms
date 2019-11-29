@@ -1,4 +1,4 @@
-package com.appleframework.jms.kafka.consumer;
+package com.appleframework.jms.kafka.consumer.multithread.group;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.errors.WakeupException;
@@ -16,7 +16,8 @@ public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<Co
 
 	private static Logger logger = LoggerFactory.getLogger(OriginalMessageConsumer.class);
 
-	@KafkaListener(topics = "#{'${spring.kafka.consumer.topics}'.split(',')}")
+	@KafkaListener(topics = "#{'${spring.kafka.consumer.topics}'.split(',')}", 
+			concurrency = "${spring.kafka.consumer.concurrency:1}")
 	public void run(ConsumerRecord<String, byte[]> record) {
 		try {
 			if (logger.isDebugEnabled()) {
