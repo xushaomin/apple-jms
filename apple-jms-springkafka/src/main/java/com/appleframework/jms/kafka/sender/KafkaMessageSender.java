@@ -6,6 +6,7 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Component;
 
 import com.appleframework.jms.core.exception.JmsException;
 import com.appleframework.jms.core.exception.MQException;
@@ -17,6 +18,7 @@ import com.appleframework.jms.core.utils.ByteUtils;
  * @author Cruise.Xu
  * 
  */
+@Component
 public class KafkaMessageSender implements MessageSender {
 
 	@Resource
