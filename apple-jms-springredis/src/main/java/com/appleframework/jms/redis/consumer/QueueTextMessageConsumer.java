@@ -9,8 +9,8 @@ import com.appleframework.jms.core.consumer.IMessageConusmer;
 public abstract class QueueTextMessageConsumer extends QueueBaseMessageConsumer implements IMessageConusmer<String> {
 
 	@Override
-	public void processMessage(byte[] message) {
-		onMessage(new String(message));
+	public void processMessage(Object message) {
+		onMessage(message.toString());
 	}
 
 }

@@ -1,7 +1,6 @@
 package com.appleframework.jms.redis.consumer;
 
 import com.appleframework.jms.core.consumer.IMessageConusmer;
-import com.appleframework.jms.core.utils.ByteUtils;
 
 /**
  * @author Cruise.Xu
@@ -10,8 +9,8 @@ import com.appleframework.jms.core.utils.ByteUtils;
 public abstract class QueueObjectMessageConsumer extends QueueBaseMessageConsumer implements IMessageConusmer<Object> {
 
 	@Override
-	public void processMessage(byte[] message) {
-		onMessage(ByteUtils.fromByte(message));
+	public void processMessage(Object message) {
+		onMessage(message);
 	}
 
 }

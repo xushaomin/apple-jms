@@ -10,7 +10,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import com.appleframework.jms.core.exception.JmsException;
 import com.appleframework.jms.core.producer.MessageProducer;
-import com.appleframework.jms.core.utils.ByteUtils;
 
 /**
  * @author Cruise.Xu
@@ -21,7 +20,7 @@ public class TopicMessageProducer implements MessageProducer {
 	private static Logger logger = LoggerFactory.getLogger(TopicMessageProducer.class);
 
 	@Resource
-	private RedisTemplate<String, byte[]> redisTemplate;
+	private RedisTemplate<String, Object> redisTemplate;
 	
 	private String topic;
 
@@ -29,7 +28,7 @@ public class TopicMessageProducer implements MessageProducer {
 		this.topic = topic;
 	}
 
-	public void setRedisTemplate(RedisTemplate<String, byte[]> redisTemplate) {
+	public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
 		this.redisTemplate = redisTemplate;
 	}
 
@@ -45,7 +44,7 @@ public class TopicMessageProducer implements MessageProducer {
 	@Override
 	public void sendObject(Serializable message) throws JmsException {
 		try {
-			redisTemplate.convertAndSend(topic, ByteUtils.toBytes(message));
+			redisTemplate.convertAndSend(topic, message);
 		} catch (Exception e) {
 			logger.error("", e);
 		}
@@ -54,7 +53,7 @@ public class TopicMessageProducer implements MessageProducer {
 	@Override
 	public void sendText(String message) throws JmsException {
 		try {
-			redisTemplate.convertAndSend(topic, message.getBytes());
+			redisTemplate.convertAndSend(topic, message);
 		} catch (Exception e) {
 			logger.error("", e);
 		}
