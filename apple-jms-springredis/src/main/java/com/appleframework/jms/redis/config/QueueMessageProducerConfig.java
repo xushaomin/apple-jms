@@ -25,6 +25,9 @@ public class QueueMessageProducerConfig {
 	@Bean
 	@ConditionalOnMissingBean(MessageProducer.class)
 	public MessageProducer messageProducerFactory() {
+		if("null".equals(topic)) {
+			return null;
+		}
 		QueueMessageProducer messageProducer = new QueueMessageProducer();
 		messageProducer.setRedisTemplate(redisTemplate);
 		messageProducer.setTopic(topic);

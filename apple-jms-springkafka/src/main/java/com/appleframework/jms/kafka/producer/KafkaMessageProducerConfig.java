@@ -24,6 +24,9 @@ public class KafkaMessageProducerConfig {
 	@Bean
 	@ConditionalOnMissingBean(MessageProducer.class)
 	public MessageProducer messageProducerFactory() {
+		if("null".equals(topic)) {
+			return null;
+		}
 		KafkaMessageProducer messageProducer = new KafkaMessageProducer();
 		messageProducer.setKafkaTemplate(kafkaTemplate);
 		messageProducer.setTopic(topic);
