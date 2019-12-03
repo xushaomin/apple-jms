@@ -1,7 +1,5 @@
 package com.appleframework.jms.kafka.producer;
 
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -18,12 +16,9 @@ public class KafkaMessageProducerConfig {
 	@Value("${spring.kafka.producer.topic:null}")
 	private String topic;
 
-	@Resource
-	private KafkaTemplate<String, byte[]> kafkaTemplate;
-
 	@Bean
 	@ConditionalOnMissingBean(MessageProducer.class)
-	public MessageProducer messageProducerFactory() {
+	public MessageProducer messageProducerFactory(KafkaTemplate<String, byte[]> kafkaTemplate) {
 		if("null".equals(topic)) {
 			return null;
 		}
@@ -35,7 +30,7 @@ public class KafkaMessageProducerConfig {
 
 	@Bean
 	@ConditionalOnMissingBean(MessageProducer2.class)
-	public MessageProducer2 messageProducer2Factory() {
+	public MessageProducer2 messageProducer2Factory(KafkaTemplate<String, byte[]> kafkaTemplate) {
 		KafkaMessageProducer2 messageProducer = new KafkaMessageProducer2();
 		messageProducer.setKafkaTemplate(kafkaTemplate);
 		return messageProducer;
@@ -43,7 +38,7 @@ public class KafkaMessageProducerConfig {
 
 	@Bean
 	@ConditionalOnMissingBean(MessageProducer3.class)
-	public MessageProducer3 messageProducer3Factory() {
+	public MessageProducer3 messageProducer3Factory(KafkaTemplate<String, byte[]> kafkaTemplate) {
 		KafkaMessageProducer3 messageProducer = new KafkaMessageProducer3();
 		messageProducer.setKafkaTemplate(kafkaTemplate);
 		return messageProducer;

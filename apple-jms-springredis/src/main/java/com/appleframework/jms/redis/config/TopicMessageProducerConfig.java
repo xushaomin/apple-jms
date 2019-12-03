@@ -1,7 +1,5 @@
 package com.appleframework.jms.redis.config;
 
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -19,12 +17,9 @@ public class TopicMessageProducerConfig {
 	@Value("${spring.redis.producer.topic:null}")
 	private String topic;
 
-	@Resource
-	private RedisTemplate<String, Object> redisTemplate;
-
 	@Bean
 	@ConditionalOnMissingBean(MessageProducer.class)
-	public MessageProducer messageProducerFactory() {
+	public MessageProducer messageProducerFactory(RedisTemplate<String, Object> redisTemplate) {
 		if("null".equals(topic)) {
 			return null;
 		}
@@ -36,7 +31,7 @@ public class TopicMessageProducerConfig {
 
 	@Bean
 	@ConditionalOnMissingBean(MessageProducer2.class)
-	public MessageProducer2 messageProducer2Factory() {
+	public MessageProducer2 messageProducer2Factory(RedisTemplate<String, Object> redisTemplate) {
 		TopicMessageProducer2 messageProducer = new TopicMessageProducer2();
 		messageProducer.setRedisTemplate(redisTemplate);
 		return messageProducer;
