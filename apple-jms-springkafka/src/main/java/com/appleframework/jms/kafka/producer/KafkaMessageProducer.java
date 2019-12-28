@@ -11,7 +11,7 @@ import com.appleframework.jms.core.exception.JmsException;
 import com.appleframework.jms.core.exception.MQException;
 import com.appleframework.jms.core.producer.MessageProducer;
 import com.appleframework.jms.core.utils.ByteUtils;
-import com.appleframework.jms.kafka.utils.StringUtils;
+import com.appleframework.jms.core.utils.TraceUtils;
 
 
 /**
@@ -28,25 +28,14 @@ public class KafkaMessageProducer implements MessageProducer {
 	}
 
 	private String topic;
-	
-	private String key = "-1";
-		 
+			 
 	public void setTopic(String topic) {
 		this.topic = topic;
 	}
 	
-	public void setKey(String key) {
-		if(StringUtils.isEmpty(key)) {
-			this.key = null;
-		}
-		else {
-			this.key = key;
-		}
-	}
-
 	public void sendByte(byte[] message) throws JmsException {
 		try {
-			kafkaTemplate.send(topic, key, message);
+			kafkaTemplate.send(topic, TraceUtils.getTraceId(), message);
 		} catch (Exception e) {
 			throw new MQException(e);
 		}
@@ -56,7 +45,7 @@ public class KafkaMessageProducer implements MessageProducer {
 	@Override
 	public void sendObject(Serializable message) throws JmsException {
 		try {
-			kafkaTemplate.send(topic, key, ByteUtils.toBytes(message));
+			kafkaTemplate.send(topic, TraceUtils.getTraceId(), ByteUtils.toBytes(message));
 		} catch (Exception e) {
 			throw new MQException(e);
 		}
@@ -65,7 +54,7 @@ public class KafkaMessageProducer implements MessageProducer {
 	@Override
 	public void sendText(String message) throws JmsException {
 		try {
-			kafkaTemplate.send(topic, key, message.getBytes());
+			kafkaTemplate.send(topic, TraceUtils.getTraceId(), message.getBytes());
 		} catch (Exception e) {
 			throw new MQException(e);
 		}

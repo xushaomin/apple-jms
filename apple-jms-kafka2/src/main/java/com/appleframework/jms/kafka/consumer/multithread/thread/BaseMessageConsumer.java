@@ -16,11 +16,14 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.errors.WakeupException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 import com.appleframework.jms.core.consumer.ErrorMessageProcessor;
 import com.appleframework.jms.core.thread.NamedThreadFactory;
+import com.appleframework.jms.core.utils.Contants;
 import com.appleframework.jms.core.utils.ExecutorUtils;
+import com.appleframework.jms.core.utils.UuidUtils;
 
 /**
  * @author Cruise.Xu
@@ -92,6 +95,12 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 				}
     			ConsumerRecords<String, byte[]> records = consumer.poll(duration);
     			for (final ConsumerRecord<String, byte[]> record : records) {
+    				if(null != record.key()) {
+    					MDC.put(Contants.KEY_TRACE_ID, record.key());
+    				}
+    				else {
+    					MDC.put(Contants.KEY_TRACE_ID, UuidUtils.genUUID());
+    				}
     				messageExecutor.submit(new Runnable() {
     					public void run() {
     						if (logger.isDebugEnabled()) {

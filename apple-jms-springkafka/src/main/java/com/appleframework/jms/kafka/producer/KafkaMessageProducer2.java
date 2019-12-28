@@ -12,7 +12,7 @@ import com.appleframework.jms.core.exception.JmsException;
 import com.appleframework.jms.core.exception.MQException;
 import com.appleframework.jms.core.producer.MessageProducer2;
 import com.appleframework.jms.core.utils.ByteUtils;
-import com.appleframework.jms.kafka.utils.StringUtils;
+import com.appleframework.jms.core.utils.TraceUtils;
 
 /**
  * @author Cruise.Xu
@@ -28,21 +28,10 @@ public class KafkaMessageProducer2 implements MessageProducer2 {
 		this.kafkaTemplate = kafkaTemplate;
 	}
 	
-	private String key = "-1";
-	
-	public void setKey(String key) {
-		if(StringUtils.isEmpty(key)) {
-			this.key = null;
-		}
-		else {
-			this.key = key;
-		}
-	}
-	
 	@Override
 	public void sendByte(String topic, byte[] message) throws JmsException {
 		try {
-			kafkaTemplate.send(topic, key, message);
+			kafkaTemplate.send(topic, TraceUtils.getTraceId(), message);
 		} catch (Exception e) {
 			throw new MQException(e);
 		}
@@ -51,7 +40,7 @@ public class KafkaMessageProducer2 implements MessageProducer2 {
 	@Override
 	public void sendObject(String topic, Serializable message) throws JmsException {
 		try {
-			kafkaTemplate.send(topic, key, ByteUtils.toBytes(message));
+			kafkaTemplate.send(topic, TraceUtils.getTraceId(), ByteUtils.toBytes(message));
 		} catch (Exception e) {
 			throw new MQException(e);
 		}
@@ -60,7 +49,7 @@ public class KafkaMessageProducer2 implements MessageProducer2 {
 	@Override
 	public void sendText(String topic, String message) throws JmsException {
 		try {
-			kafkaTemplate.send(topic, key, message.getBytes());
+			kafkaTemplate.send(topic, TraceUtils.getTraceId(), message.getBytes());
 		} catch (Exception e) {
 			throw new MQException(e);
 		}

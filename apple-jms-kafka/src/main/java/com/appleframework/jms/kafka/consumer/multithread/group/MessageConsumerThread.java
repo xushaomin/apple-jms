@@ -11,9 +11,12 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.errors.WakeupException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 import com.appleframework.jms.core.consumer.ErrorMessageProcessor;
+import com.appleframework.jms.core.utils.Contants;
+import com.appleframework.jms.core.utils.UuidUtils;
 
 /**
  * @author Cruise.Xu
@@ -58,6 +61,12 @@ public class MessageConsumerThread implements Runnable {
     			for (ConsumerRecord<String, byte[]> record : records) {
     				if (logger.isDebugEnabled()) {
     					logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+					}
+    				if(null != record.key()) {
+						MDC.put(Contants.KEY_TRACE_ID, record.key());
+					}
+					else {
+						MDC.put(Contants.KEY_TRACE_ID, UuidUtils.genUUID());
 					}
     				byte[] message = record.value();
     				if(errorProcessorLock) {

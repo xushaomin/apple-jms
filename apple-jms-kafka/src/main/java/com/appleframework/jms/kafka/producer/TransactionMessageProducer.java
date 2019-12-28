@@ -2,14 +2,14 @@ package com.appleframework.jms.kafka.producer;
 
 import java.io.Serializable;
 
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+
 import com.appleframework.jms.core.exception.JmsException;
 import com.appleframework.jms.core.exception.MQException;
 import com.appleframework.jms.core.producer.MessageProducer;
 import com.appleframework.jms.core.utils.ByteUtils;
-import com.appleframework.jms.kafka.utils.StringUtils;
-
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import com.appleframework.jms.core.utils.TraceUtils;
 
 
 /**
@@ -21,24 +21,13 @@ public class TransactionMessageProducer implements MessageProducer {
 	private Producer<String, byte[]> producer;
 	
 	private String topic;
-	
-	private String key = "-1";
-	
+		
 	public void setProducer(Producer<String, byte[]> producer) {
 		this.producer = producer;
 	}
 	 
 	public void setTopic(String topic) {
 		this.topic = topic;
-	}
-	
-	public void setKey(String key) {
-		if(StringUtils.isEmpty(key)) {
-			this.key = null;
-		}
-		else {
-			this.key = key;
-		}
 	}
 	
 	public void init() {
@@ -48,7 +37,8 @@ public class TransactionMessageProducer implements MessageProducer {
 	public void sendByte(byte[] message) throws JmsException {
 		try {
 			producer.beginTransaction();
-			ProducerRecord<String, byte[]> producerData = new ProducerRecord<String, byte[]>(topic, key, message);
+			ProducerRecord<String, byte[]> producerData = new ProducerRecord<String, byte[]>(topic, 
+					TraceUtils.getTraceId(), message);
 			producer.send(producerData);
 			producer.commitTransaction();
 		} catch (Exception e) {
@@ -61,7 +51,8 @@ public class TransactionMessageProducer implements MessageProducer {
 	public void sendObject(Serializable message) throws JmsException {
 		try {
 			producer.beginTransaction();
-			ProducerRecord<String, byte[]> producerData = new ProducerRecord<String, byte[]>(topic, key, ByteUtils.toBytes(message));
+			ProducerRecord<String, byte[]> producerData = new ProducerRecord<String, byte[]>(topic, 
+					TraceUtils.getTraceId(), ByteUtils.toBytes(message));
 			producer.send(producerData);
 			producer.commitTransaction();
 		} catch (Exception e) {
@@ -73,7 +64,8 @@ public class TransactionMessageProducer implements MessageProducer {
 	public void sendText(String message) throws JmsException {
 		try {
 			producer.beginTransaction();
-			ProducerRecord<String, byte[]> producerData = new ProducerRecord<String, byte[]>(topic, key, message.getBytes());
+			ProducerRecord<String, byte[]> producerData = new ProducerRecord<String, byte[]>(topic, 
+					TraceUtils.getTraceId(), message.getBytes());
 			producer.send(producerData);
 			producer.commitTransaction();
 		} catch (Exception e) {
