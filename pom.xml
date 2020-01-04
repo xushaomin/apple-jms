@@ -4,14 +4,14 @@
 
 	<groupId>com.appleframework.jms</groupId>
 	<artifactId>apple-jms</artifactId>
-	<version>0.2.0-SNAPSHOT</version>
+	<version>0.2.0.RELEASE</version>
 	<packaging>pom</packaging>
 
 	<name>apple-jms</name>
 	<url>http://mvnrepo.appleframework.com</url>
 
 	<properties>
-		<project.version>0.2.0-SNAPSHOT</project.version>
+		<project.version>0.2.0.RELEASE</project.version>
 		<spring.version>5.2.1.RELEASE</spring.version>
 		<junit.version>4.12</junit.version>
 		<boot.version>2.2.1.RELEASE</boot.version>

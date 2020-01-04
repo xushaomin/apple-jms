@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.appleframework.jms</groupId>
 		<artifactId>apple-jms</artifactId>
-		<version>0.2.0-SNAPSHOT</version>
+		<version>0.2.0.RELEASE</version>
 	</parent>
 	<artifactId>apple-jms-jedis</artifactId>
 	<name>apple-jms-jedis</name>
