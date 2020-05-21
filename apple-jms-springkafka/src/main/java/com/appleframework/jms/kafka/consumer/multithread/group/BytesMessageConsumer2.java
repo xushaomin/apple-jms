@@ -8,7 +8,7 @@ import com.appleframework.jms.core.consumer.IMessageConusmer;
  * @author Cruise.Xu
  * 
  */
-public class BytesMessageConsumer2 extends BaseMessageConsumer {
+public class BytesMessageConsumer2 extends BaseMessageConsumer<byte[]> {
 
 	@Resource
 	private IMessageConusmer<byte[]> messageConusmer;

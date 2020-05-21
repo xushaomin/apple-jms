@@ -1,18 +1,16 @@
 package com.appleframework.jms.kafka.consumer;
 
 import com.appleframework.jms.core.consumer.IMessageConusmer;
-import com.appleframework.jms.core.utils.ByteUtils;
-
 
 /**
  * @author Cruise.Xu
  * 
  */
-public abstract class ObjectMessageConsumer extends BaseMessageConsumer implements IMessageConusmer<Object> {
+public abstract class ObjectMessageConsumer extends BaseMessageConsumer<Object> implements IMessageConusmer<Object> {
 
 	@Override
-	public void processMessage(byte[] message) {
-		onMessage(ByteUtils.fromByte(message));
+	public void processMessage(Object message) {
+		onMessage(message);
 	}
 	
 	

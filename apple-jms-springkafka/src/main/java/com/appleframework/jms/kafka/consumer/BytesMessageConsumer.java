@@ -6,7 +6,7 @@ import com.appleframework.jms.core.consumer.IMessageConusmer;
  * @author Cruise.Xu
  * 
  */
-public abstract class BytesMessageConsumer extends BaseMessageConsumer implements IMessageConusmer<byte[]> {
+public abstract class BytesMessageConsumer extends BaseMessageConsumer<byte[]> implements IMessageConusmer<byte[]> {
 
 	@Override
 	public void processMessage(byte[] message) {

@@ -1,13 +1,12 @@
 package com.appleframework.jms.kafka.consumer.multithread.group;
 
 import com.appleframework.jms.core.consumer.IMessageConusmer;
-import com.appleframework.jms.core.utils.ByteUtils;
 
 /**
  * @author Cruise.Xu
  * 
  */
-public class ObjectMessageConsumer2 extends BaseMessageConsumer {
+public class ObjectMessageConsumer2 extends BaseMessageConsumer<Object> {
 
 	private IMessageConusmer<Object> messageConusmer;
 
@@ -16,8 +15,8 @@ public class ObjectMessageConsumer2 extends BaseMessageConsumer {
 	}
 
 	@Override
-	public void processMessage(byte[] message) {
-		messageConusmer.onMessage(ByteUtils.fromByte(message));		
+	public void processMessage(Object message) {
+		messageConusmer.onMessage(message);		
 	}
 
 }

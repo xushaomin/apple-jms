@@ -25,11 +25,11 @@ import com.appleframework.jms.core.utils.UuidUtils;
  * @author Cruise.Xu
  * 
  */
-public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]> {
+public abstract class BaseMessageConsumer<Message> extends AbstractMessageConusmer<Message> {
 		
 	private static Logger logger = LoggerFactory.getLogger(BaseMessageConsumer.class);
 	    	
-	private ErrorMessageProcessor<byte[]> errorProcessor;
+	private ErrorMessageProcessor<Message> errorProcessor;
 	
 	protected boolean errorProcessorLock = true;
 	    	
@@ -55,7 +55,7 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 	}
 
 	@KafkaListener(topics = "#{'${spring.kafka.consumer.topics}'.split(',')}")
-	public void run(final ConsumerRecord<String, byte[]> record) {
+	public void run(final ConsumerRecord<String, Message> record) {
 		try {
 			if(null != record.key()) {
 				MDC.put(Contants.KEY_TRACE_ID, record.key());
@@ -83,7 +83,7 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 						logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(),
 								record.value());
 					}
-					byte[] message = record.value();
+					Message message = record.value();
 					if (errorProcessorLock) {
 						processMessage(message);
 					} else {
@@ -100,7 +100,7 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
          }
      }
 	
-	protected void processErrorMessage(byte[] message) {
+	protected void processErrorMessage(Message message) {
 		if(!errorProcessorLock && null != errorProcessor) {
 			errorProcessor.processErrorMessage(message, this);
 		}
@@ -128,7 +128,7 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 	public void commitAsync() {
 	}
 
-	public void setErrorProcessor(ErrorMessageProcessor<byte[]> errorProcessor) {
+	public void setErrorProcessor(ErrorMessageProcessor<Message> errorProcessor) {
 		this.errorProcessor = errorProcessor;
 	}
 

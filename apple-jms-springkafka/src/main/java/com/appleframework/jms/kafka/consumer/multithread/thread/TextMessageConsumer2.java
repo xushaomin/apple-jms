@@ -7,7 +7,7 @@ import com.appleframework.jms.core.consumer.IMessageConusmer;
  * @author Cruise.Xu
  * 
  */
-public class TextMessageConsumer2 extends BaseMessageConsumer {
+public class TextMessageConsumer2 extends BaseMessageConsumer<String> {
 
 	private IMessageConusmer<String> messageConusmer;
 
@@ -16,8 +16,8 @@ public class TextMessageConsumer2 extends BaseMessageConsumer {
 	}
 
 	@Override
-	public void processMessage(byte[] message) {
-		messageConusmer.onMessage(new String(message));
+	public void processMessage(String message) {
+		messageConusmer.onMessage(message);
 	}
 
 }

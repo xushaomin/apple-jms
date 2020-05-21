@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>com.appleframework.jms</groupId>
 		<artifactId>apple-jms</artifactId>
-		<version>0.2.0.RELEASE</version>
+		<version>0.2.1.RELEASE</version>
 	</parent>
 	<artifactId>apple-jms-activemq</artifactId>
 	<name>apple-jms-activemq</name>
