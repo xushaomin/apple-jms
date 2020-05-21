@@ -14,9 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.kafka.annotation.KafkaListener;
 
+import com.appleframework.jms.core.config.TraceConfig;
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 import com.appleframework.jms.core.thread.NamedThreadFactory;
-import com.appleframework.jms.core.utils.Contants;
 import com.appleframework.jms.core.utils.ExecutorUtils;
 import com.appleframework.jms.core.utils.UuidUtils;
 
@@ -49,14 +49,16 @@ public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<Co
     	}
 	}
 	
-	@KafkaListener(topics = "#{'${spring.kafka.consumer.topics}'.split(',')}")
+	@KafkaListener(topics = "#{'${spring.kafka.consumer.topics}'.split(',')}", concurrency = "${spring.kafka.consumer.concurrency:1}")
 	public void run(final ConsumerRecord<String, byte[]> record) {
 		try {
-			if(null != record.key()) {
-				MDC.put(Contants.KEY_TRACE_ID, record.key());
-			}
-			else {
-				MDC.put(Contants.KEY_TRACE_ID, UuidUtils.genUUID());
+			if(TraceConfig.isSwitchTrace()) {
+				if(null != record.key()) {
+					MDC.put(TraceConfig.getTraceIdKey(), record.key());
+				}
+				else {
+					MDC.put(TraceConfig.getTraceIdKey(), UuidUtils.genUUID());
+				}
 			}
 			if (flowControl) {
 				while (true) {

@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.kafka.annotation.KafkaListener;
 
+import com.appleframework.jms.core.config.TraceConfig;
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
-import com.appleframework.jms.core.utils.Contants;
 import com.appleframework.jms.core.utils.UuidUtils;
 
 /**
@@ -26,11 +26,13 @@ public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<Co
 			if (logger.isDebugEnabled()) {
 				logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
 			}
-			if(null != record.key()) {
-				MDC.put(Contants.KEY_TRACE_ID, record.key());
-			}
-			else {
-				MDC.put(Contants.KEY_TRACE_ID, UuidUtils.genUUID());
+			if(TraceConfig.isSwitchTrace()) {
+				if(null != record.key()) {
+					MDC.put(TraceConfig.getTraceIdKey(), record.key());
+				}
+				else {
+					MDC.put(TraceConfig.getTraceIdKey(), UuidUtils.genUUID());
+				}
 			}
 			processMessage(record);
 		} catch (WakeupException e) {

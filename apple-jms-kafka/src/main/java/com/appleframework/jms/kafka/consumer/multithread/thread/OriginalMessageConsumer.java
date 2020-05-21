@@ -17,9 +17,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import com.appleframework.jms.core.config.TraceConfig;
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 import com.appleframework.jms.core.thread.NamedThreadFactory;
-import com.appleframework.jms.core.utils.Contants;
 import com.appleframework.jms.core.utils.ExecutorUtils;
 import com.appleframework.jms.core.utils.UuidUtils;
 
@@ -88,11 +88,13 @@ public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<Co
 				}
 				ConsumerRecords<String, byte[]> records = consumer.poll(timeout);
 				for (final ConsumerRecord<String, byte[]> record : records) {
-					if(null != record.key()) {
-						MDC.put(Contants.KEY_TRACE_ID, record.key());
-					}
-					else {
-						MDC.put(Contants.KEY_TRACE_ID, UuidUtils.genUUID());
+					if(TraceConfig.isSwitchTrace()) {
+						if(null != record.key()) {
+							MDC.put(TraceConfig.getTraceIdKey(), record.key());
+						}
+						else {
+							MDC.put(TraceConfig.getTraceIdKey(), UuidUtils.genUUID());
+						}
 					}
 					messageExecutor.submit(new Runnable() {
 						public void run() {

@@ -15,10 +15,10 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.kafka.annotation.KafkaListener;
 
+import com.appleframework.jms.core.config.TraceConfig;
 import com.appleframework.jms.core.consumer.AbstractMessageConusmer;
 import com.appleframework.jms.core.consumer.ErrorMessageProcessor;
 import com.appleframework.jms.core.thread.NamedThreadFactory;
-import com.appleframework.jms.core.utils.Contants;
 import com.appleframework.jms.core.utils.ExecutorUtils;
 import com.appleframework.jms.core.utils.UuidUtils;
 
@@ -26,11 +26,11 @@ import com.appleframework.jms.core.utils.UuidUtils;
  * @author Cruise.Xu
  * 
  */
-public abstract class RecordMessageConsumer extends AbstractMessageConusmer<ConsumerRecord<String, byte[]>> {
+public abstract class RecordMessageConsumer<Message> extends AbstractMessageConusmer<ConsumerRecord<String, Message>> {
 
 	private static Logger logger = LoggerFactory.getLogger(BaseMessageConsumer.class);
 
-	private ErrorMessageProcessor<ConsumerRecord<String, byte[]>> errorProcessor;
+	private ErrorMessageProcessor<ConsumerRecord<String, Message>> errorProcessor;
 
 	protected Boolean errorProcessorLock = true;
 
@@ -57,14 +57,16 @@ public abstract class RecordMessageConsumer extends AbstractMessageConusmer<Cons
 		}
 	}
 
-	@KafkaListener(topics = "#{'${spring.kafka.consumer.topics}'.split(',')}")
-	public void run(final ConsumerRecord<String, byte[]> record) {
+	@KafkaListener(topics = "#{'${spring.kafka.consumer.topics}'.split(',')}", concurrency = "${spring.kafka.consumer.concurrency:1}")
+	public void run(final ConsumerRecord<String, Message> record) {
 		try {
-			if(null != record.key()) {
-				MDC.put(Contants.KEY_TRACE_ID, record.key());
-			}
-			else {
-				MDC.put(Contants.KEY_TRACE_ID, UuidUtils.genUUID());
+			if(TraceConfig.isSwitchTrace()) {
+				if(null != record.key()) {
+					MDC.put(TraceConfig.getTraceIdKey(), record.key());
+				}
+				else {
+					MDC.put(TraceConfig.getTraceIdKey(), UuidUtils.genUUID());
+				}
 			}
 			if (flowControl) {
 				while (true) {
@@ -103,7 +105,7 @@ public abstract class RecordMessageConsumer extends AbstractMessageConusmer<Cons
 		}
 	}
 
-	protected void processErrorMessage(ConsumerRecord<String, byte[]> message) {
+	protected void processErrorMessage(ConsumerRecord<String, Message> message) {
 		if (!errorProcessorLock) {
 			errorProcessor.processErrorMessage(message, this);
 		}
