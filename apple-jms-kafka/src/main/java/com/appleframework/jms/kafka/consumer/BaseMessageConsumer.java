@@ -24,9 +24,6 @@ import com.appleframework.jms.core.utils.UuidUtils;
 /**
  * 
  * @author Cruise.Xu
- *
- * 
- * 
  */
 
 public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]> implements Runnable {
@@ -48,8 +45,6 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 	private long timeout = 100;
 
 	private ExecutorService executor;
-	
-	
 
 	protected void init() {
 		executor = Executors.newSingleThreadExecutor(new NamedThreadFactory("apple-jms-kafka-comsumer-main"));

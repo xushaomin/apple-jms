@@ -13,6 +13,7 @@ import org.apache.kafka.common.errors.WakeupException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 
 import com.appleframework.jms.core.config.TraceConfig;
@@ -32,16 +33,20 @@ public abstract class BaseRecordMessageConsumer<Message> extends AbstractMessage
 
 	private ErrorMessageProcessor<ConsumerRecord<String, Message>> errorProcessor;
 
+	@Value("${spring.kafka.consumer.error.processor.lock:true}")
 	protected Boolean errorProcessorLock = true;
 
 	private AtomicBoolean closed = new AtomicBoolean(false);
 
 	private ExecutorService messageExecutor;
 
+	@Value("${spring.kafka.consumer.threads.num:1}")
 	protected Integer threadsNum;
 
+	@Value("${spring.kafka.consumer.flow.control:false}")
 	protected boolean flowControl = false;
 
+	@Value("${spring.kafka.consumer.flow.capacity:2147483646}")
 	protected int flowCapacity = Integer.MAX_VALUE;
 
 	private final BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<Runnable>();;

@@ -4,6 +4,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 
 import com.appleframework.jms.core.config.TraceConfig;
@@ -23,7 +24,8 @@ public abstract class BaseMessageConsumer<Message> extends AbstractMessageConusm
 	private static Logger logger = LoggerFactory.getLogger(BaseMessageConsumer.class);
 	
 	private ErrorMessageProcessor<Message> errorProcessor;
-
+	
+	@Value("${spring.kafka.consumer.error.processor.lock:true}")
 	protected Boolean errorProcessorLock = true;
 	
 	@KafkaListener(topics = "#{'${spring.kafka.consumer.topics}'.split(',')}", 

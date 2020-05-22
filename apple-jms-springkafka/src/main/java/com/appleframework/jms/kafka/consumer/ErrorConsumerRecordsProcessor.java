@@ -20,7 +20,7 @@ import com.appleframework.jms.core.thread.NamedThreadFactory;
  * Error Consumer Records Processor
  * 
  */
-public class ErrorConsumerRecordsProcessor implements Closeable, ErrorMessageProcessor<ConsumerRecord<String, byte[]>> {
+public class ErrorConsumerRecordsProcessor<Message> implements Closeable, ErrorMessageProcessor<ConsumerRecord<Object, Message>> {
 
 	private static final Logger logger = LoggerFactory.getLogger(ErrorConsumerRecordsProcessor.class);
 
@@ -61,8 +61,8 @@ public class ErrorConsumerRecordsProcessor implements Closeable, ErrorMessagePro
 		});
 	}
 
-	public void submit(final ConsumerRecord<String, byte[]> message, 
-			final AbstractMessageConusmer<ConsumerRecord<String, byte[]>> metadataMessageConusmer) {
+	public void submit(final ConsumerRecord<Object, Message> message, 
+			final AbstractMessageConusmer<ConsumerRecord<Object, Message>> metadataMessageConusmer) {
 		int taskCount;
 		if ((taskCount = taskQueue.size()) > 1000) {
 			logger.warn("ErrorByteMessageProcessor queue task count over:{}", taskCount);
@@ -83,35 +83,35 @@ public class ErrorConsumerRecordsProcessor implements Closeable, ErrorMessagePro
 
 	class PriorityTask implements Runnable, Comparable<PriorityTask> {
 
-		ConsumerRecord<String, byte[]> message;
-		AbstractMessageConusmer<ConsumerRecord<String, byte[]>> messageConusmer1;
-		IMessageConusmer<ConsumerRecord<String, byte[]>> messageConusmer2;
+		ConsumerRecord<Object, Message> message;
+		AbstractMessageConusmer<ConsumerRecord<Object, Message>> messageConusmer1;
+		IMessageConusmer<ConsumerRecord<Object, Message>> messageConusmer2;
 		
 		int retryCount = 0;
 		long nextFireTime;
 		
 		public PriorityTask() {}
 
-		public PriorityTask(ConsumerRecord<String, byte[]> message, 
-				AbstractMessageConusmer<ConsumerRecord<String, byte[]>> metadataMessageConusmer) {
+		public PriorityTask(ConsumerRecord<Object, Message> message, 
+				AbstractMessageConusmer<ConsumerRecord<Object, Message>> metadataMessageConusmer) {
 			this(message, metadataMessageConusmer, System.currentTimeMillis() + RETRY_PERIOD_UNIT);
 		}
 
-		public PriorityTask(ConsumerRecord<String, byte[]> message, 
-				AbstractMessageConusmer<ConsumerRecord<String, byte[]>> messageConusmer, long nextFireTime) {
+		public PriorityTask(ConsumerRecord<Object, Message> message, 
+				AbstractMessageConusmer<ConsumerRecord<Object, Message>> messageConusmer, long nextFireTime) {
 			super();
 			this.message = message;
 			this.messageConusmer1 = messageConusmer;
 			this.nextFireTime = nextFireTime;
 		}
 		
-		public PriorityTask(ConsumerRecord<String, byte[]> message, 
-				IMessageConusmer<ConsumerRecord<String, byte[]>> messageConusmer) {
+		public PriorityTask(ConsumerRecord<Object, Message> message, 
+				IMessageConusmer<ConsumerRecord<Object, Message>> messageConusmer) {
 			this(message, messageConusmer, System.currentTimeMillis() + RETRY_PERIOD_UNIT);
 		}
 
-		public PriorityTask(ConsumerRecord<String, byte[]> message, 
-				IMessageConusmer<ConsumerRecord<String, byte[]>> messageConusmer, long nextFireTime) {
+		public PriorityTask(ConsumerRecord<Object, Message> message, 
+				IMessageConusmer<ConsumerRecord<Object, Message>> messageConusmer, long nextFireTime) {
 			super();
 			this.message = message;
 			this.messageConusmer2 = messageConusmer;
@@ -119,7 +119,7 @@ public class ErrorConsumerRecordsProcessor implements Closeable, ErrorMessagePro
 		}
 		
 
-		public ConsumerRecord<String, byte[]> getMessage() {
+		public ConsumerRecord<Object, Message> getMessage() {
 			return message;
 		}
 
@@ -157,8 +157,8 @@ public class ErrorConsumerRecordsProcessor implements Closeable, ErrorMessagePro
 	}
 
 	@Override
-	public void processErrorMessage(ConsumerRecord<String, byte[]> message,
-			AbstractMessageConusmer<ConsumerRecord<String, byte[]>> messageConusmer) {
+	public void processErrorMessage(ConsumerRecord<Object, Message> message,
+			AbstractMessageConusmer<ConsumerRecord<Object, Message>> messageConusmer) {
 		int taskCount;
 		if ((taskCount = taskQueue.size()) > 1000) {
 			logger.warn("ErrorByteMessageProcessor queue task count over:" + taskCount);
@@ -167,8 +167,8 @@ public class ErrorConsumerRecordsProcessor implements Closeable, ErrorMessagePro
 	}
 
 	@Override
-	public void processErrorMessage(ConsumerRecord<String, byte[]> message,
-			IMessageConusmer<ConsumerRecord<String, byte[]>> messageConusmer) {
+	public void processErrorMessage(ConsumerRecord<Object, Message> message,
+			IMessageConusmer<ConsumerRecord<Object, Message>> messageConusmer) {
 		int taskCount;
 		if ((taskCount = taskQueue.size()) > 1000) {
 			logger.warn("ErrorByteMessageProcessor queue task count over:" + taskCount);
