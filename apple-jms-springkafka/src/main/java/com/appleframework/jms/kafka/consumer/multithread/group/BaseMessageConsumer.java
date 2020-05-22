@@ -17,7 +17,6 @@ import com.appleframework.jms.core.utils.UuidUtils;
  * @author Cruise.Xu
  *
  * 
- * 
  */
 public abstract class BaseMessageConsumer<Message> extends AbstractMessageConusmer<Message> {
 
@@ -59,7 +58,12 @@ public abstract class BaseMessageConsumer<Message> extends AbstractMessageConusm
 	}
 
 	protected void processErrorMessage(Message message) {
-		if (!errorProcessorLock && null != errorProcessor) {
+		if (!errorProcessorLock) {
+			if(null == errorProcessor) {
+				synchronized(errorProcessor) {
+					errorProcessor = new ErrorMessageProcessorImpl<>();
+				}
+			}
 			errorProcessor.processErrorMessage(message, this);
 		}
 	}

@@ -57,8 +57,14 @@ public abstract class BaseMessageConsumer<Message> extends AbstractMessageConusm
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	protected void processErrorMessage(Message message) {
-		if (!errorProcessorLock && null != errorProcessor) {
+		if (!errorProcessorLock) {
+			if(null == errorProcessor) {
+				synchronized(errorProcessor) {
+					errorProcessor = new ErrorMessageProcessorImpl<>();
+				}
+			}
 			errorProcessor.processErrorMessage(message, this);
 		}
 	}

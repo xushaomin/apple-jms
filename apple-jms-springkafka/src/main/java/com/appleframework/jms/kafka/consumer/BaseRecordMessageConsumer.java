@@ -55,6 +55,11 @@ public abstract class BaseRecordMessageConsumer<Message> extends AbstractMessage
 
 	protected void processErrorMessage(ConsumerRecord<Object, Message> message) {
 		if (!errorProcessorLock) {
+			if(null == errorProcessor) {
+				synchronized(errorProcessor) {
+					errorProcessor = new ErrorConsumerRecordsProcessor<>();
+				}
+			}
 			errorProcessor.processErrorMessage(message, this);
 		}
 	}
