@@ -17,7 +17,6 @@ import redis.clients.jedis.JedisPool;
  * @author Cruise.Xu
  * 
  */
-@SuppressWarnings("deprecation")
 public abstract class QueueBaseMessageConsumer extends AbstractMessageConusmer<byte[]> {
 
 	private static Logger logger = LoggerFactory.getLogger(QueueBaseMessageConsumer.class);
@@ -43,8 +42,6 @@ public abstract class QueueBaseMessageConsumer extends AbstractMessageConusmer<b
 			}
 		} catch (Exception e) {
 			logger.error("", e);
-		} finally {
-			jedisPool.returnResource(jedis);
 		}
 	}
 

@@ -1,6 +1,5 @@
 package com.appleframework.jms.jedis.consumer.cluster;
 
-import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -71,11 +70,7 @@ public abstract class TopicBaseMessageConsumer extends AbstractMessageConusmer<b
 							logger.error("", e);
 						} finally {
 							if (jedis != null) {
-								try {
-									jedis.close();
-								} catch (IOException e) {
-									logger.error("", e);
-								}
+								jedis.close();
 							}
 						}
 						try {

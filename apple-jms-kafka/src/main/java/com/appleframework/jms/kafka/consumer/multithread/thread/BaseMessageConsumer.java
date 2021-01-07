@@ -1,5 +1,6 @@
 package com.appleframework.jms.kafka.consumer.multithread.thread;
 
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
@@ -76,7 +77,8 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
         	}
         	BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<Runnable>();
         	messageExecutor = ExecutorUtils.newFixedThreadPool(threadsNum, workQueue, new NamedThreadFactory("apple-jms-kafka-comsumer-pool"));
-        	consumer.subscribe(topicSet);
+     		consumer.subscribe(topicSet);
+     		Duration duration = Duration.ofMillis(timeout);
      		while (!closed.get()) {
 				if (flowControl) {
 					while (true) {
@@ -91,20 +93,20 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 						}
 					}
 				}
-    			ConsumerRecords<String, byte[]> records = consumer.poll(timeout);
+    			ConsumerRecords<String, byte[]> records = consumer.poll(duration);
     			for (final ConsumerRecord<String, byte[]> record : records) {
+    				if(TraceConfig.isSwitchTrace()) {
+    					if(null != record.key()) {
+    						MDC.put(TraceConfig.getTraceIdKey(), record.key());
+    					}
+    					else {
+    						MDC.put(TraceConfig.getTraceIdKey(), UuidUtils.genUUID());
+    					}
+    				}
     				messageExecutor.submit(new Runnable() {
     					public void run() {
     						if (logger.isDebugEnabled()) {
     	    					logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
-    						}
-    						if(TraceConfig.isSwitchTrace()) {
-    							if(null != record.key()) {
-    								MDC.put(TraceConfig.getTraceIdKey(), record.key());
-    							}
-    							else {
-    								MDC.put(TraceConfig.getTraceIdKey(), UuidUtils.genUUID());
-    							}
     						}
     						byte[] message = record.value();
     	    				if(errorProcessorLock) {
@@ -187,7 +189,7 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 	public void setThreadsNum(Integer threadsNum) {
 		this.threadsNum = threadsNum;
 	}
-
+	
 	public void setFlowControl(boolean flowControl) {
 		this.flowControl = flowControl;
 	}
@@ -195,5 +197,4 @@ public abstract class BaseMessageConsumer extends AbstractMessageConusmer<byte[]
 	public void setFlowCapacity(Integer flowCapacity) {
 		this.flowCapacity = flowCapacity;
 	}
-	
 }

@@ -15,11 +15,11 @@ import com.appleframework.jms.kafka.utils.StringUtils;
  * 
  */
 public class SimplePartitioner implements Partitioner {
-	
+
 	public SimplePartitioner() {
 		super();
 	}
-
+	
 	@Override
 	public void configure(Map<String, ?> configs) {		
 	}

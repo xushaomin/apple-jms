@@ -20,7 +20,6 @@ import com.appleframework.jms.core.thread.NamedThreadFactory;
  * Error Consumer Records Processor
  * 
  */
-@Deprecated
 public class ErrorConsumerRecordsProcessor implements Closeable, ErrorMessageProcessor<ConsumerRecord<String, byte[]>> {
 
 	private static final Logger logger = LoggerFactory.getLogger(ErrorConsumerRecordsProcessor.class);

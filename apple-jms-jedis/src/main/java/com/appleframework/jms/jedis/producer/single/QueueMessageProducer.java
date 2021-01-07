@@ -16,7 +16,6 @@ import redis.clients.jedis.JedisPool;
  * @author Cruise.Xu
  * 
  */
-@SuppressWarnings("deprecation")
 public class QueueMessageProducer implements MessageProducer {
 	
 	private static Logger logger = LoggerFactory.getLogger(QueueMessageProducer.class);
@@ -44,8 +43,6 @@ public class QueueMessageProducer implements MessageProducer {
 			jedis.lpush(topic.getBytes(), message);
 		} catch (Exception e) {
 			logger.error("", e);
-		} finally {
-			jedisPool.returnResource(jedis);
 		}
 	}
 
@@ -56,8 +53,6 @@ public class QueueMessageProducer implements MessageProducer {
 			jedis.lpush(topic.getBytes(), ByteUtils.toBytes(message));
 		} catch (Exception e) {
 			logger.error("", e);
-		} finally {
-			jedisPool.returnResource(jedis);
 		}
 	}
 
@@ -68,8 +63,6 @@ public class QueueMessageProducer implements MessageProducer {
 			jedis.lpush(topic, message);
 		} catch (Exception e) {
 			logger.error("", e);
-		} finally {
-			jedisPool.returnResource(jedis);
 		}
 	}
 

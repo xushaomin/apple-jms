@@ -19,7 +19,6 @@ public class KafkaMessageProducer2 implements MessageProducer2 {
 
 	private Producer<String, byte[]> producer;
 	
-
 	public void setProducer(Producer<String, byte[]> producer) {
 		this.producer = producer;
 	}

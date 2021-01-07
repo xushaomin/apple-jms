@@ -2,14 +2,14 @@ package com.appleframework.jms.kafka.producer;
 
 import java.io.Serializable;
 
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerRecord;
-
 import com.appleframework.jms.core.exception.JmsException;
 import com.appleframework.jms.core.exception.MQException;
 import com.appleframework.jms.core.producer.MessageProducer;
 import com.appleframework.jms.core.utils.ByteUtils;
 import com.appleframework.jms.core.utils.TraceUtils;
+
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 
 
 /**
@@ -21,7 +21,7 @@ public class KafkaMessageProducer implements MessageProducer {
 	private Producer<String, byte[]> producer;
 	
 	private String topic;
-			
+		
 	public void setProducer(Producer<String, byte[]> producer) {
 		this.producer = producer;
 	}
@@ -45,8 +45,8 @@ public class KafkaMessageProducer implements MessageProducer {
 	public void sendObject(Serializable message) throws JmsException {
 		try {
 			ProducerRecord<String, byte[]> producerData 
-				= new ProducerRecord<String, byte[]>(topic, TraceUtils.getTraceId(), ByteUtils.toBytes(message));
-			producer.send(producerData);
+			= new ProducerRecord<String, byte[]>(topic, TraceUtils.getTraceId(), ByteUtils.toBytes(message));
+		producer.send(producerData);
 		} catch (Exception e) {
 			throw new MQException(e);
 		}

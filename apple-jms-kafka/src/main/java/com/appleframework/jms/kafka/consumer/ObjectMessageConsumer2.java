@@ -7,7 +7,6 @@ import com.appleframework.jms.core.utils.ByteUtils;
  * @author Cruise.Xu
  * 
  */
-@Deprecated
 public class ObjectMessageConsumer2 extends BaseMessageConsumer {
 
 	private IMessageConusmer<Object> messageConusmer;

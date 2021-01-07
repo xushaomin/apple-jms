@@ -1,5 +1,6 @@
 package com.appleframework.jms.kafka.consumer.multithread.thread;
 
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
@@ -55,7 +56,7 @@ public abstract class RecordMessageConsumer extends AbstractMessageConusmer<Cons
 	protected boolean flowControl = false;
 	
 	protected Integer flowCapacity = Integer.MAX_VALUE;
-	
+		
 	protected void init() {
 		mainExecutor = Executors.newSingleThreadExecutor(new NamedThreadFactory("apple-jms-kafka-comsumer-main"));
 		mainExecutor.execute(this);
@@ -77,7 +78,7 @@ public abstract class RecordMessageConsumer extends AbstractMessageConusmer<Cons
 			BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<Runnable>();
         	messageExecutor = ExecutorUtils.newFixedThreadPool(threadsNum, workQueue, new NamedThreadFactory("apple-jms-kafka-comsumer-pool"));
 			consumer.subscribe(topicSet);
-
+			Duration duration = Duration.ofMillis(timeout);
 			while (!closed.get()) {
 				if (flowControl) {
 					while (true) {
@@ -92,7 +93,7 @@ public abstract class RecordMessageConsumer extends AbstractMessageConusmer<Cons
 						}
 					}
 				}
-				ConsumerRecords<String, byte[]> records = consumer.poll(timeout);
+				ConsumerRecords<String, byte[]> records = consumer.poll(duration);
 				for (final ConsumerRecord<String, byte[]> record : records) {
 					if(TraceConfig.isSwitchTrace()) {
 						if(null != record.key()) {
@@ -183,5 +184,4 @@ public abstract class RecordMessageConsumer extends AbstractMessageConusmer<Cons
 	public void setFlowCapacity(Integer flowCapacity) {
 		this.flowCapacity = flowCapacity;
 	}
-	
 }

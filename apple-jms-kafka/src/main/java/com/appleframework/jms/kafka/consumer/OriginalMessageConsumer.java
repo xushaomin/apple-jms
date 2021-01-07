@@ -1,5 +1,6 @@
 package com.appleframework.jms.kafka.consumer;
 
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -20,7 +21,6 @@ import com.appleframework.jms.core.utils.UuidUtils;
  * @author Cruise.Xu
  * 
  */
-@Deprecated
 public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<ConsumerRecord<String, byte[]>> implements Runnable {
 
 	private static Logger logger = LoggerFactory.getLogger(OriginalMessageConsumer.class);
@@ -50,8 +50,9 @@ public abstract class OriginalMessageConsumer extends AbstractMessageConusmer<Co
         		logger.warn("subscribe the topic -> " + topicc);
 			}
 			consumer.subscribe(topicSet);
+			Duration duration = Duration.ofMillis(timeout);
 			while (!closed.get()) {
-				ConsumerRecords<String, byte[]> records = consumer.poll(timeout);
+				ConsumerRecords<String, byte[]> records = consumer.poll(duration);
 				for (ConsumerRecord<String, byte[]> record : records) {
 					if (logger.isDebugEnabled()) {
     					logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());

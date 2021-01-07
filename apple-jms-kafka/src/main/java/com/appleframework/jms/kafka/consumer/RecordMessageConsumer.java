@@ -1,5 +1,6 @@
 package com.appleframework.jms.kafka.consumer;
 
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -21,7 +22,6 @@ import com.appleframework.jms.core.utils.UuidUtils;
  * @author Cruise.Xu
  * 
  */
-@Deprecated
 public abstract class RecordMessageConsumer extends AbstractMessageConusmer<ConsumerRecord<String, byte[]>> implements Runnable {
 
 	private static Logger logger = LoggerFactory.getLogger(BaseMessageConsumer.class);
@@ -55,9 +55,13 @@ public abstract class RecordMessageConsumer extends AbstractMessageConusmer<Cons
         		logger.warn("subscribe the topic -> " + topicc);
 			}
 			consumer.subscribe(topicSet);
+			Duration duration = Duration.ofMillis(timeout);
 			while (!closed.get()) {
-				ConsumerRecords<String, byte[]> records = consumer.poll(timeout);
+				ConsumerRecords<String, byte[]> records = consumer.poll(duration);
 				for (ConsumerRecord<String, byte[]> record : records) {
+					if (logger.isDebugEnabled()) {
+    					logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+					}
 					if(TraceConfig.isSwitchTrace()) {
 						if(null != record.key()) {
 							MDC.put(TraceConfig.getTraceIdKey(), record.key());
@@ -65,9 +69,6 @@ public abstract class RecordMessageConsumer extends AbstractMessageConusmer<Cons
 						else {
 							MDC.put(TraceConfig.getTraceIdKey(), UuidUtils.genUUID());
 						}
-					}
-					if (logger.isDebugEnabled()) {
-    					logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
 					}
 					if (errorProcessorLock) {
 						processMessage(record);

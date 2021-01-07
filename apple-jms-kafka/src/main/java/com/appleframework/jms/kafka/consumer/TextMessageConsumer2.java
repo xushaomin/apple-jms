@@ -7,7 +7,6 @@ import com.appleframework.jms.core.consumer.IMessageConusmer;
  * @author Cruise.Xu
  * 
  */
-@Deprecated
 public class TextMessageConsumer2 extends BaseMessageConsumer {
 
 	private IMessageConusmer<String> messageConusmer;

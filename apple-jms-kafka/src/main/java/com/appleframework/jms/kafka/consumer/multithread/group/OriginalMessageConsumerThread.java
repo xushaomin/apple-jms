@@ -1,5 +1,6 @@
 package com.appleframework.jms.kafka.consumer.multithread.group;
 
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -56,8 +57,9 @@ public class OriginalMessageConsumerThread implements Runnable {
 			}
         	consumer = new KafkaConsumer<String, byte[]>(properties);
      		consumer.subscribe(topicSet);
+     		Duration duration = Duration.ofMillis(timeout);
         	while (!closed.get()) {
-    			ConsumerRecords<String, byte[]> records = consumer.poll(timeout);
+    			ConsumerRecords<String, byte[]> records = consumer.poll(duration);
     			for (ConsumerRecord<String, byte[]> record : records) {
     				if (logger.isDebugEnabled()) {
     					logger.debug("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());

@@ -13,8 +13,8 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<cache.version>0.3.5.RELEASE</cache.version>
-		<jedis.version>2.9.3</jedis.version>
+		<cache.version>0.3.6.RELEASE</cache.version>
+		<jedis.version>3.4.1</jedis.version>
 	</properties>
 
 	<dependencies>
@@ -37,7 +37,6 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
