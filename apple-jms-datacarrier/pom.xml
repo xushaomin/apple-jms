@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>com.appleframework.jms</groupId>
 		<artifactId>apple-jms</artifactId>
-		<version>0.2.3.RELEASE</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>apple-jms-datacarrier</artifactId>
 	<name>apple-jms-datacarrier</name>
