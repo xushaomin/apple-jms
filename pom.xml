@@ -165,11 +165,11 @@
 			<distributionManagement>
 				<repository>
 					<id>apple-releases</id>
-					<url>http://nexus.appleframework.com:8081/nexus/content/repositories/releases/</url>
+					<url>http://nexus3.appleframework.com:8081/repository/apple-releases/</url>
 				</repository>
 				<snapshotRepository>
 					<id>apple-snapshots</id>
-					<url>http://nexus.appleframework.com:8081/nexus/content/repositories/snapshots/</url>
+					<url>http://nexus3.appleframework.com:8081/repository/apple-snapshots/</url>
 				</snapshotRepository>
 			</distributionManagement>
 		</profile>
